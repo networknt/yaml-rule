@@ -22,9 +22,9 @@ public class RuleEngine {
     /**
      * Calls executeRules(objects, ruleId)
      */
-    public Map executeRules(String groupId, Map objMap) throws Exception {
+    public Map executeRules(String groupId, Map<String, Object> objMap) throws Exception {
         Collection<Rule> rules = groupMap.get(groupId);
-        Map resultMap = new HashMap();
+        Map<String, Object> resultMap = new HashMap();
         if(rules != null && rules.size() > 0) {
             // here we have a collection of rules
             try {
@@ -58,9 +58,9 @@ public class RuleEngine {
         return resultMap;
     }
 
-    public Map executeRule(String ruleId, Map objMap) throws Exception {
+    public Map executeRule(String ruleId, Map<String, Object> objMap) throws Exception {
         Rule rule = ruleMap.get(ruleId);
-        Map resultMap = new HashMap();
+        Map<String, Object> resultMap = new HashMap();
         if(rule != null) {
             try {
                 // rule must be in the map here. evaluate it.

@@ -11,5 +11,5 @@ public interface IAction {
      * @param resultMap result map
      * @param actionValues action values
      */
-    void performAction(Map inputMap, Map resultMap, Collection actionValues);
+    void performAction(Map<String, Object> inputMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues);
 }

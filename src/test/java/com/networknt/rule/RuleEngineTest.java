@@ -70,7 +70,7 @@ public class RuleEngineTest {
 
     @Test
     public void testRoleAuthWithCcToken() throws Exception {
-        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk1Mjc0MTUxNywianRpIjoiTzZfajltbnJibnZiSW16SVpkWk1EZyIsImlhdCI6MTYzNzM4MTUxNywibmJmIjoxNjM3MzgxMzk3LCJ2ZXJzaW9uIjoiMS4wIiwiY2xpZW50X2lkIjoiZjdkNDIzNDgtYzY0Ny00ZWZiLWE1MmQtNGM1Nzg3NDIxZTczIiwic2NvcGUiOiJwb3J0YWwuciBwb3J0YWwudyJ9.XODfxSsCWDFYzJNZj1azz8MS6w4jjAMlEagyPraGyZIuARXm-iIqFOF-feBxCJ2jAVf6fzWUQSf6pFCydESLWLfOn0eoFFlQjcREdz0rRT-z87D22z50s4eHP_W57pH67thHyrgLhWgB3glPFjPrmr_4mzJbmc9NtSS6zgN5fdyIrW94fghIxW6XCliFKlSpFPgi32QIrROseK-_1QJ3uTzlUzHVcQQsiWdKDrDWjXEjbd4Ny4qp_faL08GTLXkiYGy0Uw_7c5TnFMTSo5H7gEDMQtSTft_3UtNFr7gv0uK_HOfHa6rPQwfJCvy5-yDvzpmwX_xxHb9ozyJgpyhHeA";
+        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk1MjkwMDY1MCwianRpIjoiM2VVdzdLUXpjTnl6c3d6OTlfRFZCdyIsImlhdCI6MTYzNzU0MDY1MCwibmJmIjoxNjM3NTQwNTMwLCJ2ZXJzaW9uIjoiMS4wIiwiY2xpZW50X2lkIjoiZjdkNDIzNDgtYzY0Ny00ZWZiLWE1MmQtNGM1Nzg3NDIxZTczIiwic2NvcGUiOiJhY2NvdW50LnIgYWNjb3VudC53In0.M68F5O2ZlGpwJbxa91kOjRfNcbe0-_s6FEubPP1fjAp2MItZyyzkvnqMLrKlLv9ZbCiYiXKuBH1NDTOt93sDBzqlz7FeFutnxpUfNZhbg_dwhnVlWTvWmrQuFCILRDgKFlXRkLKcihZJI9OpjWMhno4WD5OmN6coyNRcoewhwS8Sg3UsGRobjSlKbc1Fo14_l6RaUdvX7AsPCC5J2uzajOG5a9oQiRVPJ1W4ecVPyYqdqBsWoUVZcsBLZcvnAagqzMBvoDQKmhlJ7WhmOw2fZxOeZSrrRtYBfdlC0xgdc6Lgi3R-W3ZdNAxhJ-Xypb06OpTR05FUuAJ639BIUo8_mQ";
         RuleEngine engine = new RuleEngine(ruleMap, null);
         Map objMap = new HashMap();
         Map<String, Object> auditInfo = new HashMap();
@@ -85,15 +85,14 @@ public class RuleEngineTest {
         auditInfo.put("subject_claims", claims);
         objMap.put("auditInfo", auditInfo);
         objMap.put("roles", "manager,teller");
-        Map<String, Object> result = engine.executeRule("role-based-auth-skip-cc", objMap);
+        Map<String, Object> result = engine.executeRule("account-cc-group-role-auth", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
-
     @Test
-    public void testRoleAuthSkipCcRightRole() throws Exception {
-        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTYzNzM0MjgwMSwianRpIjoiQjRsTVRSSkJYN3JCZ05sMm5JRWcydyIsImlhdCI6MTYzNzM0MjIwMSwibmJmIjoxNjM3MzQyMDgxLCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlIiwidXNlcl90eXBlIjoiRU1QTE9ZRUUiLCJjbGllbnRfaWQiOiJmN2Q0MjM0OC1jNjQ3LTRlZmItYTUyZC00YzU3ODc0MjFlNzIiLCJyb2xlcyI6Im1hbmFnZXIgdGVsbGVyIiwic2NvcGUiOlsid3JpdGU6cGV0cyIsInJlYWQ6cGV0cyJdfQ.ADIoTbud9epDYJfoCEBkGEB60YbotwKZVDLXqJMmMxcxuwUm7wuPB0cLIqvDW18K4JKH6VyIy-L9lTWtP8ocpZxMFqgO0yR-d-wDrgNVmVok9G21rAWS1TbhzL7Gki4tZ6zn-dlwy9Iz1Zh2Opi4E01I99vFvmyuDkC354jC3CbMDHmi93AS9l6z39dP9lWWJKp8FO5ClK9DxHWLXG-qog5CdOt4u9k2_4zJ5dfOTkXYKt2vpl21ZIImLj14mJtr53AFZsONZCdTGoDsu-s-9xJ_c_4sgHlEgJ5-M46i2dgtKxeWzQe1yvA52Mbj3DU6HEgG-Q1As4zl42w1jJzoUQ";
+    public void testRoleAuthCustomerRightRole() throws Exception {
+        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk1MjkwMTMxOCwianRpIjoiZnhDNGYzRjVxbWg5ZWczem80TEZWQSIsImlhdCI6MTYzNzU0MTMxOCwibmJmIjoxNjM3NTQxMTk4LCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlaHUiLCJ1c2VyX3R5cGUiOiJDVVNUT01FUiIsImNsaWVudF9pZCI6ImY3ZDQyMzQ4LWM2NDctNGVmYi1hNTJkLTRjNTc4NzQyMWU3MiIsInJvbGVzIjoiY3VzdG9tZXIiLCJzY29wZSI6WyJhY2NvdW50LnIiLCJhY2NvdW50LnciXX0.bfG2okhBhgif2Jty60mGJKz2TKCtW219c2kcBVKznWctVmns8g0r0sztR_N2EBWZ-UUpA0Bm9kTo5DHoSGHM28t-46RSH_RdaTNGsRg74zLC_HJWuc6hGQl05jU-vltNNFPQ3CA0__yRNEi1zLqICtbqvmlcl0uHd_PnPeFvjNDRY68Qyr7PN_YXYbVT7dRiauqrWsslLZKbY0-Bpk8Ro6pJ03akX0-3pdd1Jy9HryyEPFw4OEwCqU2G_OETcZ2qNf-fKZwYLC9kofku9CehWkYhujpnuaFSOuGEGfB-eqi4tTHKA2YmaE-GsYUyFNa8H4cHTAGlKUmDRKRdV-em5Q";
         RuleEngine engine = new RuleEngine(ruleMap, null);
         Map objMap = new HashMap();
         Map<String, Object> auditInfo = new HashMap();
@@ -107,15 +106,15 @@ public class RuleEngineTest {
         JwtClaims claims = jwtContext.getJwtClaims();
         auditInfo.put("subject_claims", claims);
         objMap.put("auditInfo", auditInfo);
-        objMap.put("roles", "manager,teller");
-        Map<String, Object> result = engine.executeRule("role-based-auth-skip-cc", objMap);
+        objMap.put("roles", "manager teller customer");
+        Map<String, Object> result = engine.executeRule("account-cc-group-role-auth", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
-    public void testRoleAuthSkipCcWrongRole() throws Exception {
-        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTYzNzM0MjgwMSwianRpIjoiQjRsTVRSSkJYN3JCZ05sMm5JRWcydyIsImlhdCI6MTYzNzM0MjIwMSwibmJmIjoxNjM3MzQyMDgxLCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlIiwidXNlcl90eXBlIjoiRU1QTE9ZRUUiLCJjbGllbnRfaWQiOiJmN2Q0MjM0OC1jNjQ3LTRlZmItYTUyZC00YzU3ODc0MjFlNzIiLCJyb2xlcyI6Im1hbmFnZXIgdGVsbGVyIiwic2NvcGUiOlsid3JpdGU6cGV0cyIsInJlYWQ6cGV0cyJdfQ.ADIoTbud9epDYJfoCEBkGEB60YbotwKZVDLXqJMmMxcxuwUm7wuPB0cLIqvDW18K4JKH6VyIy-L9lTWtP8ocpZxMFqgO0yR-d-wDrgNVmVok9G21rAWS1TbhzL7Gki4tZ6zn-dlwy9Iz1Zh2Opi4E01I99vFvmyuDkC354jC3CbMDHmi93AS9l6z39dP9lWWJKp8FO5ClK9DxHWLXG-qog5CdOt4u9k2_4zJ5dfOTkXYKt2vpl21ZIImLj14mJtr53AFZsONZCdTGoDsu-s-9xJ_c_4sgHlEgJ5-M46i2dgtKxeWzQe1yvA52Mbj3DU6HEgG-Q1As4zl42w1jJzoUQ";
+    public void testRoleAuthWrongRole() throws Exception {
+        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk1MjkwMTQyMiwianRpIjoiNk01a242S3kwYUU3M2tIUkdJZnBjdyIsImlhdCI6MTYzNzU0MTQyMiwibmJmIjoxNjM3NTQxMzAyLCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlaHUiLCJ1c2VyX3R5cGUiOiJDVVNUT01FUiIsImNsaWVudF9pZCI6ImY3ZDQyMzQ4LWM2NDctNGVmYi1hNTJkLTRjNTc4NzQyMWU3MiIsInJvbGVzIjoidXNlciIsInNjb3BlIjpbImFjY291bnQuciIsImFjY291bnQudyJdfQ.VqExehutVEmo7qCuffCJZAPBWvoqihTWBuTBiXbR9x9vQbzPiFI0qr0FDilTxdqSOtEmW3ml9eioR2tLswLVp0NQnuHw5ElPYNfTsvIW8xLm3hcTAMk08Xhpg7TJn6_Z3zDNwv3mDn-ZMzB9R80O-OI61W2XAuWzCdOIEffcMTZa6VMB3e0tKLN3SnmKL5LJmbAxfuy8CK1QwfRLvhZgNYggd1XAyKCEB33VDEV0rKUJlwSRKXYZbKcvT1r1MojtP8JlReW9h_Xfx3CRH4VxzcAuVQyVrLd7bOpB03eVSkOTw9I4dgCe6ODELERrvGlsQ9aiETIn7rCrRsN9dt5mAw";
         RuleEngine engine = new RuleEngine(ruleMap, null);
         Map objMap = new HashMap();
         Map<String, Object> auditInfo = new HashMap();
@@ -129,15 +128,15 @@ public class RuleEngineTest {
         JwtClaims claims = jwtContext.getJwtClaims();
         auditInfo.put("subject_claims", claims);
         objMap.put("auditInfo", auditInfo);
-        objMap.put("roles", "user,customer");
-        Map<String, Object> result = engine.executeRule("role-based-auth-skip-cc", objMap);
+        objMap.put("roles", "manager teller customer");
+        Map<String, Object> result = engine.executeRule("account-cc-group-role-auth", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
         Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
-    public void testRoleAuthWithRightRow() throws Exception {
-        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTYzNzM0MjgwMSwianRpIjoiQjRsTVRSSkJYN3JCZ05sMm5JRWcydyIsImlhdCI6MTYzNzM0MjIwMSwibmJmIjoxNjM3MzQyMDgxLCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlIiwidXNlcl90eXBlIjoiRU1QTE9ZRUUiLCJjbGllbnRfaWQiOiJmN2Q0MjM0OC1jNjQ3LTRlZmItYTUyZC00YzU3ODc0MjFlNzIiLCJyb2xlcyI6Im1hbmFnZXIgdGVsbGVyIiwic2NvcGUiOlsid3JpdGU6cGV0cyIsInJlYWQ6cGV0cyJdfQ.ADIoTbud9epDYJfoCEBkGEB60YbotwKZVDLXqJMmMxcxuwUm7wuPB0cLIqvDW18K4JKH6VyIy-L9lTWtP8ocpZxMFqgO0yR-d-wDrgNVmVok9G21rAWS1TbhzL7Gki4tZ6zn-dlwy9Iz1Zh2Opi4E01I99vFvmyuDkC354jC3CbMDHmi93AS9l6z39dP9lWWJKp8FO5ClK9DxHWLXG-qog5CdOt4u9k2_4zJ5dfOTkXYKt2vpl21ZIImLj14mJtr53AFZsONZCdTGoDsu-s-9xJ_c_4sgHlEgJ5-M46i2dgtKxeWzQe1yvA52Mbj3DU6HEgG-Q1As4zl42w1jJzoUQ";
+    public void testRoleAuthWithRightGroup() throws Exception {
+        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk1MjkwMTU0NiwianRpIjoiUFVBQW5rVWdld3dsSkpDMkxCMUNvdyIsImlhdCI6MTYzNzU0MTU0NiwibmJmIjoxNjM3NTQxNDI2LCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlaHUiLCJ1c2VyX3R5cGUiOiJFTVBMT1lFRSIsImNsaWVudF9pZCI6ImY3ZDQyMzQ4LWM2NDctNGVmYi1hNTJkLTRjNTc4NzQyMWU3MiIsImdyb3VwcyI6ImFkbWluIGZyb250T2ZmaWNlIiwic2NvcGUiOlsiYWNjb3VudC5yIiwiYWNjb3VudC53Il19.nW6tu-L1qwnNMWdoEX-iAE04nlYB4rNXFYHtVS6aTBV1cwnRQZj7UygwrroOBRaRrsJKXMXkpXJ9MDfjGSurbMKZIZ-4iwqj2MK1xNnjSMIHj1hM0llNKtvjFCTlc-XJYFmvNbp6SW5YK47I3FVSRLNFEKopx75NpQu-hG_ysNbAcAoFXS8JA7bdb9SHxlbhbELBbbT7RB7GvifrU4_rvYD6PDAtRcHUOZtNBM1QbHSMSUa26P7mc7GinIC_zLJYHVblieNWvBzGdkhjhe5CQaE5mrjJvjJZUozfjg85hhRK4p_JkHz9urD9RDNnGF0u9LL1wR1QYK8USQiui-TVOw";
         RuleEngine engine = new RuleEngine(ruleMap, null);
         Map objMap = new HashMap();
         Map<String, Object> auditInfo = new HashMap();
@@ -151,15 +150,15 @@ public class RuleEngineTest {
         JwtClaims claims = jwtContext.getJwtClaims();
         auditInfo.put("subject_claims", claims);
         objMap.put("auditInfo", auditInfo);
-        objMap.put("roles", "manager,teller");
-        Map<String, Object> result = engine.executeRule("role-based-auth", objMap);
+        objMap.put("roles", "manager teller customer");
+        Map<String, Object> result = engine.executeRule("account-cc-group-role-auth", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
-    public void testRoleAuthWithWrongRow() throws Exception {
-        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTYzNzM0MjgwMSwianRpIjoiQjRsTVRSSkJYN3JCZ05sMm5JRWcydyIsImlhdCI6MTYzNzM0MjIwMSwibmJmIjoxNjM3MzQyMDgxLCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlIiwidXNlcl90eXBlIjoiRU1QTE9ZRUUiLCJjbGllbnRfaWQiOiJmN2Q0MjM0OC1jNjQ3LTRlZmItYTUyZC00YzU3ODc0MjFlNzIiLCJyb2xlcyI6Im1hbmFnZXIgdGVsbGVyIiwic2NvcGUiOlsid3JpdGU6cGV0cyIsInJlYWQ6cGV0cyJdfQ.ADIoTbud9epDYJfoCEBkGEB60YbotwKZVDLXqJMmMxcxuwUm7wuPB0cLIqvDW18K4JKH6VyIy-L9lTWtP8ocpZxMFqgO0yR-d-wDrgNVmVok9G21rAWS1TbhzL7Gki4tZ6zn-dlwy9Iz1Zh2Opi4E01I99vFvmyuDkC354jC3CbMDHmi93AS9l6z39dP9lWWJKp8FO5ClK9DxHWLXG-qog5CdOt4u9k2_4zJ5dfOTkXYKt2vpl21ZIImLj14mJtr53AFZsONZCdTGoDsu-s-9xJ_c_4sgHlEgJ5-M46i2dgtKxeWzQe1yvA52Mbj3DU6HEgG-Q1As4zl42w1jJzoUQ";
+    public void testRoleAuthWithWrongGroup() throws Exception {
+        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk1MjkwMjY3MCwianRpIjoicnFXa29IVXhhLVVuTDZXRGJQbko1QSIsImlhdCI6MTYzNzU0MjY3MCwibmJmIjoxNjM3NTQyNTUwLCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlaHUiLCJ1c2VyX3R5cGUiOiJFTVBMT1lFRSIsImNsaWVudF9pZCI6ImY3ZDQyMzQ4LWM2NDctNGVmYi1hNTJkLTRjNTc4NzQyMWU3MiIsImdyb3VwcyI6ImJhY2tPZmZpY2UiLCJzY29wZSI6WyJhY2NvdW50LnIiLCJhY2NvdW50LnciXX0.UOi8a6bAzOnbIsFYlOZ9wvkKZbSZ8CHZg3VgGNZ_e287K-lWROMRIzfJOvud0IC6dWH8svIhME-c7lo6bL-4qd2juEMzIzbUSPYp7CX8iSpa1HEu6gYmdP6iSENQz9DwG9wxUwRwHZZOEaNubppdPGPUSIDW-Xz1PwslfgIyUHnVwhPjEpwlVPlQmEKr4in5N7EOUmpe8_MIo6brPBERhqtdljQr0luB9hafY0-ErYWqZDpZmbr8VxEx2kx4AItBkKi4GtYUiIUOum3SrAFZKz8CbBEKWtT_h6GPcI6NHWJGNOnpBbFyy0rG66_-EDo3-Br7VjNJqzt2Gg3dbNO50A";
         RuleEngine engine = new RuleEngine(ruleMap, null);
         Map objMap = new HashMap();
         Map<String, Object> auditInfo = new HashMap();
@@ -173,8 +172,8 @@ public class RuleEngineTest {
         JwtClaims claims = jwtContext.getJwtClaims();
         auditInfo.put("subject_claims", claims);
         objMap.put("auditInfo", auditInfo);
-        objMap.put("roles", "user, customer");
-        Map<String, Object> result = engine.executeRule("role-based-auth", objMap);
+        objMap.put("roles", "manager teller customer");
+        Map<String, Object> result = engine.executeRule("account-cc-group-role-auth", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
         Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
     }
