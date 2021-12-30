@@ -5,9 +5,10 @@ import java.util.Objects;
 
 public class Rule {
     private String ruleId;
-    private String host;
-    private String ruleType;
-    private String groupId;
+    private String host;        // rule is always associated with a host.
+    private String ruleType;    // each host has a defined list of rule types from the rule-type ref table.
+    private String visibility;  // public or private. only public rules can be shared or subscribed by other hosts.
+    private String groupId;     // a group of rules can be executed together for example a list of validation rules.
     private String description;
     private Collection<RuleCondition> conditions;
     private Collection<RuleAction> actions;
@@ -15,10 +16,11 @@ public class Rule {
     public Rule() {
     }
 
-    public Rule(String ruleId, String host, String ruleType, String groupId, String description, Collection<RuleCondition> conditions, Collection<RuleAction> actions) {
+    public Rule(String ruleId, String host, String ruleType, String visibility, String groupId, String description, Collection<RuleCondition> conditions, Collection<RuleAction> actions) {
         this.ruleId = ruleId;
         this.host = host;
         this.ruleType = ruleType;
+        this.visibility = visibility;
         this.groupId = groupId;
         this.description = description;
         this.conditions = conditions;
@@ -77,8 +79,16 @@ public class Rule {
         return actions;
     }
 
-    public void setRuleActions(Collection<RuleAction> actions) {
+    public void setActions(Collection<RuleAction> actions) {
         this.actions = actions;
+    }
+
+    public String getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
     }
 
     @Override
@@ -86,11 +96,11 @@ public class Rule {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(host, rule.host) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(groupId, rule.groupId) && Objects.equals(description, rule.description) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditions, rule.actions);
+        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(host, rule.host) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(visibility, rule.visibility) && Objects.equals(groupId, rule.groupId) && Objects.equals(description, rule.description) && Objects.equals(conditions, rule.conditions) && Objects.equals(actions, rule.actions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ruleId, host, ruleType, groupId, description, conditions, actions);
+        return Objects.hash(ruleId, host, ruleType, visibility, groupId, description, conditions, actions);
     }
 }
