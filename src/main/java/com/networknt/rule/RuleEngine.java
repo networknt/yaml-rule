@@ -71,13 +71,16 @@ public class RuleEngine {
                 resultMap.put(RuleConstants.RESULT, Boolean.valueOf(result));
                 if(result == true) {
                     // trigger the action here.
-                    Iterator it = rule.getActions().iterator();
-                    while(it.hasNext()) {
-                        RuleAction ra = (RuleAction)it.next();
-                        String actionType = ra.getActionClassName();
-                        Collection<RuleActionValue> ravs = ra.getActionValues();
-                        IAction ia = (IAction)Class.forName(actionType).getDeclaredConstructor().newInstance();
-                        ia.performAction(objMap, resultMap, ravs);
+                    Collection actions = rule.getActions();
+                    if(actions != null) {
+                        Iterator it = actions.iterator();
+                        while(it.hasNext()) {
+                            RuleAction ra = (RuleAction)it.next();
+                            String actionType = ra.getActionClassName();
+                            Collection<RuleActionValue> ravs = ra.getActionValues();
+                            IAction ia = (IAction)Class.forName(actionType).getDeclaredConstructor().newInstance();
+                            ia.performAction(objMap, resultMap, ravs);
+                        }
                     }
                 }
             } catch (Exception e ){

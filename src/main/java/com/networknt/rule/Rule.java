@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Rule {
     private String ruleId;
     private String host;
-    private String serviceId;
+    private String ruleType;
     private String groupId;
     private String description;
     private Collection<RuleCondition> conditions;
@@ -15,10 +15,10 @@ public class Rule {
     public Rule() {
     }
 
-    public Rule(String ruleId, String host, String serviceId, String groupId, String description, Collection<RuleCondition> conditions, Collection<RuleAction> actions) {
+    public Rule(String ruleId, String host, String ruleType, String groupId, String description, Collection<RuleCondition> conditions, Collection<RuleAction> actions) {
         this.ruleId = ruleId;
         this.host = host;
-        this.serviceId = serviceId;
+        this.ruleType = ruleType;
         this.groupId = groupId;
         this.description = description;
         this.conditions = conditions;
@@ -41,12 +41,12 @@ public class Rule {
         this.host = host;
     }
 
-    public String getServiceId() {
-        return serviceId;
+    public String getRuleType() {
+        return ruleType;
     }
 
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
+    public void setRuleType(String ruleType) {
+        this.ruleType = ruleType;
     }
 
     public String getGroupId() {
@@ -86,11 +86,11 @@ public class Rule {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(host, rule.host) && Objects.equals(serviceId, rule.serviceId) && Objects.equals(groupId, rule.groupId) && Objects.equals(description, rule.description) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditions, rule.actions);
+        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(host, rule.host) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(groupId, rule.groupId) && Objects.equals(description, rule.description) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditions, rule.actions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ruleId, host, serviceId, groupId, description, conditions, actions);
+        return Objects.hash(ruleId, host, ruleType, groupId, description, conditions, actions);
     }
 }
