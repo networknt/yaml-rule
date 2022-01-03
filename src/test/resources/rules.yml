@@ -145,8 +145,74 @@ ccsid-group-role-auth:
         - actionValueId: roles
           value: $roles
 
-config-server-access:
-  ruleId: config-server-access
+controller-register-access:
+  ruleId: controller-register-access
+  host: lightapi.net
+  ruleType: request-access
+  visibility: public
+  description: Allow client credentials token with sid as customized claim. The sid should match the request body serviceId. The register will only accept cc token.
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: NIL
+      joinCode: AND
+      index: 1
+    - conditionId: has-sid
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: NNIL
+      joinCode: AND
+      index: 2
+    - conditionId: has-sid-match-body
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: EQ
+      joinCode: AND
+      index: 3
+      conditionValues:
+        - conditionValueId: body-serviceId
+          expression: true
+          conditionValue: requestBody.serviceId
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+controller-deregister-access:
+  ruleId: controller-deregister-access
+  host: lightapi.net
+  ruleType: request-access
+  visibility: public
+  description: Allow client credentail token access with sid as customized claim. The sid should match the query parameter serviceId and only cc token is allowed to access.
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: NIL
+      joinCode: AND
+      index: 1
+    - conditionId: has-sid
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: NNIL
+      joinCode: AND
+      index: 2
+    - conditionId: has-sid-match-query
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: EQ
+      joinCode: AND
+      index: 3
+      conditionValues:
+        - conditionValueId: query-serviceId
+          expression: true
+          conditionValue: queryParameters.serviceId.First
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+get-config-access:
+  ruleId: get-config-access
   host: lightapi.net
   ruleType: request-access
   visibility: public
@@ -157,11 +223,16 @@ config-server-access:
       operatorCode: NIL
       joinCode: AND
       index: 1
-    - conditionId: has-sid-match-path
+    - conditionId: has-sid
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: NNIL
+      joinCode: AND
+      index: 2
+    - conditionId: sid-match-path
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
       operatorCode: EQ
       joinCode: AND
-      index: 2
+      index: 3
       conditionValues:
         - conditionValueId: path-service
           expression: true
@@ -170,7 +241,7 @@ config-server-access:
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
       operatorCode: CS
       joinCode: OR
-      index: 3
+      index: 4
       conditionValues:
         - conditionValueId: manager
           conditionValue: admin
@@ -178,7 +249,7 @@ config-server-access:
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
       operatorCode: CS
       joinCode: OR
-      index: 4
+      index: 5
       conditionValues:
         - conditionValueId: teller
           conditionValue: frontOffice
@@ -186,7 +257,7 @@ config-server-access:
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
       operatorCode: NNIL
       joinCode: OR
-      index: 5
+      index: 6
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
