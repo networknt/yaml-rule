@@ -4,13 +4,15 @@ import java.util.Objects;
 
 public class RuleConditionValue {
     private String conditionValueId;
+    private boolean expression;
     private String conditionValue;
 
     public RuleConditionValue() {
     }
 
-    public RuleConditionValue(String conditionValueId, String conditionValue) {
+    public RuleConditionValue(String conditionValueId, boolean expression, String conditionValue) {
         this.conditionValueId = conditionValueId;
+        this.expression = expression;
         this.conditionValue = conditionValue;
     }
 
@@ -30,16 +32,24 @@ public class RuleConditionValue {
         this.conditionValue = conditionValue;
     }
 
+    public boolean isExpression() {
+        return expression;
+    }
+
+    public void setExpression(boolean expression) {
+        this.expression = expression;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RuleConditionValue that = (RuleConditionValue) o;
-        return Objects.equals(conditionValueId, that.conditionValueId) && Objects.equals(conditionValue, that.conditionValue);
+        return expression == that.expression && Objects.equals(conditionValueId, that.conditionValueId) && Objects.equals(conditionValue, that.conditionValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(conditionValueId, conditionValue);
+        return Objects.hash(conditionValueId, expression, conditionValue);
     }
 }

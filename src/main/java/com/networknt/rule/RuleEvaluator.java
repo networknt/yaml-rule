@@ -71,7 +71,7 @@ public class RuleEvaluator {
             while (it.hasNext()) {
                 RuleCondition rc = (RuleCondition) it.next();
                 boolean r = evaluateCondition(rc.getPropertyPath(), rc.getOperatorCode(),
-                        (List) rc.getConditionValues(), objMap.get(rc.getVariableName()));
+                        (List) rc.getConditionValues(), objMap);
                 resultMap.put(rc.getConditionId(), r);
                 result = evaluateJoin(rc.getJoinCode(), result, r);
             }
@@ -109,94 +109,49 @@ public class RuleEvaluator {
             logger.warn("Input object is null for operator " + opCode);
             throw new Exception("Input object is null for operator " + opCode);
         }
-
+        Object valueObject = null;
+        if(conditionValues != null && !conditionValues.isEmpty()) {
+            RuleConditionValue conditionValue = (RuleConditionValue) conditionValues.get(0);
+            if(conditionValue.isExpression()) {
+                valueObject = getObjectByPath(conditionValue.getConditionValue(), object);
+            } else {
+                valueObject = conditionValue.getConditionValue();
+            }
+        }
         if (RuleConstants.CR_OP_EQUALS.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if (conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateEquals(getObjectByPath(propertyPath, object), conditionValue);
-
+            return evaluateEquals(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_NOT_EQUALS.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if (conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return !evaluateEquals(getObjectByPath(propertyPath, object), conditionValue);
+            return !evaluateEquals(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_CONTAINS.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if(conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateContains(getObjectByPath(propertyPath, object), conditionValue);
+            return evaluateContains(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_NOT_CONTAINS.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if(conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return !evaluateContains(getObjectByPath(propertyPath, object), conditionValue);
+            return !evaluateContains(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_IN_LIST.equals(opCode)) {
             return evaluateInList(getObjectByPath(propertyPath, object), conditionValues);
         } else if (RuleConstants.CR_OP_NOT_IN_LIST.equals(opCode)) {
             return !evaluateInList(getObjectByPath(propertyPath, object), conditionValues);
         } else if (RuleConstants.CR_OP_GT.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if (conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateGreaterThan(getObjectByPath(propertyPath, object), conditionValue);
+            return evaluateGreaterThan(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LT.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if (conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateLessThan(getObjectByPath(propertyPath, object), conditionValue);
+            return evaluateLessThan(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_EMPTY.equals(opCode)) {
             return isEmpty(getObjectByPath(propertyPath, object));
         } else if (RuleConstants.CR_OP_NOT_EMPTY.equals(opCode)) {
             return !isEmpty(getObjectByPath(propertyPath, object));
         } else if (RuleConstants.CR_OP_BEFORE.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if (conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateBefore(getObjectByPath(propertyPath, object), conditionValue);
+            return evaluateBefore(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_AFTER.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if (conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateAfter(getObjectByPath(propertyPath, object), conditionValue);
+            return evaluateAfter(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LEN_EQ.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if(conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateLenEq(getObjectByPath(propertyPath, object), conditionValue);
+            return evaluateLenEq(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LEN_GT.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if(conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateLenGt(getObjectByPath(propertyPath, object), conditionValue);
+            return evaluateLenGt(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LEN_LT.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if(conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateLenLt(getObjectByPath(propertyPath, object), conditionValue);
+            return evaluateLenLt(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_MATCH.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if(conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return evaluateMatch(getObjectByPath(propertyPath, object), conditionValue);
+            return evaluateMatch(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_NOT_MATCH.equals(opCode)) {
-            RuleConditionValue conditionValue = null;
-            if(conditionValues != null && !conditionValues.isEmpty()) {
-                conditionValue = (RuleConditionValue) conditionValues.get(0);
-            }
-            return !evaluateMatch(getObjectByPath(propertyPath, object), conditionValue);
+            return !evaluateMatch(getObjectByPath(propertyPath, object), valueObject);
         } else {
             logger.warn("Operator " + opCode + " is not supported");
             throw new Exception("Invalid operator" + opCode);
@@ -256,18 +211,16 @@ public class RuleEvaluator {
         return null;
     }
 
-    private boolean evaluateEquals(Object object, RuleConditionValue value) throws Exception {
-
-        String valueStr = (value != null ? value.getConditionValue() : null);
-        if(object == null || valueStr == null) {
-            return (object == null && valueStr == null);
-        }
-        Object valueObject = convertConditionValue(object, value.getConditionValue());
-
+    private boolean evaluateEquals(Object object, Object valueObject) throws Exception {
         if (object == null || valueObject == null) {
             return (object == null && valueObject == null);
         } else {
-            return object.equals(valueObject);
+            if(valueObject instanceof String) {
+                Object convertedValueObject = convertConditionValue(object, (String)valueObject);
+                return object.equals(convertedValueObject);
+            } else {
+                return object.equals(valueObject);
+            }
         }
     }
 
@@ -275,15 +228,17 @@ public class RuleEvaluator {
      * Checks if string version of object is contained within ConditionValue
      *
      */
-    private boolean evaluateContains(Object object, RuleConditionValue value) throws Exception {
-
-        String valueStr = (value != null ? value.getConditionValue() : null);
+    private boolean evaluateContains(Object object, Object valueObject) throws Exception {
         // null contains null
-        if (object == null || valueStr == null) {
-            return (object == null && valueStr == null);
+        if (object == null || valueObject == null) {
+            return (object == null && valueObject == null);
         }
-        // don't need to validate against the attribute type here
-        return (object.toString().indexOf(valueStr) >= 0);
+        if(valueObject instanceof String) {
+            return (object.toString().indexOf((String)valueObject) >= 0);
+        } else {
+            logger.error("Contains evaluation with type different than string " + object.getClass());
+            return false;
+        }
     }
 
 
@@ -315,17 +270,16 @@ public class RuleEvaluator {
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateGreaterThan(Object object, RuleConditionValue conditionValue) throws Exception {
-        boolean result = (compareNumeric(object, conditionValue) > 0);
+    private boolean evaluateGreaterThan(Object object, Object valueObject) throws Exception {
+        boolean result = (compareNumeric(object, valueObject) > 0);
         return result;
     }
 
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateLessThan(Object object, RuleConditionValue conditionValue) throws Exception {
-
-        boolean result = (compareNumeric(object, conditionValue) < 0);
+    private boolean evaluateLessThan(Object object, Object valueObject) throws Exception {
+        boolean result = (compareNumeric(object, valueObject) < 0);
         return result;
     }
 
@@ -333,61 +287,62 @@ public class RuleEvaluator {
      * Compare two numeric values.
      *
      */
-    private int compareNumeric(Object object, RuleConditionValue value) throws Exception {
+    private int compareNumeric(Object object, Object valueObject) throws Exception {
 
         if(!(object instanceof java.lang.Number)) {
             throw new Exception("Object is not a number:" + object.getClass());
         }
-        if(evaluateEquals(object, value)) {
+        if(evaluateEquals(object, valueObject)) {
             return 0;
         }
 
-        String valueStr = (value != null ? value.getConditionValue() : null);
-        if (object == null && valueStr == null) {
+        if (object == null && valueObject == null) {
             return 0;
         }
-        if (object == null && valueStr != null) {
+        if (object == null && valueObject != null) {
             return -1;
         }
-        if (object != null && valueStr == null) {
+        if (object != null && valueObject == null) {
             return 1;
         }
+        Object value = valueObject;
+        if(valueObject instanceof String) {
+            value = convertConditionValue(object, (String) valueObject);
+        }
 
-        Object valueObject = convertConditionValue(object, value.getConditionValue());
-
-        if (valueObject == null && object == null) {
+        if (value == null && object == null) {
             return 0;
         }
-        if ( valueObject != null && object == null) {
+        if ( value != null && object == null) {
             return -1;
         }
-        if ( valueObject == null && object != null) {
+        if ( value == null && object != null) {
             return 1;
         }
 
         if(object.getClass().getName().equals("java.lang.Integer")) {
-            return ((Integer)object).compareTo((Integer) valueObject);
+            return ((Integer)object).compareTo((Integer) value);
         }
         if(object.getClass().getName().equals("java.math.BigDecimal")) {
-            return ((BigDecimal)object).compareTo((BigDecimal) valueObject);
+            return ((BigDecimal)object).compareTo((BigDecimal) value);
         }
         if(object.getClass().getName().equals("java.lang.Long")) {
-            return ((Long)object).compareTo((Long) valueObject);
+            return ((Long)object).compareTo((Long) value);
         }
         if(object.getClass().getName().equals("java.math.BigInteger")) {
-            return ((BigInteger)object).compareTo((BigInteger) valueObject);
+            return ((BigInteger)object).compareTo((BigInteger) value);
         }
         if(object.getClass().getName().equals("java.lang.Byte")) {
-            return ((Byte)object).compareTo((Byte) valueObject);
+            return ((Byte)object).compareTo((Byte) value);
         }
         if(object.getClass().getName().equals("java.lang.Double")) {
-            return ((Double)object).compareTo((Double) valueObject);
+            return ((Double)object).compareTo((Double) value);
         }
         if(object.getClass().getName().equals("java.lang.Float")) {
-            return ((Float)object).compareTo((Float) valueObject);
+            return ((Float)object).compareTo((Float) value);
         }
         if(object.getClass().getName().equals("java.lang.Short")) {
-            return ((Short)object).compareTo((Short) valueObject);
+            return ((Short)object).compareTo((Short) value);
         }
         return 0;
     }
@@ -395,17 +350,17 @@ public class RuleEvaluator {
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateBefore(Object object, RuleConditionValue conditionValue) throws Exception {
-        boolean result = (compareDate(object, conditionValue) < 0);
+    private boolean evaluateBefore(Object object, Object valueObject) throws Exception {
+        boolean result = (compareDate(object, valueObject) < 0);
         return result;
     }
 
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateAfter(Object object, RuleConditionValue conditionValue) throws Exception {
+    private boolean evaluateAfter(Object object, Object valueObject) throws Exception {
 
-        boolean result = (compareDate(object, conditionValue) > 0);
+        boolean result = (compareDate(object, valueObject) > 0);
         return result;
     }
 
@@ -413,88 +368,86 @@ public class RuleEvaluator {
      * Compare two Date values.
      *
      */
-    private int compareDate(Object object, RuleConditionValue value) throws Exception {
+    private int compareDate(Object object, Object valueObject) throws Exception {
 
         if(!(object instanceof java.util.Date)) {
             throw new Exception("Object is not a Date");
         }
 
-        if(evaluateEquals(object, value)) {
+        if(evaluateEquals(object, valueObject)) {
             return 0;
         }
 
-        String valueStr = (value != null ? value.getConditionValue() : null);
-        if (object == null && valueStr == null) {
+        if (object == null && valueObject == null) {
             return 0;
         }
-        if (object == null && valueStr != null) {
+        if (object == null && valueObject != null) {
             return -1;
         }
-        if (object != null && valueStr == null) {
+        if (object != null && valueObject == null) {
             return 1;
         }
+        Object value = valueObject;
+        if(valueObject instanceof String) {
+            value = convertConditionValue(object, (String)valueObject);
+        }
 
-        Object valueObject = convertConditionValue(object, value.getConditionValue());
-
-        if (valueObject == null && object == null) {
+        if (value == null && object == null) {
             return 0;
         }
-        if ( valueObject != null && object == null) {
+        if ( value != null && object == null) {
             return -1;
         }
-        if ( valueObject == null && object != null) {
+        if ( value == null && object != null) {
             return 1;
         }
 
         if(object.getClass().getName().equals("java.util.Date")) {
-            return ((java.util.Date)object).compareTo((Date) valueObject);
+            return ((java.util.Date)object).compareTo((Date) value);
         }
         if(object.getClass().getName().equals("java.sql.Date")) {
-            return ((java.sql.Date)object).compareTo((Date) valueObject);
+            return ((java.sql.Date)object).compareTo((Date) value);
         }
         if(object.getClass().getName().equals("java.sql.Timestamp")) {
-            return ((Timestamp)object).compareTo((Timestamp) valueObject);
+            return ((Timestamp)object).compareTo((Timestamp) value);
         }
         return 0;
     }
 
-    private boolean evaluateLenEq(Object object, RuleConditionValue conditionValue) throws Exception {
-        return (compareStringLength(object, conditionValue) == 0);
+    private boolean evaluateLenEq(Object object, Object valueObject) throws Exception {
+        return (compareStringLength(object, valueObject) == 0);
     }
 
-    private boolean evaluateLenGt(Object object, RuleConditionValue conditionValue) throws Exception {
-        return (compareStringLength(object, conditionValue) > 0);
+    private boolean evaluateLenGt(Object object, Object valueObject) throws Exception {
+        return (compareStringLength(object, valueObject) > 0);
     }
 
-    private boolean evaluateLenLt(Object object, RuleConditionValue conditionValue) throws Exception {
-        return (compareStringLength(object, conditionValue) < 0);
+    private boolean evaluateLenLt(Object object, Object valueObject) throws Exception {
+        return (compareStringLength(object, valueObject) < 0);
     }
 
     /**
      * Compare two string's length
      *
      */
-    private int compareStringLength(Object object, RuleConditionValue value) throws Exception {
+    private int compareStringLength(Object object, Object valueObject) throws Exception {
 
         if(!(object instanceof java.lang.String)) {
             throw new Exception("Object is not a String:" + object.getClass());
         }
-        if(evaluateEquals(object, value)) {
+        if(evaluateEquals(object, valueObject)) {
             return 0;
         }
 
-        String valueStr = (value != null ? value.getConditionValue() : null);
-        if (object == null && valueStr == null) {
+        if (object == null && valueObject == null) {
             return 0;
         }
-        if (object == null && valueStr != null) {
+        if (object == null && valueObject != null) {
             return -1;
         }
-        if (object != null && valueStr == null) {
+        if (object != null && valueObject == null) {
             return 1;
         }
-
-        Object valueObject = convertConditionValue(object, value.getConditionValue());
 
         if (valueObject == null && object == null) {
             return 0;
@@ -506,20 +459,28 @@ public class RuleEvaluator {
             return 1;
         }
 
+        Object value = valueObject;
+        if(!(valueObject instanceof String)) {
+            value = valueObject.toString();
+        }
+
         if(object.getClass().getName().equals("java.lang.String")) {
-            return ((java.lang.String)object).length() - valueStr.length();
+            return ((java.lang.String)object).length() - ((String)value).length();
         } else {
             throw new Exception("Incompatible object to compare length of String with " + object.getClass().getName());
         }
     }
 
-    private boolean evaluateMatch(Object object, RuleConditionValue conditionValue) throws Exception {
+    private boolean evaluateMatch(Object object, Object valueObject) throws Exception {
         if(!(object instanceof java.lang.String)) {
             throw new Exception("Object is not a String:" + object.getClass());
         }
-        String valueStr = (conditionValue != null ? conditionValue.getConditionValue() : null);
-        if(valueStr != null && valueStr.length() > 0) {
-            return Pattern.matches(valueStr, (String)object);
+        Object value = valueObject;
+        if(!(valueObject instanceof java.lang.String)) {
+            value = valueObject.toString();
+        }
+        if(value != null && ((String)value).length() > 0) {
+            return Pattern.matches((String)value, (String)object);
         } else {
             throw new Exception("Condition Value is empty");
         }

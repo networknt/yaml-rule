@@ -12,9 +12,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ControllerAuthTest {
@@ -85,6 +83,12 @@ public class ControllerAuthTest {
         auditInfo.put("subject_claims", claims);
         objMap.put("auditInfo", auditInfo);
         objMap.put("roles", "manager,teller");
+        // pass in the pathParameters so that the sid can be matched with the service in the path parameter.
+        Deque<String> serviceNameDeque = new ArrayDeque<String>();
+        serviceNameDeque.add("0100");
+        Map<String, Deque<String>> pathParameters = new HashMap<>();
+        pathParameters.put("service_name", serviceNameDeque);
+        objMap.put("pathParameters", pathParameters);
         Map<String, Object> result = engine.executeRule("ccsid-group-role-auth", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));

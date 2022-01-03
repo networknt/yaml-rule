@@ -5,7 +5,6 @@ import java.util.Objects;
 
 public class RuleCondition {
     private String conditionId;
-    private String variableName;
     private String propertyPath;
     private String operatorCode;
     private String joinCode;
@@ -21,14 +20,6 @@ public class RuleCondition {
 
     public void setConditionId(String conditionId) {
         this.conditionId = conditionId;
-    }
-
-    public String getVariableName() {
-        return variableName;
-    }
-
-    public void setVariableName(String variableName) {
-        this.variableName = variableName;
     }
 
     public String getPropertyPath() {
@@ -76,11 +67,11 @@ public class RuleCondition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RuleCondition that = (RuleCondition) o;
-        return Objects.equals(conditionId, that.conditionId) && Objects.equals(variableName, that.variableName) && Objects.equals(propertyPath, that.propertyPath) && Objects.equals(operatorCode, that.operatorCode) && Objects.equals(joinCode, that.joinCode) && Objects.equals(index, that.index) && Objects.equals(conditionValues, that.conditionValues);
+        return Objects.equals(conditionId, that.conditionId) && Objects.equals(propertyPath, that.propertyPath) && Objects.equals(operatorCode, that.operatorCode) && Objects.equals(joinCode, that.joinCode) && Objects.equals(index, that.index) && Objects.equals(conditionValues, that.conditionValues);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(conditionId, variableName, propertyPath, operatorCode, joinCode, index, conditionValues);
+        return Objects.hash(conditionId, propertyPath, operatorCode, joinCode, index, conditionValues);
     }
 }
