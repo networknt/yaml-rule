@@ -265,6 +265,27 @@ get-config-access:
         - actionValueId: roles
           value: $roles
 
+get-config-filter:
+  ruleId: get-config-filter
+  host: lightapi.net
+  ruleType: response-filter
+  visibility: public
+  description: For CfgAppRead and CfgAppAdmin roles, the list result will be filtered by the service-name that the user has access in the user profile.
+  conditions:
+    - conditionId: row-filter-role
+      propertyPath: auditInfo.subject_claims.ClaimsMap.roles
+      operatorCode: IN
+      joinCode: OR
+      index: 1
+      conditionValues:
+        - conditionValueId: role-list
+          conditionValue: CfgAppRead CfgAppAdmin
+  actions:
+    - actionId: filter-row
+      actionClassName: com.networknt.rule.RoleFilterRowAction
+    - actionId: filter-col
+      actionClassName: com.networknt.rule.RoleFilterColAction
+
 petstore-group-role-transform:
   ruleId: petstore-group-role-transform
   host: lightapi.net
