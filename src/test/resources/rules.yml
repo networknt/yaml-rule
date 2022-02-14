@@ -150,7 +150,7 @@ controller-register-access:
   host: lightapi.net
   ruleType: request-access
   visibility: public
-  description: Allow client credentials token with sid as customized claim. The sid should match the request body serviceId. The register will only accept cc token.
+  description: Allow client credentials token with sid as customized claim. The sid should match the request body serviceId. The register will only accept cc token. It means that only the a running service can register itself. This endpoint shouldn't be called by the portal view at all.
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
@@ -183,7 +183,7 @@ controller-deregister-access:
   host: lightapi.net
   ruleType: request-access
   visibility: public
-  description: Allow client credentail token access with sid as customized claim. The sid should match the query parameter serviceId and only cc token is allowed to access.
+  description: Allow client credentail token access with sid as customized claim. The sid should match the query parameter serviceId and only cc token is allowed to access. It means that only the a running service can register itself. This endpoint shouldn't be called by the portal view at all.
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
