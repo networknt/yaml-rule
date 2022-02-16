@@ -211,12 +211,47 @@ controller-deregister-access:
         - actionValueId: roles
           value: $roles
 
-get-config-access:
-  ruleId: get-config-access
+controller-group-role:
+  ruleId: controller-group-role
   host: lightapi.net
   ruleType: request-access
   visibility: public
-  description: Role-based authorization rule for account service and allow cc token with sid claim and transform group to role. This is for the controller and config server.
+  description: Rule that converts a list of AD groups to controller roles before invoking the portal-role-access rule for role-based authentication
+  conditions:
+    - conditionId: CtlPltRead
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: CS
+      joinCode: OR
+      index: 1
+      conditionValues:
+        - conditionValueId: CtlPltRead
+          conditionValue: User_API_Dev_R
+    - conditionId: CtlPltWrite
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: CS
+      joinCode: OR
+      index: 2
+      conditionValues:
+        - conditionValueId: CtlPltWrite
+          conditionValue: User_API_Dev_W
+    - conditionId: CtlPltAdmin
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: CS
+      joinCode: OR
+      index: 2
+      conditionValues:
+        - conditionValueId: CtlPltAdmin
+          conditionValue: User_API_Dev_A
+  actions:
+    - actionId: collect-role
+      actionClassName: com.networknt.rule.GroupRoleTransformAction
+
+config-service-access:
+  ruleId: config-service-access
+  host: lightapi.net
+  ruleType: request-access
+  visibility: public
+  description: Rule-based authorization for portal service and allow cc token with sid claim to access the config server configs, certs and files endpoint during the service startup to get config files.
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
@@ -237,27 +272,27 @@ get-config-access:
         - conditionValueId: path-service
           expression: true
           conditionValue: pathParameters.service-name.First
-    - conditionId: manager
-      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
-      operatorCode: CS
-      joinCode: OR
-      index: 4
-      conditionValues:
-        - conditionValueId: manager
-          conditionValue: admin
-    - conditionId: teller
-      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
-      operatorCode: CS
-      joinCode: OR
-      index: 5
-      conditionValues:
-        - conditionValueId: teller
-          conditionValue: frontOffice
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+
+
+portal-role-access:
+  ruleId: portal-role-access
+  host: lightapi.net
+  ruleType: request-access
+  visibility: public
+  description: Rule-based authorization for portal service and allow certain roles to access certain endpoints. For AD integration, it transform the group to role. This is for the portal services like controller and config server access from the protal-view.
+  conditions:
     - conditionId: allow-role-jwt
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
       operatorCode: NNIL
       joinCode: OR
-      index: 6
+      index: 1
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction

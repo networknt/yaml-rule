@@ -158,5 +158,100 @@ public class ControllerAuthTest {
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
+    /**
+     * The token is an authorization code flow token with a list of roles as custom claims. The portal-role-access rule
+     * will be called and the allowed should be true with the right roles in the claim.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testRoleAccessRightRoles() throws Exception {
+        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk2MDQwMzU5OSwianRpIjoiWGUtZDJLbjhlNkROREV3UWtvRUZTUSIsImlhdCI6MTY0NTA0MzU5OSwibmJmIjoxNjQ1MDQzNDc5LCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlaHVAZ21haWwuY29tIiwidXNlcl90eXBlIjoiRU1QTE9ZRUUiLCJjbGllbnRfaWQiOiJmN2Q0MjM0OC1jNjQ3LTRlZmItYTUyZC00YzU3ODc0MjFlNzMiLCJyb2xlcyI6InVzZXIgQ3RsUGx0QWRtaW4gQ3RsUGx0UmVhZCBDdGxQbHRXcml0ZSIsInNjb3BlIjpbInBvcnRhbC5yIiwicG9ydGFsLnciXX0.eXE7dVBPsfXgTfKdz-SjLF8h2nh3bYW53hGMXRTBfGYAQBBP5rnn3OZ_Pd4qd4juai9j-mHmMW9rLxqgfIxYZ1bNcf86GjGgNJ6ynBD5WfioUhk6dfyWk3n912pkGaxVfYxixauLpQmY6_ysRYYLrp945Cih4CDKjrr7yDNcKnLyuyEMzLUWFqZOnxdg3Qa2KuMv517AZD1zTn3GN-d4H4M0PxL5SwRDd28PcXWYcUUu_u0DdWYFIU6uzKC1WPsrqE565k6_viPziVi7yhrrloJE6YRIjBy_Qp8s4LOg69KUPv19Bvgj66c2_IDB5JojHYaj-KJPzdIEn_Ttf_teJA";
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        Map objMap = new HashMap();
+        Map<String, Object> auditInfo = new HashMap();
+        JwtConsumer consumer = new JwtConsumerBuilder()
+                .setSkipAllValidators()
+                .setDisableRequireSignature()
+                .setSkipSignatureVerification()
+                .build();
+
+        JwtContext jwtContext = consumer.process(jwt);
+        JwtClaims claims = jwtContext.getJwtClaims();
+        auditInfo.put("subject_claims", claims);
+        objMap.put("auditInfo", auditInfo);
+        objMap.put("roles", "CtlPltAdmin,CtlPltRead,CtlAppAdmin,CtlAppRead");
+        // pass in the pathParameters so that the sid can be matched with the service in the path parameter.
+        Map<String, Object> result = engine.executeRule("portal-role-access", objMap);
+        System.out.println("allowed = " + result.get(RuleConstants.RESULT));
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    /**
+     * The token is an authorization code flow token with a list of roles as custom claims. The portal-role-access rule
+     * will be called and the allowed should be true with the right roles in the claim.
+     *
+     * To make is simple, we change the list of the roles in the rule input and keep the same token as the above test.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testRoleAccessWrongRoles() throws Exception {
+        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk2MDQwMzU5OSwianRpIjoiWGUtZDJLbjhlNkROREV3UWtvRUZTUSIsImlhdCI6MTY0NTA0MzU5OSwibmJmIjoxNjQ1MDQzNDc5LCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlaHVAZ21haWwuY29tIiwidXNlcl90eXBlIjoiRU1QTE9ZRUUiLCJjbGllbnRfaWQiOiJmN2Q0MjM0OC1jNjQ3LTRlZmItYTUyZC00YzU3ODc0MjFlNzMiLCJyb2xlcyI6InVzZXIgQ3RsUGx0QWRtaW4gQ3RsUGx0UmVhZCBDdGxQbHRXcml0ZSIsInNjb3BlIjpbInBvcnRhbC5yIiwicG9ydGFsLnciXX0.eXE7dVBPsfXgTfKdz-SjLF8h2nh3bYW53hGMXRTBfGYAQBBP5rnn3OZ_Pd4qd4juai9j-mHmMW9rLxqgfIxYZ1bNcf86GjGgNJ6ynBD5WfioUhk6dfyWk3n912pkGaxVfYxixauLpQmY6_ysRYYLrp945Cih4CDKjrr7yDNcKnLyuyEMzLUWFqZOnxdg3Qa2KuMv517AZD1zTn3GN-d4H4M0PxL5SwRDd28PcXWYcUUu_u0DdWYFIU6uzKC1WPsrqE565k6_viPziVi7yhrrloJE6YRIjBy_Qp8s4LOg69KUPv19Bvgj66c2_IDB5JojHYaj-KJPzdIEn_Ttf_teJA";
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        Map objMap = new HashMap();
+        Map<String, Object> auditInfo = new HashMap();
+        JwtConsumer consumer = new JwtConsumerBuilder()
+                .setSkipAllValidators()
+                .setDisableRequireSignature()
+                .setSkipSignatureVerification()
+                .build();
+
+        JwtContext jwtContext = consumer.process(jwt);
+        JwtClaims claims = jwtContext.getJwtClaims();
+        auditInfo.put("subject_claims", claims);
+        objMap.put("auditInfo", auditInfo);
+        objMap.put("roles", "CfgPltAdmin,CfgPltRead,CfgAppAdmin,CfgAppRead");
+        // pass in the pathParameters so that the sid can be matched with the service in the path parameter.
+        Map<String, Object> result = engine.executeRule("portal-role-access", objMap);
+        System.out.println("allowed = " + result.get(RuleConstants.RESULT));
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    /**
+     * The token is an authorization code flow token with a list of groups as custom claims. In this case, we need
+     * to call the group to role transform rule first and then call the portal-role-access rule to match the roles.
+     * The jwt token has group User_API_Dev_R, User_API_Dev_W, User_API_Dev_A
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testRoleAccessRightGroups() throws Exception {
+        String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk2MDQwNDcwNCwianRpIjoibzVSeUFCcGk3ckE4MS1lZk5IX3RPQSIsImlhdCI6MTY0NTA0NDcwNCwibmJmIjoxNjQ1MDQ0NTg0LCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlaHUiLCJ1c2VyX3R5cGUiOiJFTVBMT1lFRSIsImNsaWVudF9pZCI6ImY3ZDQyMzQ4LWM2NDctNGVmYi1hNTJkLTRjNTc4NzQyMWU3MiIsImdyb3VwcyI6IlVzZXJfQVBJX0Rldl9SIFVzZXJfQVBJX0Rldl9XIiwic2NvcGUiOlsicG9ydGFsLnIiLCJwb3J0YWwudyJdfQ.aZh3j9YciSPIAw5IIsWnpEh5H4bGFSX76iDlqV1GnK-C3fSc4jaivn6Mfx20bNvj-qGuDKY7e_wAwfRY-cHuzZMMhhFb4m7_ykg0YB2NpaGA8OqVtcTmWOhVQ_JVyWruWTjVxHX2YchPZWPAsbErDicE__1psuouxO2Hz8p0d3CKVX3gGKiPzOGAvd2d7bp8LQu1-luMblJfreUS_txqsvEC49m0srYy5E5FIy6e0h5WSZmAlzxR9cHp8X2I6lrctMLIHO-ljD6uFfOZHYQJ6LZu_NSVCvagOx-n_1DBYM1Gxh57aDIIGrVFKBHzTeUYVAAN4W6aOsL4hH-QYWRzlw";
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        Map objMap = new HashMap();
+        Map<String, Object> auditInfo = new HashMap();
+        JwtConsumer consumer = new JwtConsumerBuilder()
+                .setSkipAllValidators()
+                .setDisableRequireSignature()
+                .setSkipSignatureVerification()
+                .build();
+
+        JwtContext jwtContext = consumer.process(jwt);
+        JwtClaims claims = jwtContext.getJwtClaims();
+        auditInfo.put("subject_claims", claims);
+        objMap.put("auditInfo", auditInfo);
+        // this is roles passed to the rule in the endpoint rule definition page. If multiple roles, they
+        // can be separated by comma or space.
+        objMap.put("roles", "CtlPltAdmin CtlPltRead CtlAppAdmin CtlAppRead");
+        // pass in the pathParameters so that the sid can be matched with the service in the path parameter.
+        Map<String, Object> result = engine.executeRule("controller-group-role", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+
+        result = engine.executeRule("portal-role-access", objMap);
+        System.out.println("allowed = " + result.get(RuleConstants.RESULT));
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
 
 }

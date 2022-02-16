@@ -64,7 +64,7 @@ public class ConfigServerAuthTest {
         Map<String, Deque<String>> pathParameters = new HashMap<>();
         pathParameters.put("service-name", serviceNameDeque);
         objMap.put("pathParameters", pathParameters);
-        Map<String, Object> result = engine.executeRule("get-config-access", objMap);
+        Map<String, Object> result = engine.executeRule("config-service-access", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
@@ -103,7 +103,7 @@ public class ConfigServerAuthTest {
         Map<String, Deque<String>> pathParameters = new HashMap<>();
         pathParameters.put("service-name", serviceNameDeque);
         objMap.put("pathParameters", pathParameters);
-        Map<String, Object> result = engine.executeRule("get-config-access", objMap);
+        Map<String, Object> result = engine.executeRule("config-service-access", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
         Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
     }
