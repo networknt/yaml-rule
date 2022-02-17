@@ -286,7 +286,7 @@ portal-role-access:
   host: lightapi.net
   ruleType: request-access
   visibility: public
-  description: Rule-based authorization for portal service and allow certain roles to access certain endpoints. For AD integration, it transform the group to role. This is for the portal services like controller and config server access from the protal-view.
+  description: Rule-based authorization for portal service and allow certain roles to access certain endpoints. For AD integration, it transforms the group into a role. This is for the portal services like controller and config server access from the portal view.
   conditions:
     - conditionId: allow-role-jwt
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
