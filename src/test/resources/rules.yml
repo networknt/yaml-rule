@@ -178,6 +178,39 @@ controller-register-access:
         - actionValueId: roles
           value: $roles
 
+controller-check-access:
+  ruleId: controller-check-access
+  host: lightapi.net
+  ruleType: request-access
+  visibility: public
+  description: Allow client credentials token with sid as customized claim. The sid should be contained in the id property of the body in the put request. The check will only accept cc token. It means that only the a running service can check itself to let controler know it is healthy. This endpoint shouldn't be called by the portal view at all.
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: NIL
+      joinCode: AND
+      index: 1
+    - conditionId: has-sid
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: NNIL
+      joinCode: AND
+      index: 2
+    - conditionId: body-id-has-sid
+      propertyPath: requestBody.id
+      operatorCode: CS
+      joinCode: AND
+      index: 3
+      conditionValues:
+        - conditionValueId: sid
+          expression: true
+          conditionValue: auditInfo.subject_claims.ClaimsMap.sid
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
 controller-deregister-access:
   ruleId: controller-deregister-access
   host: lightapi.net
