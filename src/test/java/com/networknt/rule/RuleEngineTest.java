@@ -200,6 +200,45 @@ public class RuleEngineTest {
         Assertions.assertFalse((Boolean)result.get("teller"));
     }
 
+    @Test
+    public void testResponseHeaderReplaceRule() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        Map objMap = new HashMap();
+        objMap.put("requestPath", "/v1/dogs");
+        Map<String, Object> result = engine.executeRule("petstore-response-header-replace", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testResponseHeaderReplaceRuleInFalse() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        Map objMap = new HashMap();
+        objMap.put("requestPath", "/v1/eggs");
+        Map<String, Object> result = engine.executeRule("petstore-response-header-replace-in", objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testResponseHeaderReplaceRuleInTrue() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        Map objMap = new HashMap();
+        objMap.put("requestPath", "/v1/dogs");
+        Map<String, Object> result = engine.executeRule("petstore-response-header-replace-in", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testResponseHeaderReplaceRuleMatch() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        Map objMap = new HashMap();
+        // objMap.put("requestPath", "/v3/customerId/BankingServices/Token");
+        // objMap.put("requestPath", "/v3/customerId/Investments");
+        // objMap.put("requestPath", "/v3/customerId/insight/login/loginId/attributes/requestId/GetLendingAttributes");
+        objMap.put("requestPath", "/v3/customerId/attributes/library");
+        Map<String, Object> result = engine.executeRule("petstore-response-header-replace-match", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
     class ClassA {
         String aname;
         ClassB bobject;
