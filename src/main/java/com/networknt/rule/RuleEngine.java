@@ -66,7 +66,7 @@ public class RuleEngine {
                 // rule must be in the map here. evaluate it.
                 RuleEvaluator evaluator = RuleEvaluator.getInstance();
                 boolean result = evaluator.evaluate(rule, objMap, resultMap);
-                System.out.println("executeRule result = " + result);
+                if(logger.isDebugEnabled()) logger.debug("executeRule result = " + result);
                 // save the evaluator result into the result map
                 resultMap.put(RuleConstants.RESULT, Boolean.valueOf(result));
                 if(result == true) {
