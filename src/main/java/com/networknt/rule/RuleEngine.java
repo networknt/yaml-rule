@@ -7,12 +7,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RuleEngine {
-    private static Logger logger = LoggerFactory.getLogger(RuleEngine.class);
-
-    private Map<String, Rule> ruleMap;
-    private Map<String, Collection<Rule>> groupMap;
+    private static final Logger logger = LoggerFactory.getLogger(RuleEngine.class);
+    private final Map<String, Rule> ruleMap;
+    private final Map<String, Collection<Rule>> groupMap;
+    // cache for the rule action classes
+    public final Map<String, IAction> actionClassCache = new ConcurrentHashMap<>();
 
     public RuleEngine(Map<String, Rule> ruleMap, Map<String, Collection<Rule>> groupMap) {
         this.ruleMap = ruleMap;
@@ -42,7 +44,13 @@ public class RuleEngine {
                             RuleAction ra = (RuleAction)itActions.next();
                             String actionType = ra.getActionClassName();
                             Collection ravs = ra.getActionValues();
-                            IAction ia = (IAction)Class.forName(actionType).getDeclaredConstructor().newInstance();
+                            // first check the cache to see if the action class is already loaded. If not, load it.
+                            // the RuleLoaderStartupHook will load all the action classes during server startup.
+                            IAction ia = actionClassCache.get(actionType);
+                            if(ia == null) {
+                                ia = (IAction)Class.forName(actionType).getDeclaredConstructor().newInstance();
+                                actionClassCache.put(actionType, ia);
+                            }
                             ia.performAction(objMap, resultMap, ravs);
                         }
                     }
@@ -78,7 +86,13 @@ public class RuleEngine {
                             RuleAction ra = (RuleAction)it.next();
                             String actionType = ra.getActionClassName();
                             Collection<RuleActionValue> ravs = ra.getActionValues();
-                            IAction ia = (IAction)Class.forName(actionType).getDeclaredConstructor().newInstance();
+                            // first check the cache to see if the action class is already loaded. If not, load it.
+                            // the RuleLoaderStartupHook will load all the action classes during server startup.
+                            IAction ia = actionClassCache.get(actionType);
+                            if(ia == null) {
+                                ia = (IAction)Class.forName(actionType).getDeclaredConstructor().newInstance();
+                                actionClassCache.put(actionType, ia);
+                            }
                             ia.performAction(objMap, resultMap, ravs);
                         }
                     }
