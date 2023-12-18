@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.networknt</groupId>
     <artifactId>yaml-rule</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
     <description>A rule engine based on YAML or JSON for rule definition</description>
     <url>https://github.com/networknt/yaml-rule</url>
@@ -66,7 +66,7 @@
         <version.slf4j>2.0.9</version.slf4j>
         <version.logback>1.4.14</version.logback>
         <version.junit>5.9.3</version.junit>
-        <version.jose4j>0.6.3</version.jose4j>
+        <version.jose4j>0.9.3</version.jose4j>
     </properties>
     <dependencies>
         <dependency>
