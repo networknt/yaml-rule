@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## 1.0.3 - 2023-12-18
+
+### Added
+- fixes #15 add cache for the action object
+
 ## 1.0.2 - 2023-06-07
 
 ### Added
