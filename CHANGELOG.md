@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## 1.0.4 - 2024-10-18
+
+### Added
+- fixes #17 update rule action execution to add postPerformAction
+
 ## 1.0.3 - 2023-12-18
 
 ### Added
