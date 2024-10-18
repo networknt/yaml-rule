@@ -52,6 +52,8 @@ public class RuleEngine {
                                 actionClassCache.put(actionType, ia);
                             }
                             ia.performAction(objMap, resultMap, ravs);
+                            // execute the post perform action.
+                            ia.postPerformAction(objMap, resultMap);
                         }
                     }
                 }
@@ -94,6 +96,8 @@ public class RuleEngine {
                                 actionClassCache.put(actionType, ia);
                             }
                             ia.performAction(objMap, resultMap, ravs);
+                            // execute the post perform action.
+                            ia.postPerformAction(objMap, resultMap);
                         }
                     }
                 }

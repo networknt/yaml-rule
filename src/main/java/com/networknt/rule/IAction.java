@@ -12,4 +12,9 @@ public interface IAction {
      * @param actionValues action values
      */
     void performAction(Map<String, Object> inputMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues);
+
+    default void postPerformAction(Map<String, Object> objMap, Map<String, Object> resultMap) {
+        // NOOP for classes implement IAction.
+    }
+
 }
