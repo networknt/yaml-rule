@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## 1.0.5 - 2024-10-22
+
+### Added
+- fixes #19 break the execution of multiple rules if one rule returns false
+
 ## 1.0.4 - 2024-10-18
 
 ### Added
