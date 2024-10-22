@@ -55,6 +55,9 @@ public class RuleEngine {
                             // execute the post perform action.
                             ia.postPerformAction(objMap, resultMap);
                         }
+                    } else {
+                        // evaluator result is false, break and return the false.
+                        break;
                     }
                 }
             } catch (Exception e) {
@@ -62,7 +65,7 @@ public class RuleEngine {
                 resultMap.put(RuleConstants.RULE_ENGINE_EXCEPTION, e);
             }
         } else {
-            logger.error("Rule group cannot be found with groupId = " + groupId);
+            logger.error("Rule group cannot be found with groupId = {}", groupId);
             resultMap.put(RuleConstants.RULE_ENGINE_EXCEPTION, "Rule group not found for " + groupId);
         }
         return resultMap;
@@ -106,7 +109,7 @@ public class RuleEngine {
                 resultMap.put(RuleConstants.RULE_ENGINE_EXCEPTION, e);
             }
         } else {
-            logger.error("Rule cannot be found with id = " + ruleId);
+            logger.error("Rule cannot be found with id = {}", ruleId);
             resultMap.put(RuleConstants.RULE_ENGINE_EXCEPTION, "Rule not found for "  + ruleId);
         }
         return resultMap;
