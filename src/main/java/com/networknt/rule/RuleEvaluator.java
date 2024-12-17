@@ -164,9 +164,9 @@ public class RuleEvaluator {
         } else if (RuleConstants.CR_OP_LEN_LT.equals(opCode)) {
             return evaluateLenLt(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_MATCH.equals(opCode)) {
-            return evaluateMatch(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateMatch(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
         } else if (RuleConstants.CR_OP_NOT_MATCH.equals(opCode)) {
-            return !evaluateMatch(getObjectByPath(propertyPath, object), valueObject);
+            return !evaluateMatch(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
         } else {
             logger.warn("Operator " + opCode + " is not supported");
             throw new Exception("Invalid operator" + opCode);
@@ -514,7 +514,7 @@ public class RuleEvaluator {
         }
     }
 
-    private boolean evaluateMatch(Object object, Object valueObject) throws Exception {
+    private boolean evaluateMatch(Object object, Object valueObject, String regexFlags) throws Exception {
         if(!(object instanceof java.lang.String)) {
             throw new Exception("Object is not a String:" + object.getClass());
         }
@@ -523,7 +523,15 @@ public class RuleEvaluator {
             value = valueObject.toString();
         }
         if(value != null && ((String)value).length() > 0) {
-            return Pattern.matches((String)value, (String)object);
+            int flags = 0;
+            if(regexFlags != null) {
+                if(regexFlags.contains("i")) flags = flags | Pattern.CASE_INSENSITIVE;
+                if(regexFlags.contains("m")) flags = flags | Pattern.MULTILINE;
+                if(regexFlags.contains("s")) flags = flags | Pattern.DOTALL;
+                if(regexFlags.contains("u")) flags = flags | Pattern.UNICODE_CASE;
+                if(regexFlags.contains("x")) flags = flags | Pattern.COMMENTS;
+            }
+            return Pattern.compile((String)value, flags).matcher((String)object).matches();
         } else {
             throw new Exception("Condition Value is empty");
         }

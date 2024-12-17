@@ -7,6 +7,7 @@ public class RuleConditionValue {
     private boolean expression;
     private String conditionValue;
     private String valueTypeCode;
+    private String regexFlags;
 
     public RuleConditionValue() {
     }
@@ -23,6 +24,15 @@ public class RuleConditionValue {
         this.expression = expression;
         this.conditionValue = conditionValue;
         this.valueTypeCode = valueTypeCode;
+        this.regexFlags = null;
+    }
+
+    public RuleConditionValue(String conditionValueId, boolean expression, String conditionValue, String valueTypeCode, String regexFlags) {
+        this.conditionValueId = conditionValueId;
+        this.expression = expression;
+        this.conditionValue = conditionValue;
+        this.valueTypeCode = valueTypeCode;
+        this.regexFlags = regexFlags;
     }
 
     public String getConditionValueId() {
@@ -57,16 +67,24 @@ public class RuleConditionValue {
         this.valueTypeCode = valueTypeCode;
     }
 
+    public String getRegexFlags() {
+        return regexFlags;
+    }
+
+    public void setRegexFlags(String regexFlags) {
+        this.regexFlags = regexFlags;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RuleConditionValue that = (RuleConditionValue) o;
-        return expression == that.expression && Objects.equals(conditionValueId, that.conditionValueId) && Objects.equals(conditionValue, that.conditionValue) && Objects.equals(valueTypeCode, that.valueTypeCode);
+        return expression == that.expression && Objects.equals(conditionValueId, that.conditionValueId) && Objects.equals(conditionValue, that.conditionValue) && Objects.equals(valueTypeCode, that.valueTypeCode) && Objects.equals(regexFlags, that.regexFlags);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(conditionValueId, expression, conditionValue, valueTypeCode);
+        return Objects.hash(conditionValueId, expression, conditionValue, valueTypeCode, regexFlags);
     }
 }

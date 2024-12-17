@@ -707,6 +707,26 @@ test-not-match-rule:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
 
+test-match-rule-flags:
+  ruleId: test-match-rule-flags
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string match with flags
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: MATCH
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: CLASSa
+          regexFlags: i
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
 test-empty-rule:
   ruleId: test-empty-rule
   host: lightapi.net
