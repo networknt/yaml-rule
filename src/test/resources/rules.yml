@@ -17,6 +17,21 @@ rule1:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
+      conditionResult: true
 
 test-multiple-actions:
   ruleId: test-multiple-actions
@@ -33,8 +48,10 @@ test-multiple-actions:
   actions:
     - actionId: actionOne
       actionClassName: com.networknt.rule.MultipleActionOne
+      conditionResult: true
     - actionId: actionTwo
       actionClassName: com.networknt.rule.MultipleActionTwo
+      conditionResult: true
 
 test-on-date-format-rule:
   ruleId: test-on-date-format-rule
@@ -228,6 +245,7 @@ role-based-auth:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
+      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -252,6 +270,7 @@ role-based-auth-skip-cc:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
+      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -292,6 +311,7 @@ cc-group-role-auth:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
+      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -337,6 +357,7 @@ ccsid-group-role-auth:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
+      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -370,6 +391,7 @@ controller-register-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
+      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -403,6 +425,7 @@ controller-check-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
+      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -436,6 +459,7 @@ controller-deregister-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
+      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -474,6 +498,7 @@ controller-group-role:
   actions:
     - actionId: collect-role
       actionClassName: com.networknt.rule.GroupRoleTransformAction
+      conditionResult: true
 
 config-service-access:
   ruleId: config-service-access
@@ -504,6 +529,7 @@ config-service-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
+      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -547,8 +573,10 @@ get-config-filter:
   actions:
     - actionId: filter-row
       actionClassName: com.networknt.rule.RoleFilterRowAction
+      conditionResult: true
     - actionId: filter-col
       actionClassName: com.networknt.rule.RoleFilterColAction
+      conditionResult: true
 
 petstore-group-role-transform:
   ruleId: petstore-group-role-transform
@@ -609,6 +637,7 @@ petstore-response-header-replace:
   actions:
     - actionId: header-transform
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
       actionValues:
         - actionValueId: sourceHeader
           value: X-Test-1
@@ -637,6 +666,7 @@ petstore-response-header-replace-in:
   actions:
     - actionId: header-transform
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
       actionValues:
         - actionValueId: sourceHeader
           value: X-Test-1
