@@ -17,6 +17,26 @@ rule1:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
 
+test-len-eq-int-rule:
+  ruleId: test-len-eq-int-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string length equal to an integer
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: LEN_EQ
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
 role-based-auth:
   ruleId: role-based-auth
   host: lightapi.net

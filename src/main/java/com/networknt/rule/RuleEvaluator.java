@@ -143,11 +143,11 @@ public class RuleEvaluator {
         } else if (RuleConstants.CR_OP_AFTER.equals(opCode)) {
             return evaluateAfter(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LEN_EQ.equals(opCode)) {
-            return evaluateLenEq(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateLenEq(getObjectByPath(propertyPath, object), valueObject, conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_LEN_GT.equals(opCode)) {
-            return evaluateLenGt(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateLenGt(getObjectByPath(propertyPath, object), valueObject, conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_LEN_LT.equals(opCode)) {
-            return evaluateLenLt(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateLenLt(getObjectByPath(propertyPath, object), valueObject, conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_MATCH.equals(opCode)) {
             return evaluateMatch(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_NOT_MATCH.equals(opCode)) {
@@ -414,23 +414,23 @@ public class RuleEvaluator {
         return 0;
     }
 
-    private boolean evaluateLenEq(Object object, Object valueObject) throws Exception {
-        return (compareStringLength(object, valueObject) == 0);
+    private boolean evaluateLenEq(Object object, Object valueObject, String valueTypeCode) throws Exception {
+        return (compareStringLength(object, valueObject, valueTypeCode) == 0);
     }
 
-    private boolean evaluateLenGt(Object object, Object valueObject) throws Exception {
-        return (compareStringLength(object, valueObject) > 0);
+    private boolean evaluateLenGt(Object object, Object valueObject, String valueTypeCode) throws Exception {
+        return (compareStringLength(object, valueObject, valueTypeCode) > 0);
     }
 
-    private boolean evaluateLenLt(Object object, Object valueObject) throws Exception {
-        return (compareStringLength(object, valueObject) < 0);
+    private boolean evaluateLenLt(Object object, Object valueObject, String valueTypeCode) throws Exception {
+        return (compareStringLength(object, valueObject, valueTypeCode) < 0);
     }
 
     /**
      * Compare two string's length
      *
      */
-    private int compareStringLength(Object object, Object valueObject) throws Exception {
+    private int compareStringLength(Object object, Object valueObject, String valueTypeCode) throws Exception {
 
         if(!(object instanceof java.lang.String)) {
             throw new Exception("Object is not a String:" + object.getClass());
@@ -460,14 +460,23 @@ public class RuleEvaluator {
         }
 
         Object value = valueObject;
-        if(!(valueObject instanceof String)) {
-            value = valueObject.toString();
-        }
-
-        if(object.getClass().getName().equals("java.lang.String")) {
-            return ((java.lang.String)object).length() - ((String)value).length();
+        if("STRING".equals(valueTypeCode)) {
+            if(!(valueObject instanceof String)) {
+                value = valueObject.toString();
+            }
+            if(object.getClass().getName().equals("java.lang.String")) {
+                return ((java.lang.String)object).length() - ((String)value).length();
+            } else {
+                throw new Exception("Incompatible object to compare length of String with " + object.getClass().getName());
+            }
+        } else if ("INTEGER".equals(valueTypeCode)) {
+            if(object.getClass().getName().equals("java.lang.String")) {
+                return ((java.lang.String)object).length() - Integer.valueOf(value.toString());
+            } else {
+                throw new Exception("Incompatible object to compare length of String with " + object.getClass().getName());
+            }
         } else {
-            throw new Exception("Incompatible object to compare length of String with " + object.getClass().getName());
+           throw new Exception("Incompatible value type " + valueTypeCode);
         }
     }
 
