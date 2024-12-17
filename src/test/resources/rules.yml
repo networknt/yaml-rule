@@ -486,3 +486,138 @@ petstore-response-header-replace-match:
       conditionValues:
         - conditionValueId: path
           conditionValue: /v3/(.*)/attributes/(.*)
+
+test-priority-rule:
+  ruleId: test-priority-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test rule priority
+  priority: 1
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: GT
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 5
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-priority-rule2:
+  ruleId: test-priority-rule2
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test rule priority
+  priority: 2
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: GT
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-len-eq-rule:
+  ruleId: test-len-eq-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string length equal
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: LEN_EQ
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-len-gt-rule:
+  ruleId: test-len-gt-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string length greater than
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: LEN_GT
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-len-lt-rule:
+  ruleId: test-len-lt-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string length less than
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: LEN_LT
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-match-rule:
+  ruleId: test-match-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string match
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: MATCH
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: Class.*
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-not-match-rule:
+  ruleId: test-not-match-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string not match
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: NMATCH
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: ClassB.*
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
