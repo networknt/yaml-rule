@@ -20,7 +20,7 @@ public class RuleAction {
     public String getActionId() {
         return actionId;
     }
-
+Y
     public void setActionId(String actionId) {
         this.actionId = actionId;
     }
