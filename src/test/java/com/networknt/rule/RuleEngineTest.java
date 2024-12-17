@@ -275,7 +275,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-len-eq-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
     }
     
     @Test
@@ -312,6 +312,24 @@ public class RuleEngineTest {
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-len-gt-rule", objMap);
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleLenGtIntType() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassAA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-len-gt-rule-int", objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test

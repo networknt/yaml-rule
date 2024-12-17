@@ -32,7 +32,7 @@ test-len-eq-int-rule:
       index: 0
       conditionValues:
         - conditionValueId: cv1
-          conditionValue: 6
+          conditionValue: 7
           valueTypeCode: INTEGER
   actions:
     - actionId: act1
@@ -574,7 +574,7 @@ test-len-gt-rule:
   host: lightapi.net
   ruleType: generic
   visibility: public
-  description: test string length greater than
+  description: test string "ClassAA" length greater than another string length "6" and the result is true
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -585,6 +585,26 @@ test-len-gt-rule:
         - conditionValueId: cv1
           conditionValue: 6
           valueTypeCode: STRING
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-len-gt-rule-int:
+  ruleId: test-len-gt-rule-int
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string "ClassAA" length greater than an integer 9 and the result is false
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: LEN_GT
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 9
+          valueTypeCode: INTEGER
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
@@ -604,6 +624,7 @@ test-len-lt-rule:
       conditionValues:
         - conditionValueId: cv1
           conditionValue: 6
+          valueTypeCode: INTEGER
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
