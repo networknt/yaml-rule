@@ -18,20 +18,6 @@ rule1:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
       conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
-      conditionResult: true
 
 test-multiple-actions:
   ruleId: test-multiple-actions
@@ -72,6 +58,7 @@ test-on-date-format-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-before-date-format-rule:
   ruleId: test-before-date-format-rule
@@ -92,6 +79,7 @@ test-before-date-format-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-after-date-format-rule:
   ruleId: test-after-date-format-rule
@@ -112,6 +100,7 @@ test-after-date-format-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-before-rule:
   ruleId: test-before-rule
@@ -131,6 +120,7 @@ test-before-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-after-rule:
   ruleId: test-after-rule
@@ -150,6 +140,7 @@ test-after-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-on-rule:
   ruleId: test-on-rule
@@ -169,6 +160,7 @@ test-on-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-len-eq-int-rule:
   ruleId: test-len-eq-int-rule
@@ -189,6 +181,7 @@ test-len-eq-int-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-gte-rule:
   ruleId: test-gte-rule
@@ -209,6 +202,7 @@ test-gte-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-lte-rule:
   ruleId: test-lte-rule
@@ -229,6 +223,7 @@ test-lte-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 role-based-auth:
   ruleId: role-based-auth
@@ -551,6 +546,7 @@ portal-role-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
+      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -732,6 +728,7 @@ test-priority-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-priority-rule2:
   ruleId: test-priority-rule2
@@ -753,6 +750,7 @@ test-priority-rule2:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-len-eq-rule:
   ruleId: test-len-eq-rule
@@ -773,6 +771,7 @@ test-len-eq-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-len-gt-rule:
   ruleId: test-len-gt-rule
@@ -793,6 +792,7 @@ test-len-gt-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-len-gt-rule-int:
   ruleId: test-len-gt-rule-int
@@ -813,6 +813,7 @@ test-len-gt-rule-int:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-len-lt-rule:
   ruleId: test-len-lt-rule
@@ -833,6 +834,7 @@ test-len-lt-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-match-rule:
   ruleId: test-match-rule
@@ -852,6 +854,7 @@ test-match-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-not-match-rule:
   ruleId: test-not-match-rule
@@ -871,6 +874,7 @@ test-not-match-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-match-rule-flags:
   ruleId: test-match-rule-flags
@@ -891,6 +895,7 @@ test-match-rule-flags:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-empty-rule:
   ruleId: test-empty-rule
@@ -907,6 +912,7 @@ test-empty-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-not-empty-rule:
   ruleId: test-not-empty-rule
@@ -923,6 +929,7 @@ test-not-empty-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-blank-rule:
   ruleId: test-blank-rule
@@ -939,6 +946,7 @@ test-blank-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 test-not-blank-rule:
   ruleId: test-not-blank-rule
@@ -955,6 +963,7 @@ test-not-blank-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
 
 
 test-conditional-actions:
