@@ -13,6 +13,7 @@ rule1:
       conditionValues:
         - conditionValueId: cv1
           conditionValue: 6
+          valueTypeCode: STRING
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
@@ -543,6 +544,7 @@ test-priority-rule2:
       conditionValues:
         - conditionValueId: cv1
           conditionValue: 6
+          valueTypeCode: STRING
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
@@ -562,6 +564,7 @@ test-len-eq-rule:
       conditionValues:
         - conditionValueId: cv1
           conditionValue: 6
+          valueTypeCode: STRING
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
@@ -581,6 +584,7 @@ test-len-gt-rule:
       conditionValues:
         - conditionValueId: cv1
           conditionValue: 6
+          valueTypeCode: STRING
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
