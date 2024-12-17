@@ -21,6 +21,14 @@ public class RuleConstants {
     public static final String CR_OP_EMPTY = "NIL";
     /** Code for the Is Not Blank criteria operator */
     public static final String CR_OP_NOT_EMPTY = "NNIL";
+    /** Code for the Is Empty String criteria operator */
+    public static final String CR_OP_IS_EMPTY = "EMPTY";
+    /** Code for the Is Not Empty String criteria operator */
+    public static final String CR_OP_IS_NOT_EMPTY = "NEMPTY";
+    /** Code for the Is Blank String criteria operator */
+    public static final String CR_OP_IS_BLANK = "BLANK";
+    /** Code for the Is Not Blank String criteria operator */
+    public static final String CR_OP_IS_NOT_BLANK = "NBLANK";
     /** Code for the Date Before operator */
     public static final String CR_OP_BEFORE = "BF";
     /** Code for the Date After operator */

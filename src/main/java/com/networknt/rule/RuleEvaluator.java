@@ -141,7 +141,15 @@ public class RuleEvaluator {
             return isEmpty(getObjectByPath(propertyPath, object));
         } else if (RuleConstants.CR_OP_NOT_EMPTY.equals(opCode)) {
             return !isEmpty(getObjectByPath(propertyPath, object));
-        } else if (RuleConstants.CR_OP_BEFORE.equals(opCode)) {
+        } else if (RuleConstants.CR_OP_IS_EMPTY.equals(opCode)) {
+            return isEmpty(getObjectByPath(propertyPath, object));
+        } else if (RuleConstants.CR_OP_IS_NOT_EMPTY.equals(opCode)) {
+            return !isEmpty(getObjectByPath(propertyPath, object));
+        } else if (RuleConstants.CR_OP_IS_BLANK.equals(opCode)) {
+            return isBlank(getObjectByPath(propertyPath, object));
+        } else if (RuleConstants.CR_OP_IS_NOT_BLANK.equals(opCode)) {
+            return !isBlank(getObjectByPath(propertyPath, object));
+        }else if (RuleConstants.CR_OP_BEFORE.equals(opCode)) {
             return evaluateBefore(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_AFTER.equals(opCode)) {
             return evaluateAfter(getObjectByPath(propertyPath, object), valueObject);
@@ -505,6 +513,13 @@ public class RuleEvaluator {
      * Check if the string is null or empty
      */
     private boolean isEmpty(Object val) {
+        return (val == null || val.toString().length() == 0);
+    }
+
+    /**
+     * Check if the string is null or blank
+     */
+    private boolean isBlank(Object val) {
         return (val == null || val.toString().trim().length() == 0);
     }
 
