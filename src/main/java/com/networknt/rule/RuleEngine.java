@@ -37,11 +37,12 @@ public class RuleEngine {
                     boolean result = evaluator.evaluate(rule, objMap, resultMap);
                     // save the evaluator result into the result map.
                     resultMap.put(RuleConstants.RESULT, Boolean.valueOf(result));
-                    if(result == true) {
-                        // trigger the action here.
-                        Iterator itActions = rule.getActions().iterator();
-                        while(itActions.hasNext()) {
-                            RuleAction ra = (RuleAction)itActions.next();
+                    // trigger the action here.
+                    Iterator itActions = rule.getActions().iterator();
+                    while(itActions.hasNext()) {
+                        RuleAction ra = (RuleAction)itActions.next();
+                        // check the condition result.
+                        if(ra.isConditionResult() == result || !ra.isConditionResult()) {
                             String actionType = ra.getActionClassName();
                             Collection ravs = ra.getActionValues();
                             // first check the cache to see if the action class is already loaded. If not, load it.
@@ -55,7 +56,8 @@ public class RuleEngine {
                             // execute the post perform action.
                             ia.postPerformAction(objMap, resultMap);
                         }
-                    } else {
+                    }
+                    if(!result) {
                         // evaluator result is false, break and return the false.
                         break;
                     }
@@ -82,13 +84,14 @@ public class RuleEngine {
                 if(logger.isDebugEnabled()) logger.debug("executeRule result = " + result);
                 // save the evaluator result into the result map
                 resultMap.put(RuleConstants.RESULT, Boolean.valueOf(result));
-                if(result == true) {
-                    // trigger the action here.
-                    Collection actions = rule.getActions();
-                    if(actions != null) {
-                        Iterator it = actions.iterator();
-                        while(it.hasNext()) {
-                            RuleAction ra = (RuleAction)it.next();
+                // trigger the action here.
+                Collection actions = rule.getActions();
+                if(actions != null) {
+                    Iterator it = actions.iterator();
+                    while(it.hasNext()) {
+                        RuleAction ra = (RuleAction)it.next();
+                        // check the condition result.
+                        if(ra.isConditionResult() == result || !ra.isConditionResult()) {
                             String actionType = ra.getActionClassName();
                             Collection<RuleActionValue> ravs = ra.getActionValues();
                             // first check the cache to see if the action class is already loaded. If not, load it.
