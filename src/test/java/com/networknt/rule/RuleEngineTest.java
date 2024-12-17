@@ -344,9 +344,9 @@ public class RuleEngineTest {
         ClassA objectA = new ClassA();
         objectA.setAname("ClassA");
         objectA.setBobject(objectB);
-        Map objMap = new HashMap();
+        Map<String, Object> objMap = new HashMap<>();
         objMap.put("ClassA", objectA);
-        Map<String, Object> result = engine.executeRule("test-not-match-rule", objMap);
+        Map result = engine.executeRule("test-not-match-rule", objMap);
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
     
