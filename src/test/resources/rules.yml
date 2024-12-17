@@ -494,6 +494,7 @@ controller-group-role:
     - actionId: collect-role
       actionClassName: com.networknt.rule.GroupRoleTransformAction
       conditionResult: true
+      conditionResult: true
 
 config-service-access:
   ruleId: config-service-access
