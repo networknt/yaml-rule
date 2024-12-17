@@ -277,7 +277,75 @@ public class RuleEngineTest {
         Map<String, Object> result = engine.executeRule("test-len-eq-rule", objMap);
         Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
     }
-    
+
+    @Test
+    public void testRuleEmpty() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("");
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-empty-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleNotEmpty() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("  ");
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-not-empty-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleBlank() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("  ");
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-blank-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleNotBlank() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-not-blank-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
     @Test
     public void testRuleLenEqInteger() throws Exception {
         RuleEngine engine = new RuleEngine(ruleMap, null);
