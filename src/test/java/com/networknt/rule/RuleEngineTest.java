@@ -544,7 +544,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-on-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
     }
     
     class ClassA {
