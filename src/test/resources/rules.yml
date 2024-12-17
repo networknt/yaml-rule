@@ -666,3 +666,67 @@ test-not-match-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+
+test-empty-rule:
+  ruleId: test-empty-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string empty
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cname
+      operatorCode: EMPTY
+      joinCode: AND
+      index: 0
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-not-empty-rule:
+  ruleId: test-not-empty-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string not empty
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cname
+      operatorCode: NEMPTY
+      joinCode: AND
+      index: 0
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-blank-rule:
+  ruleId: test-blank-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string blank
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cname
+      operatorCode: BLANK
+      joinCode: AND
+      index: 0
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-not-blank-rule:
+  ruleId: test-not-blank-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test string not blank
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cname
+      operatorCode: NBLANK
+      joinCode: AND
+      index: 0
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
