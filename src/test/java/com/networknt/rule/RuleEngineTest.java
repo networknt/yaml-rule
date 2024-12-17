@@ -628,18 +628,61 @@ public class RuleEngineTest {
     }
 
     @Test
-    public void testMultipleActions() throws Exception {
+    public void testMultipleActionsTrue() throws Exception {
         RuleEngine engine = new RuleEngine(ruleMap, null);
         ClassA objectA = new ClassA();
         objectA.setAname("ClassA");
-        Map objMap = new HashMap();
+        Map<String, Object> objMap = new HashMap<>();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-multiple-actions", objMap);
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        Assertions.assertTrue((Boolean)result.get("MultipleActionOne"));
+        Assertions.assertTrue((Boolean)result.get("MultipleActionThree"));
+        Assertions.assertFalse(result.containsKey("MultipleActionTwo"));
     }
 
+    @Test
+    public void testMultipleActionsFalse() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassA objectA = new ClassA();
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-multiple-actions", objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+        Assertions.assertTrue((Boolean)result.get("MultipleActionTwo"));
+        Assertions.assertTrue((Boolean)result.get("MultipleActionThree"));
+        Assertions.assertFalse(result.containsKey("MultipleActionOne"));
+    }
 
-    class ClassA {
+    /**
+     * Test single action with true result and the action is executed
+     * @throws Exception exception
+     */
+    @Test
+    public void testSingleActionTrue() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("name", "ClassA");
+        Map<String, Object> result = engine.executeRule("test-single-action-true", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        Assertions.assertTrue((Boolean)result.get("MultipleActionOne"));
+    }
+
+    /**
+     * Test single action with false result and the action is not executed
+     * @throws Exception exception
+     */
+    @Test
+    public void testSingleActionFalse() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("name", "ClassA");
+        Map<String, Object> result = engine.executeRule("test-single-action-false", objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+        Assertions.assertFalse(result.containsKey("MultipleActionOne"));
+    }
+
+    static class ClassA {
         String aname;
         ClassB bobject;
         public String getAname() {
@@ -656,7 +699,7 @@ public class RuleEngineTest {
         }
     }
 
-    class ClassB {
+    static class ClassB {
         String bname;
         ClassC cobject;
         public String getBname() {
@@ -674,7 +717,7 @@ public class RuleEngineTest {
 
     }
 
-    class ClassC {
+    static class ClassC {
         String cname;
         int cint;
         Date cdate;

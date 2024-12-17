@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class RuleCondition {
     private String conditionId;
+    private String conditionDesc;
     private String propertyPath;
     private String operatorCode;
     private String joinCode;
@@ -30,6 +31,14 @@ public class RuleCondition {
         this.propertyPath = propertyPath;
     }
 
+    public String getConditionDesc() {
+        return conditionDesc;
+    }
+
+    public void setConditionDesc(String conditionDesc) {
+        this.conditionDesc = conditionDesc;
+    }
+
     public String getOperatorCode() {
         return operatorCode;
     }
@@ -50,8 +59,8 @@ public class RuleCondition {
         return index;
     }
 
-    public void setIndexNum(Integer indexNum) {
-        this.index = indexNum;
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     public Collection<RuleConditionValue> getConditionValues() {
@@ -67,11 +76,11 @@ public class RuleCondition {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RuleCondition that = (RuleCondition) o;
-        return Objects.equals(conditionId, that.conditionId) && Objects.equals(propertyPath, that.propertyPath) && Objects.equals(operatorCode, that.operatorCode) && Objects.equals(joinCode, that.joinCode) && Objects.equals(index, that.index) && Objects.equals(conditionValues, that.conditionValues);
+        return Objects.equals(conditionId, that.conditionId) && Objects.equals(conditionDesc, that.conditionDesc) && Objects.equals(propertyPath, that.propertyPath) && Objects.equals(operatorCode, that.operatorCode) && Objects.equals(joinCode, that.joinCode) && Objects.equals(index, that.index) && Objects.equals(conditionValues, that.conditionValues);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(conditionId, propertyPath, operatorCode, joinCode, index, conditionValues);
+        return Objects.hash(conditionId, conditionDesc, propertyPath, operatorCode, joinCode, index, conditionValues);
     }
 }

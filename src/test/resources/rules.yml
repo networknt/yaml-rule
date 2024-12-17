@@ -17,27 +17,7 @@ rule1:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
-test-multiple-actions:
-  ruleId: test-multiple-actions
-  host: lightapi.net
-  ruleType: generic
-  visibility: public
-  description: test multiple actions
-  conditions:
-    - conditionId: cid1
-      propertyPath: ClassA.Aname
-      operatorCode: NEMPTY
-      joinCode: AND
-      index: 0
-  actions:
-    - actionId: actionOne
-      actionClassName: com.networknt.rule.MultipleActionOne
-      conditionResult: true
-    - actionId: actionTwo
-      actionClassName: com.networknt.rule.MultipleActionTwo
-      conditionResult: true
 
 test-on-date-format-rule:
   ruleId: test-on-date-format-rule
@@ -58,7 +38,6 @@ test-on-date-format-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-before-date-format-rule:
   ruleId: test-before-date-format-rule
@@ -79,7 +58,6 @@ test-before-date-format-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-after-date-format-rule:
   ruleId: test-after-date-format-rule
@@ -100,7 +78,6 @@ test-after-date-format-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-before-rule:
   ruleId: test-before-rule
@@ -120,7 +97,6 @@ test-before-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-after-rule:
   ruleId: test-after-rule
@@ -140,7 +116,6 @@ test-after-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-on-rule:
   ruleId: test-on-rule
@@ -160,7 +135,6 @@ test-on-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-len-eq-int-rule:
   ruleId: test-len-eq-int-rule
@@ -181,7 +155,6 @@ test-len-eq-int-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-gte-rule:
   ruleId: test-gte-rule
@@ -202,7 +175,6 @@ test-gte-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-lte-rule:
   ruleId: test-lte-rule
@@ -223,7 +195,6 @@ test-lte-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 role-based-auth:
   ruleId: role-based-auth
@@ -240,7 +211,6 @@ role-based-auth:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
-      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -265,7 +235,6 @@ role-based-auth-skip-cc:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
-      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -306,7 +275,6 @@ cc-group-role-auth:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
-      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -352,7 +320,6 @@ ccsid-group-role-auth:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
-      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -386,7 +353,6 @@ controller-register-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
-      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -420,7 +386,6 @@ controller-check-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
-      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -454,7 +419,6 @@ controller-deregister-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
-      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -493,8 +457,6 @@ controller-group-role:
   actions:
     - actionId: collect-role
       actionClassName: com.networknt.rule.GroupRoleTransformAction
-      conditionResult: true
-      conditionResult: true
 
 config-service-access:
   ruleId: config-service-access
@@ -525,7 +487,6 @@ config-service-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
-      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -547,7 +508,6 @@ portal-role-access:
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
-      conditionResult: true
       actionValues:
         - actionValueId: roles
           value: $roles
@@ -634,7 +594,6 @@ petstore-response-header-replace:
   actions:
     - actionId: header-transform
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
       actionValues:
         - actionValueId: sourceHeader
           value: X-Test-1
@@ -663,7 +622,6 @@ petstore-response-header-replace-in:
   actions:
     - actionId: header-transform
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
       actionValues:
         - actionValueId: sourceHeader
           value: X-Test-1
@@ -729,7 +687,6 @@ test-priority-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-priority-rule2:
   ruleId: test-priority-rule2
@@ -751,7 +708,6 @@ test-priority-rule2:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-len-eq-rule:
   ruleId: test-len-eq-rule
@@ -772,7 +728,6 @@ test-len-eq-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-len-gt-rule:
   ruleId: test-len-gt-rule
@@ -793,7 +748,6 @@ test-len-gt-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-len-gt-rule-int:
   ruleId: test-len-gt-rule-int
@@ -814,7 +768,6 @@ test-len-gt-rule-int:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-len-lt-rule:
   ruleId: test-len-lt-rule
@@ -835,7 +788,6 @@ test-len-lt-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-match-rule:
   ruleId: test-match-rule
@@ -875,7 +827,6 @@ test-not-match-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-match-rule-flags:
   ruleId: test-match-rule-flags
@@ -896,7 +847,6 @@ test-match-rule-flags:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-empty-rule:
   ruleId: test-empty-rule
@@ -913,7 +863,6 @@ test-empty-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-not-empty-rule:
   ruleId: test-not-empty-rule
@@ -930,7 +879,6 @@ test-not-empty-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-blank-rule:
   ruleId: test-blank-rule
@@ -947,7 +895,6 @@ test-blank-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
 test-not-blank-rule:
   ruleId: test-not-blank-rule
@@ -964,31 +911,72 @@ test-not-blank-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
-      conditionResult: true
 
-
-test-conditional-actions:
-  ruleId: test-conditional-actions
+test-single-action-true:
+  ruleId: test-single-action-true
   host: lightapi.net
   ruleType: generic
   visibility: public
-  description: test conditional actions
+  description: If a rule has only one action, it is executed only if the evaluation result is true
   conditions:
     - conditionId: cid1
-      propertyPath: ClassA.Bobject.Cobject.Cint
-      operatorCode: GT
+      conditionDesc: The name is ClassA and its length is greater than 4, so the condition is true
+      propertyPath: "name"
+      operatorCode: LEN_GT
       joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
-          conditionValue: 5
+          conditionValue: 4
           valueTypeCode: INTEGER
   actions:
     - actionId: actionIfTrue
-      actionClassName: com.networknt.rule.ActionA
-      conditionResult: true  # Execute only if rule evaluates to true
-    - actionId: actionIfFalse
-      actionClassName: com.networknt.rule.ActionB
-      conditionResult: false # Execute only if rule evaluates to false
-    - actionId: actionAlways
-      actionClassName: com.networknt.rule.ActionC # Always execute
+      actionDesc: This action is executed only if the rule evaluation is true
+      actionClassName: com.networknt.rule.MultipleActionOne
+
+test-single-action-false:
+  ruleId: test-single-action-false
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: If a rule has only one action, it won't be executed if the evaluation result is false
+  conditions:
+    - conditionId: cid1
+      conditionDesc: The name is ClassA and its length is less than 10, so the condition is false
+      propertyPath: "name"
+      operatorCode: LEN_GT
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 10
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: actionIfTrue
+      actionDesc: This action will not be executed as the evaluation result is false
+      actionClassName: com.networknt.rule.MultipleActionOne
+
+test-multiple-actions:
+  ruleId: test-multiple-actions
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test multiple actions, MultipleActionOne is executed if the condition is true, MultipleActionTwo is executed if the condition is false. MultipleActionThree is executed regardless of the evaluation result.
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: NEMPTY
+      joinCode: AND
+      index: 0
+  actions:
+    - actionId: actionOne
+      actionDesc: This action is executed as the condition is true
+      actionClassName: com.networknt.rule.MultipleActionOne
+      conditionResult: true
+    - actionId: actionTwo
+      actionDesc: This action is not executed as the condition is false
+      actionClassName: com.networknt.rule.MultipleActionTwo
+      conditionResult: false
+    - actionId: actionThree
+      actionDesc: This action is executed regardless evaluation result is true or false
+      actionClassName: com.networknt.rule.MultipleActionThree

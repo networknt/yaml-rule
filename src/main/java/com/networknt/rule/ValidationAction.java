@@ -5,11 +5,9 @@ import java.util.Map;
 
 public class ValidationAction implements IAction {
 
-    public void performAction(Map objMap, Map resultMap, Collection actionValues) {
+    public void performAction(Map<String, Object> objMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues) {
         if(actionValues != null) {
-            Iterator it = actionValues.iterator();
-            while(it.hasNext()) {
-                RuleActionValue rav = (RuleActionValue)it.next();
+            for (RuleActionValue rav : actionValues) {
                 resultMap.put(rav.getActionValueId(), rav.getValue());
             }
         }
