@@ -233,7 +233,7 @@ public class RuleEvaluator {
             return (object == null && valueObject == null);
         } else {
             if(valueObject instanceof String) {
-                Object convertedValueObject = convertConditionValue(object, (String)valueObject);
+                Object convertedValueObject = convertConditionValue(object, (String)valueObject, conditionValue);
                 return object.equals(convertedValueObject);
             } else {
                 return object.equals(valueObject);
@@ -274,7 +274,7 @@ public class RuleEvaluator {
         ListIterator it = valueConditions.listIterator();
         while (!match && it.hasNext()) {
             RuleConditionValue value = (RuleConditionValue) it.next();
-            Object valueObject = convertConditionValue(object, value.getConditionValue());
+            Object valueObject = convertConditionValue(object, value.getConditionValue(), value);
             if (object == null || valueObject == null) {
                 match = (object == null && valueObject == null);
             } else {
@@ -340,7 +340,7 @@ public class RuleEvaluator {
         }
         Object value = valueObject;
         if(valueObject instanceof String) {
-            value = convertConditionValue(object, (String) valueObject);
+            value = convertConditionValue(object, (String) valueObject, conditionValue);
         }
 
         if (value == null && object == null) {
@@ -430,7 +430,7 @@ public class RuleEvaluator {
         }
         Object value = valueObject;
         if(valueObject instanceof String) {
-            value = convertConditionValue(object, (String)valueObject);
+            value = convertConditionValue(object, (String)valueObject, conditionValue);
         }
 
         if (value == null && object == null) {
@@ -609,18 +609,22 @@ public class RuleEvaluator {
             oret = Timestamp.valueOf(valueStr);
         }
         if(clazz.getName().equals("java.util.Date")) {
-            DateFormat df = null;
-            if(conditionValue != null && conditionValue.getDateFormat() != null) {
-                df = new SimpleDateFormat(conditionValue.getDateFormat());
-            } else {
-                df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            }
-            oret = df.parse(valueStr);
+            oret = convertDate(valueStr, conditionValue);
         }
         if(clazz.getName().equals("java.sql.Date")) {
             oret = java.sql.Date.valueOf(valueStr);
         }
         return oret;
+    }
+
+    private Date convertDate(String valueStr, RuleConditionValue conditionValue) throws Exception {
+        DateFormat df = null;
+        if(conditionValue != null && conditionValue.getDateFormat() != null) {
+            df = new SimpleDateFormat(conditionValue.getDateFormat());
+        } else {
+            df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        }
+        return df.parse(valueStr);
     }
 
     private Method[] getAccessors(Class clazz) {
