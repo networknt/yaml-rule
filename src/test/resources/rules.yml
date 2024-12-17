@@ -18,6 +18,22 @@ rule1:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
 
+test-multiple-actions:
+  ruleId: test-multiple-actions
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test multiple actions
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: NNIL
+      joinCode: AND
+      index: 0
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.MultipleAction
+
 test-on-date-format-rule:
   ruleId: test-on-date-format-rule
   host: lightapi.net
