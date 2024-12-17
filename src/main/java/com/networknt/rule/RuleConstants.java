@@ -1,6 +1,7 @@
 package com.networknt.rule;
 
 public class RuleConstants {
+
     /** Code for the EQUALS criteria operator */
     public static final String CR_OP_EQUALS = "EQ";
     /** Code for the NOT EQUAL criteria operator */
@@ -17,15 +18,15 @@ public class RuleConstants {
     public static final String CR_OP_GT = "GT";
     /** Code for the Less Than criteria operator */
     public static final String CR_OP_LT = "LT";
-    /** Code for the Is Blank criteria operator */
-    public static final String CR_OP_EMPTY = "NIL";
+    /** Code for the Is Blank criteria operator. Null check if an object is null */
+    public static final String CR_OP_NULL = "NIL";
     /** Code for the Is Not Blank criteria operator */
-    public static final String CR_OP_NOT_EMPTY = "NNIL";
-    /** Code for the Is Empty String criteria operator */
+    public static final String CR_OP_NOT_NULL = "NNIL";
+    /** Code for the Is Empty String criteria operator. Empty check if a string is null or has a length of zero*/
     public static final String CR_OP_IS_EMPTY = "EMPTY";
     /** Code for the Is Not Empty String criteria operator */
     public static final String CR_OP_IS_NOT_EMPTY = "NEMPTY";
-    /** Code for the Is Blank String criteria operator */
+    /** Code for the Is Blank String criteria operator. Blank check if a string is null or contains only whitespace characters (after trimming) */
     public static final String CR_OP_IS_BLANK = "BLANK";
     /** Code for the Is Not Blank String criteria operator */
     public static final String CR_OP_IS_NOT_BLANK = "NBLANK";

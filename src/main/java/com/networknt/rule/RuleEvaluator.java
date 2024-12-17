@@ -137,10 +137,10 @@ public class RuleEvaluator {
             return evaluateGreaterThan(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LT.equals(opCode)) {
             return evaluateLessThan(getObjectByPath(propertyPath, object), valueObject);
-        } else if (RuleConstants.CR_OP_EMPTY.equals(opCode)) {
-            return isEmpty(getObjectByPath(propertyPath, object));
-        } else if (RuleConstants.CR_OP_NOT_EMPTY.equals(opCode)) {
-            return !isEmpty(getObjectByPath(propertyPath, object));
+        } else if (RuleConstants.CR_OP_NULL.equals(opCode)) {
+            return isNull(getObjectByPath(propertyPath, object));
+        } else if (RuleConstants.CR_OP_NOT_NULL.equals(opCode)) {
+            return !isNull(getObjectByPath(propertyPath, object));
         } else if (RuleConstants.CR_OP_IS_EMPTY.equals(opCode)) {
             return isEmpty(getObjectByPath(propertyPath, object));
         } else if (RuleConstants.CR_OP_IS_NOT_EMPTY.equals(opCode)) {
@@ -507,6 +507,13 @@ public class RuleEvaluator {
         } else {
             throw new Exception("Condition Value is empty");
         }
+    }
+
+    /**
+     * Check if the object is null
+     */
+    private boolean isNull(Object val) {
+        return (val == null);
     }
 
     /**
