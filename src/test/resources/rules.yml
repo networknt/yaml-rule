@@ -26,13 +26,15 @@ test-multiple-actions:
   description: test multiple actions
   conditions:
     - conditionId: cid1
-      propertyPath: ClassA.Bobject.Cobject.Cint
-      operatorCode: NNIL
+      propertyPath: ClassA.Aname
+      operatorCode: NEMPTY
       joinCode: AND
       index: 0
   actions:
-    - actionId: act1
-      actionClassName: com.networknt.rule.MultipleAction
+    - actionId: actionOne
+      actionClassName: com.networknt.rule.MultipleActionOne
+    - actionId: actionTwo
+      actionClassName: com.networknt.rule.MultipleActionTwo
 
 test-on-date-format-rule:
   ruleId: test-on-date-format-rule

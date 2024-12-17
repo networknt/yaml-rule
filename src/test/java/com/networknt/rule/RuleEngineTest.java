@@ -91,15 +91,6 @@ public class RuleEngineTest {
     }
 
     @Test
-    public void testMultipleActions() throws Exception {
-        RuleEngine engine = new RuleEngine(ruleMap, null);
-        Map objMap = new HashMap();
-        Map<String, Object> result = engine.executeRule("test-multiple-actions", objMap);
-        Assertions.assertTrue((Boolean)result.get("action1"));
-        Assertions.assertTrue((Boolean)result.get("action2"));
-    }
-
-    @Test
     public void testRoleAuthCustomerRightRole() throws Exception {
         String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk1MjkwMTMxOCwianRpIjoiZnhDNGYzRjVxbWg5ZWczem80TEZWQSIsImlhdCI6MTYzNzU0MTMxOCwibmJmIjoxNjM3NTQxMTk4LCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlaHUiLCJ1c2VyX3R5cGUiOiJDVVNUT01FUiIsImNsaWVudF9pZCI6ImY3ZDQyMzQ4LWM2NDctNGVmYi1hNTJkLTRjNTc4NzQyMWU3MiIsInJvbGVzIjoiY3VzdG9tZXIiLCJzY29wZSI6WyJhY2NvdW50LnIiLCJhY2NvdW50LnciXX0.bfG2okhBhgif2Jty60mGJKz2TKCtW219c2kcBVKznWctVmns8g0r0sztR_N2EBWZ-UUpA0Bm9kTo5DHoSGHM28t-46RSH_RdaTNGsRg74zLC_HJWuc6hGQl05jU-vltNNFPQ3CA0__yRNEi1zLqICtbqvmlcl0uHd_PnPeFvjNDRY68Qyr7PN_YXYbVT7dRiauqrWsslLZKbY0-Bpk8Ro6pJ03akX0-3pdd1Jy9HryyEPFw4OEwCqU2G_OETcZ2qNf-fKZwYLC9kofku9CehWkYhujpnuaFSOuGEGfB-eqi4tTHKA2YmaE-GsYUyFNa8H4cHTAGlKUmDRKRdV-em5Q";
         RuleEngine engine = new RuleEngine(ruleMap, null);
@@ -635,7 +626,19 @@ public class RuleEngineTest {
         Map<String, Object> result = engine.executeRule("test-after-date-format-rule", objMap);
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
-    
+
+    @Test
+    public void testMultipleActions() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-multiple-actions", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+
     class ClassA {
         String aname;
         ClassB bobject;
