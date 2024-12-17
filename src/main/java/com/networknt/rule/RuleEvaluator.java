@@ -113,10 +113,12 @@ public class RuleEvaluator {
         RuleConditionValue conditionValue = null;
         if(conditionValues != null && !conditionValues.isEmpty()) {
             conditionValue = (RuleConditionValue) conditionValues.get(0);
-            if(conditionValue.isExpression()) {
-                valueObject = getObjectByPath(conditionValue.getConditionValue(), object);
-            } else {
-                valueObject = conditionValue.getConditionValue();
+            if(conditionValue != null) {
+                if (conditionValue.isExpression()) {
+                    valueObject = getObjectByPath(conditionValue.getConditionValue(), object);
+                } else {
+                    valueObject = conditionValue.getConditionValue();
+                }
             }
         }
         if (RuleConstants.CR_OP_EQUALS.equals(opCode)) {
@@ -416,14 +418,17 @@ public class RuleEvaluator {
     }
 
     private boolean evaluateLenEq(Object object, Object valueObject, String valueTypeCode) throws Exception {
+        if (valueObject == null) return false;
         return (compareStringLength(object, valueObject, valueTypeCode) == 0);
     }
 
     private boolean evaluateLenGt(Object object, Object valueObject, String valueTypeCode) throws Exception {
+        if (valueObject == null) return false;
         return (compareStringLength(object, valueObject, valueTypeCode) > 0);
     }
 
     private boolean evaluateLenLt(Object object, Object valueObject, String valueTypeCode) throws Exception {
+        if (valueObject == null) return false;
         return (compareStringLength(object, valueObject, valueTypeCode) < 0);
     }
 
