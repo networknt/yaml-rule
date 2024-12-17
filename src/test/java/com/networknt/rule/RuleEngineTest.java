@@ -546,6 +546,26 @@ public class RuleEngineTest {
         Map<String, Object> result = engine.executeRule("test-on-rule", objMap);
         Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
     }
+
+    @Test
+    public void testRuleOnTrue() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        java.text.DateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        objectC.setCdate(df.parse("2024-12-16 16:49:00"));
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-on-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
     
     class ClassA {
         String aname;
