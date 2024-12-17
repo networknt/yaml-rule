@@ -16,9 +16,9 @@ public class RuleEvaluator {
     private static RuleEvaluator instance = null;
 
     /** Logger instance for this class */
-    private static Logger logger = LoggerFactory.getLogger(RuleEvaluator.class);
+    private static final Logger logger = LoggerFactory.getLogger(RuleEvaluator.class);
 
-    private static Map accessorMap = new HashMap();
+    private static final Map accessorMap = new HashMap();
     private static final Class[] EMPTY_CLASS_LIST = new Class[0];
 
     private static final String ACCESSOR_METHOD_PREFIX = "get";
@@ -154,11 +154,11 @@ public class RuleEvaluator {
         } else if (RuleConstants.CR_OP_IS_NOT_BLANK.equals(opCode)) {
             return !isBlank(getObjectByPath(propertyPath, object));
         }else if (RuleConstants.CR_OP_BEFORE.equals(opCode)) {
-            return evaluateBefore(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateBefore(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
         } else if (RuleConstants.CR_OP_AFTER.equals(opCode)) {
-            return evaluateAfter(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateAfter(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
         } else if (RuleConstants.CR_OP_ON.equals(opCode)) {
-            return evaluateOn(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateOn(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
         } else if (RuleConstants.CR_OP_LEN_EQ.equals(opCode)) {
             return evaluateLenEq(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_LEN_GT.equals(opCode)) {
@@ -233,7 +233,7 @@ public class RuleEvaluator {
             return (object == null && valueObject == null);
         } else {
             if(valueObject instanceof String) {
-                Object convertedValueObject = convertConditionValue(object, (String)valueObject, conditionValue);
+                Object convertedValueObject = convertConditionValue(object, (String)valueObject, null);
                 return object.equals(convertedValueObject);
             } else {
                 return object.equals(valueObject);
@@ -274,7 +274,7 @@ public class RuleEvaluator {
         ListIterator it = valueConditions.listIterator();
         while (!match && it.hasNext()) {
             RuleConditionValue value = (RuleConditionValue) it.next();
-            Object valueObject = convertConditionValue(object, value.getConditionValue(), value);
+            Object valueObject = convertConditionValue(object, value.getConditionValue(), null);
             if (object == null || valueObject == null) {
                 match = (object == null && valueObject == null);
             } else {
@@ -340,7 +340,7 @@ public class RuleEvaluator {
         }
         Object value = valueObject;
         if(valueObject instanceof String) {
-            value = convertConditionValue(object, (String) valueObject, conditionValue);
+            value = convertConditionValue(object, (String) valueObject, null);
         }
 
         if (value == null && object == null) {
@@ -383,25 +383,25 @@ public class RuleEvaluator {
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateBefore(Object object, Object valueObject) throws Exception {
-        boolean result = (compareDate(object, valueObject) < 0);
+    private boolean evaluateBefore(Object object, Object valueObject, String dateFormat) throws Exception {
+        boolean result = (compareDate(object, valueObject, dateFormat) < 0);
         return result;
     }
 
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateAfter(Object object, Object valueObject) throws Exception {
+    private boolean evaluateAfter(Object object, Object valueObject, String dateFormat) throws Exception {
 
-        boolean result = (compareDate(object, valueObject) > 0);
+        boolean result = (compareDate(object, valueObject, dateFormat) > 0);
         return result;
     }
 
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateOn(Object object, Object valueObject) throws Exception {
-        boolean result = (compareDate(object, valueObject) == 0);
+    private boolean evaluateOn(Object object, Object valueObject, String dateFormat) throws Exception {
+        boolean result = (compareDate(object, valueObject, dateFormat) == 0);
         return result;
     }
 
@@ -409,7 +409,7 @@ public class RuleEvaluator {
      * Compare two Date values.
      *
      */
-    private int compareDate(Object object, Object valueObject) throws Exception {
+    private int compareDate(Object object, Object valueObject, String dateFormat) throws Exception {
 
         if(!(object instanceof java.util.Date)) {
             throw new Exception("Object is not a Date");
@@ -430,7 +430,7 @@ public class RuleEvaluator {
         }
         Object value = valueObject;
         if(valueObject instanceof String) {
-            value = convertConditionValue(object, (String)valueObject, conditionValue);
+            value = convertConditionValue(object, (String)valueObject, dateFormat);
         }
 
         if (value == null && object == null) {
@@ -569,7 +569,7 @@ public class RuleEvaluator {
     }
 
 
-    private Object convertConditionValue(Object object, String valueStr) throws Exception {
+    private Object convertConditionValue(Object object, String valueStr, String dateFormat) throws Exception {
         Class clazz = object.getClass();
         Object oret = null;
         if(clazz.getName().equals("java.lang.String")) {
@@ -609,22 +609,18 @@ public class RuleEvaluator {
             oret = Timestamp.valueOf(valueStr);
         }
         if(clazz.getName().equals("java.util.Date")) {
-            oret = convertDate(valueStr, conditionValue);
+            DateFormat df = null;
+            if(dateFormat != null) {
+                df = new SimpleDateFormat(dateFormat);
+            } else {
+                df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            }
+            oret = df.parse(valueStr);
         }
         if(clazz.getName().equals("java.sql.Date")) {
             oret = java.sql.Date.valueOf(valueStr);
         }
         return oret;
-    }
-
-    private Date convertDate(String valueStr, RuleConditionValue conditionValue) throws Exception {
-        DateFormat df = null;
-        if(conditionValue != null && conditionValue.getDateFormat() != null) {
-            df = new SimpleDateFormat(conditionValue.getDateFormat());
-        } else {
-            df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        }
-        return df.parse(valueStr);
     }
 
     private Method[] getAccessors(Class clazz) {

@@ -85,6 +85,13 @@ public class RuleConditionValue {
 
     public void setRegexFlags(String regexFlags) {
         this.regexFlags = regexFlags;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
     }
 
