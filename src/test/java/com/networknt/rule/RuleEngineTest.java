@@ -239,6 +239,117 @@ public class RuleEngineTest {
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
+    @Test
+    public void testRulePriority() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-priority-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        objectC.setCint(7);
+        result = engine.executeRule("test-priority-rule2", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleLenEq() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-len-eq-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleLenGt() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassAA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-len-gt-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleLenLt() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("Class");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-len-lt-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleMatch() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-match-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleNotMatch() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-not-match-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+    
     class ClassA {
         String aname;
         ClassB bobject;
