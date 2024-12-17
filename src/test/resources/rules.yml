@@ -925,3 +925,30 @@ test-not-blank-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+
+
+test-conditional-actions:
+  ruleId: test-conditional-actions
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test conditional actions
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: GT
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 5
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: actionIfTrue
+      actionClassName: com.networknt.rule.ActionA
+      conditionResult: true  # Execute only if rule evaluates to true
+    - actionId: actionIfFalse
+      actionClassName: com.networknt.rule.ActionB
+      conditionResult: false # Execute only if rule evaluates to false
+    - actionId: actionAlways
+      actionClassName: com.networknt.rule.ActionC # Always execute
