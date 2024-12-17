@@ -38,6 +38,8 @@ public class RuleConstants {
     public static final String CR_OP_BEFORE = "BF";
     /** Code for the Date After operator */
     public static final String CR_OP_AFTER = "AF";
+    /** Code for the Date On operator */
+    public static final String CR_OP_ON = "ON";
     /** Code for the length of string greater than */
     public static final String CR_OP_LEN_GT = "LEN_GT";
     /** Code for the length of sting less than */

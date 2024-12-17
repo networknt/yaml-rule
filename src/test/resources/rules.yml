@@ -56,6 +56,25 @@ test-after-rule:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
 
+test-on-rule:
+  ruleId: test-on-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test date on
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cdate
+      operatorCode: ON
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2024-12-16 16:49:00"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
 test-len-eq-int-rule:
   ruleId: test-len-eq-int-rule
   host: lightapi.net

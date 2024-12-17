@@ -157,6 +157,8 @@ public class RuleEvaluator {
             return evaluateBefore(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_AFTER.equals(opCode)) {
             return evaluateAfter(getObjectByPath(propertyPath, object), valueObject);
+        } else if (RuleConstants.CR_OP_ON.equals(opCode)) {
+            return evaluateOn(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LEN_EQ.equals(opCode)) {
             return evaluateLenEq(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_LEN_GT.equals(opCode)) {
@@ -392,6 +394,14 @@ public class RuleEvaluator {
     private boolean evaluateAfter(Object object, Object valueObject) throws Exception {
 
         boolean result = (compareDate(object, valueObject) > 0);
+        return result;
+    }
+
+    /**
+     * Evaluates whether the object value matches the criteria.
+     */
+    private boolean evaluateOn(Object object, Object valueObject) throws Exception {
+        boolean result = (compareDate(object, valueObject) == 0);
         return result;
     }
 
