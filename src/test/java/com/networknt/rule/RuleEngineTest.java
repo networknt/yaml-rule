@@ -489,6 +489,44 @@ public class RuleEngineTest {
         Map result = engine.executeRule("test-not-match-rule", objMap);
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
+
+    @Test
+    public void testRuleBefore() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        objectC.setCdate(new java.util.Date(System.currentTimeMillis() + 10000));
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-before-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleAfter() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        objectC.setCdate(new java.util.Date(System.currentTimeMillis() - 10000));
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-after-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
     
     class ClassA {
         String aname;

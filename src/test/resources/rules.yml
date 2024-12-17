@@ -18,6 +18,44 @@ rule1:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
 
+test-before-rule:
+  ruleId: test-before-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test date before
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cdate
+      operatorCode: BF
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2099-12-31 23:59:59"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-after-rule:
+  ruleId: test-after-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test date after
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cdate
+      operatorCode: AF
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2000-01-01 00:00:00"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
 test-len-eq-int-rule:
   ruleId: test-len-eq-int-rule
   host: lightapi.net
