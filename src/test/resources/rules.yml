@@ -8,7 +8,6 @@ rule1:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
       operatorCode: EQ
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -29,7 +28,6 @@ test-on-date-format-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
       operatorCode: ON
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -49,7 +47,6 @@ test-before-date-format-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
       operatorCode: BF
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -69,7 +66,6 @@ test-after-date-format-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
       operatorCode: AF
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -89,7 +85,6 @@ test-before-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
       operatorCode: BF
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -108,7 +103,6 @@ test-after-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
       operatorCode: AF
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -127,7 +121,6 @@ test-on-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
       operatorCode: ON
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -146,7 +139,6 @@ test-len-eq-int-rule:
     - conditionId: cid1
       propertyPath: ClassA.Aname
       operatorCode: LEN_EQ
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -166,7 +158,6 @@ test-gte-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
       operatorCode: GTE
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -186,7 +177,6 @@ test-lte-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
       operatorCode: LTE
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -206,7 +196,6 @@ role-based-auth:
     - conditionId: allow-role
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
       operatorCode: NNIL
-      joinCode: OR
       index: 1
   actions:
     - actionId: match-role
@@ -225,13 +214,12 @@ role-based-auth-skip-cc:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
       operatorCode: NIL
-      joinCode: OR
       index: 1
     - conditionId: allow-role
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
       operatorCode: NNIL
-      joinCode: OR
       index: 2
+  conditionExpression: (allow-cc OR allow-role)
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
@@ -249,12 +237,10 @@ cc-group-role-auth:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
       operatorCode: NIL
-      joinCode: OR
       index: 1
     - conditionId: manager
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
       operatorCode: CS
-      joinCode: OR
       index: 2
       conditionValues:
         - conditionValueId: manager
@@ -262,7 +248,6 @@ cc-group-role-auth:
     - conditionId: teller
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
       operatorCode: CS
-      joinCode: OR
       index: 3
       conditionValues:
         - conditionValueId: teller
@@ -270,8 +255,8 @@ cc-group-role-auth:
     - conditionId: allow-role-jwt
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
       operatorCode: NNIL
-      joinCode: OR
       index: 4
+  conditionExpression: (allow-cc OR manager OR teller OR allow-role-jwt)
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
@@ -289,17 +274,14 @@ ccsid-group-role-auth:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
       operatorCode: NIL
-      joinCode: AND
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
       operatorCode: NNIL
-      joinCode: AND
       index: 2
     - conditionId: manager
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
       operatorCode: CS
-      joinCode: OR
       index: 3
       conditionValues:
         - conditionValueId: manager
@@ -307,7 +289,6 @@ ccsid-group-role-auth:
     - conditionId: teller
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
       operatorCode: CS
-      joinCode: OR
       index: 4
       conditionValues:
         - conditionValueId: teller
@@ -315,8 +296,8 @@ ccsid-group-role-auth:
     - conditionId: allow-role-jwt
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
       operatorCode: NNIL
-      joinCode: OR
       index: 5
+  conditionExpression: (allow-cc AND has-sid AND (manager OR teller OR allow-role-jwt))
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
@@ -334,22 +315,20 @@ controller-register-access:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
       operatorCode: NIL
-      joinCode: AND
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
       operatorCode: NNIL
-      joinCode: AND
       index: 2
     - conditionId: has-sid-match-body
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
       operatorCode: EQ
-      joinCode: AND
       index: 3
       conditionValues:
         - conditionValueId: body-serviceId
           expression: true
           conditionValue: requestBody.serviceId
+  conditionExpression: (allow-cc AND has-sid AND has-sid-match-body)
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
@@ -367,22 +346,20 @@ controller-check-access:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
       operatorCode: NIL
-      joinCode: AND
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
       operatorCode: NNIL
-      joinCode: AND
       index: 2
     - conditionId: body-id-has-sid
       propertyPath: requestBody.id
       operatorCode: CS
-      joinCode: AND
       index: 3
       conditionValues:
         - conditionValueId: sid
           expression: true
           conditionValue: auditInfo.subject_claims.ClaimsMap.sid
+  conditionExpression: (allow-cc AND has-sid AND body-id-has-sid)
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
@@ -400,22 +377,20 @@ controller-deregister-access:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
       operatorCode: NIL
-      joinCode: AND
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
       operatorCode: NNIL
-      joinCode: AND
       index: 2
     - conditionId: has-sid-match-query
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
       operatorCode: EQ
-      joinCode: AND
       index: 3
       conditionValues:
         - conditionValueId: query-serviceId
           expression: true
           conditionValue: queryParameters.serviceId.First
+  conditionExpression: (allow-cc AND has-sid AND has-sid-match-query)
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
@@ -433,7 +408,6 @@ controller-group-role:
     - conditionId: CtlPltRead
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
       operatorCode: CS
-      joinCode: OR
       index: 1
       conditionValues:
         - conditionValueId: CtlPltRead
@@ -441,7 +415,6 @@ controller-group-role:
     - conditionId: CtlPltWrite
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
       operatorCode: CS
-      joinCode: OR
       index: 2
       conditionValues:
         - conditionValueId: CtlPltWrite
@@ -449,11 +422,11 @@ controller-group-role:
     - conditionId: CtlPltAdmin
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
       operatorCode: CS
-      joinCode: OR
       index: 2
       conditionValues:
         - conditionValueId: CtlPltAdmin
           conditionValue: User_API_Dev_A
+  conditionExpression: (CtlPltRead OR CtlPltWrite OR CtlPltAdmin)
   actions:
     - actionId: collect-role
       actionClassName: com.networknt.rule.GroupRoleTransformAction
@@ -468,22 +441,20 @@ config-service-access:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
       operatorCode: NIL
-      joinCode: AND
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
       operatorCode: NNIL
-      joinCode: AND
       index: 2
     - conditionId: sid-match-path
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
       operatorCode: EQ
-      joinCode: AND
       index: 3
       conditionValues:
         - conditionValueId: path-service
           expression: true
           conditionValue: pathParameters.service-name.First
+  conditionExpression: (allow-cc AND has-sid AND sid-match-path)
   actions:
     - actionId: match-role
       actionClassName: com.networknt.rule.FineGrainedAuthAction
@@ -503,7 +474,6 @@ portal-role-access:
     - conditionId: allow-role-jwt
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
       operatorCode: NNIL
-      joinCode: OR
       index: 1
   actions:
     - actionId: match-role
@@ -522,7 +492,6 @@ get-config-filter:
     - conditionId: row-filter-role
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
       operatorCode: IN
-      joinCode: OR
       index: 1
       conditionValues:
         - conditionValueId: role-list
@@ -545,7 +514,6 @@ petstore-group-role-transform:
     - conditionId: manager
       propertyPath: groups
       operatorCode: CS
-      joinCode: OR
       index: 1
       conditionValues:
         - conditionValueId: manager
@@ -553,11 +521,11 @@ petstore-group-role-transform:
     - conditionId: teller
       propertyPath: groups
       operatorCode: CS
-      joinCode: OR
       index: 2
       conditionValues:
         - conditionValueId: teller
           conditionValue: frontOffice
+  conditionExpression: (manager OR teller)
 
 petstore-response-header-replace:
   ruleId: petstore-response-header-replace
@@ -569,7 +537,6 @@ petstore-response-header-replace:
     - conditionId: path-pets
       propertyPath: requestPath
       operatorCode: EQ
-      joinCode: AND
       index: 1
       conditionValues:
         - conditionValueId: path
@@ -577,7 +544,6 @@ petstore-response-header-replace:
     - conditionId: path-dogs
       propertyPath: requestPath
       operatorCode: EQ
-      joinCode: OR
       index: 2
       conditionValues:
         - conditionValueId: path
@@ -585,12 +551,11 @@ petstore-response-header-replace:
     - conditionId: path-cats
       propertyPath: requestPath
       operatorCode: EQ
-      joinCode: OR
       index: 3
       conditionValues:
         - conditionValueId: path
           conditionValue: /v1/cats
-
+  conditionExpression: (path-pets OR path-dogs OR path-cats)
   actions:
     - actionId: header-transform
       actionClassName: com.networknt.rule.ValidationAction
@@ -610,7 +575,6 @@ petstore-response-header-replace-in:
     - conditionId: path-pets
       propertyPath: requestPath
       operatorCode: IN
-      joinCode: AND
       index: 1
       conditionValues:
         - conditionValueId: pets
@@ -638,7 +602,6 @@ petstore-response-header-replace-match:
     - conditionId: BankingServices
       propertyPath: requestPath
       operatorCode: MATCH
-      joinCode: AND
       index: 1
       conditionValues:
         - conditionValueId: path
@@ -646,7 +609,6 @@ petstore-response-header-replace-match:
     - conditionId: insight
       propertyPath: requestPath
       operatorCode: MATCH
-      joinCode: OR
       index: 2
       conditionValues:
         - conditionValueId: path
@@ -654,7 +616,6 @@ petstore-response-header-replace-match:
     - conditionId: Investments
       propertyPath: requestPath
       operatorCode: MATCH
-      joinCode: OR
       index: 3
       conditionValues:
         - conditionValueId: path
@@ -662,11 +623,11 @@ petstore-response-header-replace-match:
     - conditionId: attributes
       propertyPath: requestPath
       operatorCode: MATCH
-      joinCode: OR
       index: 4
       conditionValues:
         - conditionValueId: path
           conditionValue: /v3/(.*)/attributes/(.*)
+  conditionExpression: (BankingServices OR insight OR Investments OR attributes)
 
 test-priority-rule:
   ruleId: test-priority-rule
@@ -679,7 +640,6 @@ test-priority-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
       operatorCode: GT
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -699,7 +659,6 @@ test-priority-rule2:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
       operatorCode: GT
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -719,7 +678,6 @@ test-len-eq-rule:
     - conditionId: cid1
       propertyPath: ClassA.Aname
       operatorCode: LEN_EQ
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -739,7 +697,6 @@ test-len-gt-rule:
     - conditionId: cid1
       propertyPath: ClassA.Aname
       operatorCode: LEN_GT
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -759,7 +716,6 @@ test-len-gt-rule-int:
     - conditionId: cid1
       propertyPath: ClassA.Aname
       operatorCode: LEN_GT
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -779,7 +735,6 @@ test-len-lt-rule:
     - conditionId: cid1
       propertyPath: ClassA.Aname
       operatorCode: LEN_LT
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -799,7 +754,6 @@ test-match-rule:
     - conditionId: cid1
       propertyPath: ClassA.Aname
       operatorCode: MATCH
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -819,7 +773,6 @@ test-not-match-rule:
     - conditionId: cid1
       propertyPath: ClassA.Aname
       operatorCode: NMATCH
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -838,7 +791,6 @@ test-match-rule-flags:
     - conditionId: cid1
       propertyPath: ClassA.Aname
       operatorCode: MATCH
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -858,7 +810,6 @@ test-empty-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
       operatorCode: EMPTY
-      joinCode: AND
       index: 0
   actions:
     - actionId: act1
@@ -874,7 +825,6 @@ test-not-empty-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
       operatorCode: NEMPTY
-      joinCode: AND
       index: 0
   actions:
     - actionId: act1
@@ -890,7 +840,6 @@ test-blank-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
       operatorCode: BLANK
-      joinCode: AND
       index: 0
   actions:
     - actionId: act1
@@ -906,7 +855,6 @@ test-not-blank-rule:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
       operatorCode: NBLANK
-      joinCode: AND
       index: 0
   actions:
     - actionId: act1
@@ -923,7 +871,6 @@ test-single-action-true:
       conditionDesc: The name is ClassA and its length is greater than 4, so the condition is true
       propertyPath: "name"
       operatorCode: LEN_GT
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -945,7 +892,6 @@ test-single-action-false:
       conditionDesc: The name is ClassA and its length is less than 10, so the condition is false
       propertyPath: "name"
       operatorCode: LEN_GT
-      joinCode: AND
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -966,7 +912,6 @@ test-multiple-actions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
       operatorCode: NEMPTY
-      joinCode: AND
       index: 0
   actions:
     - actionId: actionOne
@@ -980,3 +925,35 @@ test-multiple-actions:
     - actionId: actionThree
       actionDesc: This action is executed regardless evaluation result is true or false
       actionClassName: com.networknt.rule.MultipleActionThree
+
+condition_id_reference:
+  ruleId: condition_id_reference
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: first rule for unit test
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: EQ
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+    - conditionId: cid2
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: GT
+      index: 1
+      conditionValues:
+        - conditionValueId: cv2
+          conditionValue: 7
+          valueTypeCode: STRING
+    - conditionId: cid3
+      propertyPath: ClassA.Aname
+      operatorCode: NEMPTY
+      index: 2
+  conditionExpression: "(cid1 OR (cid2 AND cid3))"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction

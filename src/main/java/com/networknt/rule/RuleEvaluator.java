@@ -61,43 +61,120 @@ public class RuleEvaluator {
      *             if could not evaluate
      */
     public boolean evaluate(Rule rule, Map objMap, Map resultMap) throws Exception {
+        boolean result;
+        if(rule.getConditions() == null || rule.getConditions().isEmpty()) {
+           return true;
+        }
 
-        boolean result = true;
-
-        Collection conditions = rule.getConditions();
-        if (conditions != null && !conditions.isEmpty()) {
-            Iterator it = conditions.iterator();
-
-            while (it.hasNext()) {
-                RuleCondition rc = (RuleCondition) it.next();
+        if (rule.getConditionExpression() != null && !rule.getConditionExpression().trim().isEmpty()) {
+            result = evaluateConditionExpression(rule.getConditionExpression(), rule.getConditions(), objMap, resultMap);
+        } else {
+            // Default to AND all conditions if no expression is given for backward compatibility.
+            result = true;
+             for (RuleCondition rc : rule.getConditions()) {
                 boolean r = evaluateCondition(rc.getPropertyPath(), rc.getOperatorCode(),
                         (List) rc.getConditionValues(), objMap);
                 resultMap.put(rc.getConditionId(), r);
-                result = evaluateJoin(rc.getJoinCode(), result, r);
-            }
+                 if(!r) {
+                     result = false;
+                     break;
+                 }
+             }
         }
         return result;
     }
 
 
     /**
-     * Evaluates joint result of the 2 conditions from the rule.
-     *
+     * Evaluate a logical expression with condition ids
      */
-    private boolean evaluateJoin(
-            String opCode, boolean cr1Result, boolean cr2Result) throws Exception {
+    private boolean evaluateConditionExpression(String expression, Collection<RuleCondition> conditions, Map objMap, Map resultMap) throws Exception {
+       // A simple stack-based parser for expressions like "(cid1 OR (cid2 AND cid3))"
+        Stack<Boolean> stack = new Stack<>();
+        Stack<String> operatorStack = new Stack<>();
+        
+        StringTokenizer tokenizer = new StringTokenizer(expression, "() ", true);
 
-        if (RuleConstants.CR_JOIN_OP_AND.equals(opCode)) {
-            return (cr1Result && cr2Result);
-        } else if (RuleConstants.CR_JOIN_OP_OR.equals(opCode)) {
-            return (cr1Result || cr2Result);
-        } else if (RuleConstants.CR_JOIN_OP_NOT.equals(opCode)) {
-            return (cr1Result && !cr2Result);
-        } else {
-            logger.error("Condition join operator " + opCode + " is not supported");
-            throw new Exception("Condition join operator " + opCode + " is not supported");
+        while(tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken().trim();
+             if (token.isEmpty()) continue; // Skip empty tokens
+
+            if (token.equals("(")) {
+                operatorStack.push(token);
+            } else if (token.equals(")")) {
+                while(!operatorStack.isEmpty() && !operatorStack.peek().equals("(")) {
+                   processOperator(stack, operatorStack, objMap, resultMap, conditions);
+                }
+                if(!operatorStack.isEmpty() && operatorStack.peek().equals("(")) {
+                   operatorStack.pop();
+                }
+            } else if (token.equalsIgnoreCase("AND") || token.equalsIgnoreCase("OR")) {
+                while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(") && hasHigherPrecedence(operatorStack.peek(), token)) {
+                    processOperator(stack, operatorStack, objMap, resultMap, conditions);
+                }
+                operatorStack.push(token);
+            } else {
+                // Assume this is a condition id
+                boolean conditionResult;
+               if (resultMap.containsKey(token)) {
+                    conditionResult = (Boolean)resultMap.get(token);
+                } else {
+                   RuleCondition ruleCondition = getRuleCondition(token, conditions);
+                    if(ruleCondition == null) {
+                        throw new Exception("Condition with id: " + token + " is not defined");
+                    }
+                   conditionResult = evaluateCondition(ruleCondition.getPropertyPath(), ruleCondition.getOperatorCode(),
+                            (List) ruleCondition.getConditionValues(), objMap);
+                    resultMap.put(token, conditionResult);
+                }
+                stack.push(conditionResult);
+            }
+        }
+         while(!operatorStack.isEmpty()) {
+             processOperator(stack, operatorStack, objMap, resultMap, conditions);
+         }
+        if (stack.size() != 1) {
+            throw new Exception("Invalid expression. Stack size is not 1");
+        }
+        return stack.pop();
+    }
+
+
+    private boolean hasHigherPrecedence(String op1, String op2) {
+        if(op1.equals("(") || op1.equals(")")) {
+            return false;
+        }
+        if(op2.equals("(") || op2.equals(")")) {
+            return true;
+        }
+        return op1.equalsIgnoreCase("AND") && op2.equalsIgnoreCase("OR");
+    }
+
+    private void processOperator(Stack<Boolean> stack, Stack<String> operatorStack, Map objMap, Map resultMap, Collection<RuleCondition> conditions) throws Exception {
+      String operator = operatorStack.pop();
+      if (operator.equalsIgnoreCase("AND") || operator.equalsIgnoreCase("OR")) {
+          if(stack.size() < 2) {
+             throw new Exception("Invalid expression. Stack size is less than 2 for an operator");
+          }
+          boolean operand2 = stack.pop();
+          boolean operand1 = stack.pop();
+           if (operator.equalsIgnoreCase("AND")) {
+                stack.push(operand1 && operand2);
+           } else if (operator.equalsIgnoreCase("OR")) {
+                stack.push(operand1 || operand2);
+           }
         }
     }
+
+    private RuleCondition getRuleCondition(String conditionId, Collection<RuleCondition> conditions) {
+        for (RuleCondition condition : conditions) {
+            if(condition.getConditionId().equals(conditionId)) {
+                return condition;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Evaluates values passed as strings based on their type and the operator.
