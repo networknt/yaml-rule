@@ -8,6 +8,7 @@ public class RuleConditionValue {
     private String conditionValue;
     private String valueTypeCode;
     private String regexFlags;
+    private String dateFormat;
 
     public RuleConditionValue() {
     }
@@ -25,6 +26,7 @@ public class RuleConditionValue {
         this.conditionValue = conditionValue;
         this.valueTypeCode = valueTypeCode;
         this.regexFlags = null;
+        this.dateFormat = null;
     }
 
     public RuleConditionValue(String conditionValueId, boolean expression, String conditionValue, String valueTypeCode, String regexFlags) {
@@ -33,6 +35,16 @@ public class RuleConditionValue {
         this.conditionValue = conditionValue;
         this.valueTypeCode = valueTypeCode;
         this.regexFlags = regexFlags;
+        this.dateFormat = null;
+    }
+
+    public RuleConditionValue(String conditionValueId, boolean expression, String conditionValue, String valueTypeCode, String regexFlags, String dateFormat) {
+        this.conditionValueId = conditionValueId;
+        this.expression = expression;
+        this.conditionValue = conditionValue;
+        this.valueTypeCode = valueTypeCode;
+        this.regexFlags = regexFlags;
+        this.dateFormat = dateFormat;
     }
 
     public String getConditionValueId() {
@@ -73,6 +85,7 @@ public class RuleConditionValue {
 
     public void setRegexFlags(String regexFlags) {
         this.regexFlags = regexFlags;
+        this.dateFormat = dateFormat;
     }
 
     @Override
@@ -80,11 +93,11 @@ public class RuleConditionValue {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RuleConditionValue that = (RuleConditionValue) o;
-        return expression == that.expression && Objects.equals(conditionValueId, that.conditionValueId) && Objects.equals(conditionValue, that.conditionValue) && Objects.equals(valueTypeCode, that.valueTypeCode) && Objects.equals(regexFlags, that.regexFlags);
+        return expression == that.expression && Objects.equals(conditionValueId, that.conditionValueId) && Objects.equals(conditionValue, that.conditionValue) && Objects.equals(valueTypeCode, that.valueTypeCode) && Objects.equals(regexFlags, that.regexFlags) && Objects.equals(dateFormat, that.dateFormat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(conditionValueId, expression, conditionValue, valueTypeCode, regexFlags);
+        return Objects.hash(conditionValueId, expression, conditionValue, valueTypeCode, regexFlags, dateFormat);
     }
 }

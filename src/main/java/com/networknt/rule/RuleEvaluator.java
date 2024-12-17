@@ -609,7 +609,12 @@ public class RuleEvaluator {
             oret = Timestamp.valueOf(valueStr);
         }
         if(clazz.getName().equals("java.util.Date")) {
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            DateFormat df = null;
+            if(conditionValue != null && conditionValue.getDateFormat() != null) {
+                df = new SimpleDateFormat(conditionValue.getDateFormat());
+            } else {
+                df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            }
             oret = df.parse(valueStr);
         }
         if(clazz.getName().equals("java.sql.Date")) {
