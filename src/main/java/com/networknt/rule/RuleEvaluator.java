@@ -110,8 +110,9 @@ public class RuleEvaluator {
             throw new Exception("Input object is null for operator " + opCode);
         }
         Object valueObject = null;
+        RuleConditionValue conditionValue = null;
         if(conditionValues != null && !conditionValues.isEmpty()) {
-            RuleConditionValue conditionValue = (RuleConditionValue) conditionValues.get(0);
+            conditionValue = (RuleConditionValue) conditionValues.get(0);
             if(conditionValue.isExpression()) {
                 valueObject = getObjectByPath(conditionValue.getConditionValue(), object);
             } else {
@@ -143,11 +144,11 @@ public class RuleEvaluator {
         } else if (RuleConstants.CR_OP_AFTER.equals(opCode)) {
             return evaluateAfter(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LEN_EQ.equals(opCode)) {
-            return evaluateLenEq(getObjectByPath(propertyPath, object), valueObject, conditionValue.getValueTypeCode());
+            return evaluateLenEq(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_LEN_GT.equals(opCode)) {
-            return evaluateLenGt(getObjectByPath(propertyPath, object), valueObject, conditionValue.getValueTypeCode());
+            return evaluateLenGt(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_LEN_LT.equals(opCode)) {
-            return evaluateLenLt(getObjectByPath(propertyPath, object), valueObject, conditionValue.getValueTypeCode());
+            return evaluateLenLt(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_MATCH.equals(opCode)) {
             return evaluateMatch(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_NOT_MATCH.equals(opCode)) {
