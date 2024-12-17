@@ -6,14 +6,16 @@ import java.util.Objects;
 public class RuleAction {
     private String actionId;
     private String actionClassName;
+    private boolean conditionResult;
     private Collection<RuleActionValue> actionValues;
 
     public RuleAction() {
     }
 
-    public RuleAction(String actionId, String actionClassName, Collection<RuleActionValue> actionValues) {
+    public RuleAction(String actionId, String actionClassName, boolean conditionResult, Collection<RuleActionValue> actionValues) {
         this.actionId = actionId;
         this.actionClassName = actionClassName;
+        this.conditionResult = conditionResult;
         this.actionValues = actionValues;
     }
 
@@ -33,6 +35,14 @@ Y
         this.actionClassName = actionClassName;
     }
 
+    public boolean isConditionResult() {
+        return conditionResult;
+    }
+
+    public void setConditionResult(boolean conditionResult) {
+        this.conditionResult = conditionResult;
+    }
+
     public Collection<RuleActionValue> getActionValues() {
         return actionValues;
     }
@@ -46,11 +56,11 @@ Y
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RuleAction that = (RuleAction) o;
-        return Objects.equals(actionId, that.actionId) && Objects.equals(actionClassName, that.actionClassName) && Objects.equals(actionValues, that.actionValues);
+        return conditionResult == that.conditionResult && Objects.equals(actionId, that.actionId) && Objects.equals(actionClassName, that.actionClassName) && Objects.equals(actionValues, that.actionValues);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(actionId, actionClassName, actionValues);
+        return Objects.hash(actionId, actionClassName, conditionResult, actionValues);
     }
 }
