@@ -38,6 +38,46 @@ test-len-eq-int-rule:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
 
+test-gte-rule:
+  ruleId: test-gte-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test greater than or equal to
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: GTE
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-lte-rule:
+  ruleId: test-lte-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test less than or equal to
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: LTE
+      joinCode: AND
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
 role-based-auth:
   ruleId: role-based-auth
   host: lightapi.net

@@ -16,8 +16,12 @@ public class RuleConstants {
     public static final String CR_OP_NOT_IN_LIST = "NIN";
     /** Code for the Greater Than criteria operator */
     public static final String CR_OP_GT = "GT";
+    /** Code for the Greater Than or Equal To criteria operator */
+    public static final String CR_OP_GTE = "GTE";
     /** Code for the Less Than criteria operator */
     public static final String CR_OP_LT = "LT";
+    /** Code for the Less Than or Equal To criteria operator */
+    public static final String CR_OP_LTE = "LTE";
     /** Code for the Is Blank criteria operator. Null check if an object is null */
     public static final String CR_OP_NULL = "NIL";
     /** Code for the Is Not Blank criteria operator */

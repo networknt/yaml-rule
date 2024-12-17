@@ -365,6 +365,42 @@ public class RuleEngineTest {
     }
 
     @Test
+    public void testRuleGte() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("ClassAA");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-gte-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    public void testRuleLte() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        ClassC objectC = new ClassC();
+        objectC.setCname("ClassC");
+        objectC.setCint(6);
+        ClassB objectB = new ClassB();
+        objectB.setBname("ClassB");
+        objectB.setCobject(objectC);
+        ClassA objectA = new ClassA();
+        objectA.setAname("Class");
+        objectA.setBobject(objectB);
+        Map objMap = new HashMap();
+        objMap.put("ClassA", objectA);
+        Map<String, Object> result = engine.executeRule("test-lte-rule", objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
     public void testRuleLenGt() throws Exception {
         RuleEngine engine = new RuleEngine(ruleMap, null);
         ClassC objectC = new ClassC();

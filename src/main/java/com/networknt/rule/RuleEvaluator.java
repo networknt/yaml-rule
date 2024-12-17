@@ -135,8 +135,12 @@ public class RuleEvaluator {
             return !evaluateInList(getObjectByPath(propertyPath, object), conditionValues);
         } else if (RuleConstants.CR_OP_GT.equals(opCode)) {
             return evaluateGreaterThan(getObjectByPath(propertyPath, object), valueObject);
+        } else if (RuleConstants.CR_OP_GTE.equals(opCode)) {
+            return evaluateGreaterThanOrEqual(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LT.equals(opCode)) {
             return evaluateLessThan(getObjectByPath(propertyPath, object), valueObject);
+        } else if (RuleConstants.CR_OP_LTE.equals(opCode)) {
+            return evaluateLessThanOrEqual(getObjectByPath(propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_NULL.equals(opCode)) {
             return isNull(getObjectByPath(propertyPath, object));
         } else if (RuleConstants.CR_OP_NOT_NULL.equals(opCode)) {
@@ -289,8 +293,24 @@ public class RuleEvaluator {
     /**
      * Evaluates whether the object value matches the criteria.
      */
+    private boolean evaluateGreaterThanOrEqual(Object object, Object valueObject) throws Exception {
+        boolean result = (compareNumeric(object, valueObject) >= 0);
+        return result;
+    }
+
+    /**
+     * Evaluates whether the object value matches the criteria.
+     */
     private boolean evaluateLessThan(Object object, Object valueObject) throws Exception {
         boolean result = (compareNumeric(object, valueObject) < 0);
+        return result;
+    }
+
+    /**
+     * Evaluates whether the object value matches the criteria.
+     */
+    private boolean evaluateLessThanOrEqual(Object object, Object valueObject) throws Exception {
+        boolean result = (compareNumeric(object, valueObject) <= 0);
         return result;
     }
 
