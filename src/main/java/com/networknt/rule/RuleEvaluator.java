@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 public class RuleEvaluator {
@@ -32,6 +33,7 @@ public class RuleEvaluator {
     private static HashSet simpleTypes;
 
     private static final ThreadLocal<Map<String, Object>> objectCache = ThreadLocal.withInitial(HashMap::new);
+    private final Map<String, Pattern> patternCache = new ConcurrentHashMap<>();
 
     static {
         simpleTypes = new HashSet();
@@ -193,7 +195,7 @@ public class RuleEvaluator {
     /**
      * Evaluates values passed as strings based on their type and the operator.
      */
-    private boolean evaluateCondition(String ruleId, String conditionId, String propertyPath,
+    protected boolean evaluateCondition(String ruleId, String conditionId, String propertyPath,
                                       String opCode, List<RuleConditionValue> conditionValues, Object object) throws RuleEngineException {
         if (object == null) {
             String errorMsg = "Input object is null for operator " + opCode;
@@ -299,7 +301,7 @@ public class RuleEvaluator {
                 Method[] accessors = getAccessors(clazz);
                 boolean found = false;
                 for (Method accessor : accessors) {
-                    if (accessor.getName().substring(ACCESSOR_METHOD_PREFIX.length()).equals(subProperty)) {
+                    if (accessor.getName().substring(ACCESSOR_METHOD_PREFIX.length()).equals(capitalizeFirstLetter(subProperty))) {
                         try {
                             current = accessor.invoke(current, EMPTY_CLASS_LIST);
                             found = true;
@@ -625,25 +627,30 @@ public class RuleEvaluator {
     }
 
     private boolean evaluateMatch(String ruleId, String conditionId, Object object, Object valueObject, String regexFlags) throws RuleEngineException {
-        if (!(object instanceof java.lang.String)) {
+        if(!(object instanceof java.lang.String)) {
             String errorMsg = "Object is not a String:" + object.getClass();
             logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
             throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
         }
         Object value = valueObject;
-        if (!(valueObject instanceof java.lang.String)) {
+        if(!(valueObject instanceof java.lang.String)) {
             value = valueObject.toString();
         }
-        if (value != null && ((String) value).length() > 0) {
+        if(value != null && ((String)value).length() > 0) {
+            String regex = (String)value;
             int flags = 0;
-            if (regexFlags != null) {
-                if (regexFlags.contains("i")) flags = flags | Pattern.CASE_INSENSITIVE;
-                if (regexFlags.contains("m")) flags = flags | Pattern.MULTILINE;
-                if (regexFlags.contains("s")) flags = flags | Pattern.DOTALL;
-                if (regexFlags.contains("u")) flags = flags | Pattern.UNICODE_CASE;
-                if (regexFlags.contains("x")) flags = flags | Pattern.COMMENTS;
+            if(regexFlags != null) {
+                if(regexFlags.contains("i")) flags = flags | Pattern.CASE_INSENSITIVE;
+                if(regexFlags.contains("m")) flags = flags | Pattern.MULTILINE;
+                if(regexFlags.contains("s")) flags = flags | Pattern.DOTALL;
+                if(regexFlags.contains("u")) flags = flags | Pattern.UNICODE_CASE;
+                if(regexFlags.contains("x")) flags = flags | Pattern.COMMENTS;
             }
-            return Pattern.compile((String) value, flags).matcher((String) object).matches();
+            final int finalFlags = flags; // Create a final variable to use in the lambda
+            String key = regex + ":" + finalFlags;
+            Pattern pattern = patternCache.computeIfAbsent(key, k -> Pattern.compile(regex, finalFlags));
+            return pattern.matcher((String)object).matches();
+
         } else {
             String errorMsg = "Condition Value is empty";
             logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
@@ -753,4 +760,11 @@ public class RuleEvaluator {
         return allMethods;
     }
 
+    public static String capitalizeFirstLetter(String str) {
+        if (str == null || str.isEmpty()) {
+            return str; // Return the original string if null or empty
+        }
+        // Capitalize the first letter and concatenate with the rest of the string
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
 }
