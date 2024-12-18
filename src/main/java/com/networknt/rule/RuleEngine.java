@@ -41,10 +41,9 @@ public class RuleEngine {
                     handleActions(rule.getRuleId(), result, actions, objMap, resultMap);
                 }
             } catch (RuleEngineException e) {
-                String errorMsg = "Rule Engine Runtime Exception";
-                logger.error("Error executing rules in group {}: {}", groupId, errorMsg, e);
+                logger.error("Error executing rules in group {}: {}", groupId, e.getMessage(), e);
                 resultMap.put(RuleConstants.RULE_ENGINE_EXCEPTION, e);
-                throw new RuleEngineException(errorMsg, groupId);
+                throw e;
             }
         } else {
             String errorMsg = "Rule group cannot be found with groupId " + groupId;
@@ -97,8 +96,12 @@ public class RuleEngine {
         if (ia == null) {
             try {
                 ia = (IAction) Class.forName(actionType).getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                String errorMsg = "IAction class " + actionType + " not found or cannot be initialized";
+            } catch (ClassNotFoundException e) {
+                String errorMsg = "IAction class " + actionType + " not found";
+                logger.error("Error executing action in rule {}, action {}: {}", ruleId, ra.getActionId(), errorMsg, e);
+                throw new ActionExecutionException(errorMsg, ruleId, ra.getActionId());
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | java.lang.reflect.InvocationTargetException e) {
+                String errorMsg = "IAction class " + actionType + " cannot be initialized";
                 logger.error("Error executing action in rule {}, action {}: {}", ruleId, ra.getActionId(), errorMsg, e);
                 throw new ActionExecutionException(errorMsg, ruleId, ra.getActionId());
             }
@@ -130,11 +133,10 @@ public class RuleEngine {
                 // trigger the action here.
                 Collection<RuleAction> actions = rule.getActions();
                 handleActions(ruleId, result, actions, objMap, resultMap);
-            } catch (Exception e ){
-                String errorMsg = "Rule Engine Runtime Exception";
-                logger.error("Error executing rule in rule {}: {}", ruleId, errorMsg, e);
+            } catch (RuleEngineException e ){
+                logger.error("Error executing rule in rule {}: {}", ruleId, e.getMessage(), e);
                 resultMap.put(RuleConstants.RULE_ENGINE_EXCEPTION, e.getMessage());
-                throw new RuleEngineException(errorMsg, ruleId);
+                throw e;
             }
         } else {
             String errorMsg = "Rule cannot be found with id " + ruleId;

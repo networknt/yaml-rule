@@ -126,7 +126,7 @@ public class RuleEvaluator {
                    RuleCondition ruleCondition = getRuleCondition(token, conditions);
                     if(ruleCondition == null) {
                         String errorMsg = "Condition with id: " + token + " is not defined";
-                        logger.error("Error evaluating condition in rule {}: {}", ruleId, errorMsg);
+                        logger.error("Error evaluating condition in rule {} missing condition {}: {}", ruleId, token, errorMsg);
                         throw new RuleEngineException(errorMsg, ruleId);
                     }
                    conditionResult = evaluateCondition(ruleId, ruleCondition.getConditionId(), ruleCondition.getPropertyPath(), ruleCondition.getOperatorCode(),
