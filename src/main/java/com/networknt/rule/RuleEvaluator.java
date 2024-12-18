@@ -268,58 +268,56 @@ public class RuleEvaluator {
     }
 
     public Object getObjectByPath(String ruleId, String conditionId, String propertyPath, Object object) throws RuleEngineException {
-        if (object == null) {
-            return null;
-        } else {
-            if (propertyPath == null) {
-                return object;
-            }
+        if (object == null || propertyPath == null) {
+            return object;
         }
 
-        boolean isLastProp = true;
-        String subProperty;
-        int index = propertyPath.indexOf(".");
-        if (index > 0) {
-            isLastProp = false;
-            subProperty = propertyPath.substring(0, index);
-        } else {
-            subProperty = propertyPath;
+        String key = propertyPath + ":" + System.identityHashCode(object);
+        Map<String, Object> cache = objectCache.get();
+        if (cache.containsKey(key)) {
+            return cache.get(key);
         }
-        if (object instanceof Map) {
-            // in case of map, the path is the key
-            Object o = ((Map) object).get(subProperty);
-            if (isLastProp) {
-                return o;
+
+
+        Object current = object;
+        String[] properties = propertyPath.split("\\.");
+        for (String subProperty : properties) {
+            if (current == null) {
+                break;
+            } else if (current instanceof Map) {
+                current = ((Map<?, ?>) current).get(subProperty);
+            } else if (current instanceof List) {
+                try {
+                    current = ((List<?>) current).get(Integer.parseInt(subProperty));
+                } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                    String errorMsg = "Number format exception or Index out of bound exception with object " + object + " in getObjectByPath for propertyPath " + propertyPath;
+                    logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg, e);
+                    throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
+                }
             } else {
-                return getObjectByPath(ruleId, conditionId, propertyPath.substring(subProperty.length() + 1), o);
-            }
-        } else if (object instanceof List) {
-            // in case of list, the path is the index
-            Object o = ((List) object).get(Integer.valueOf(subProperty));
-        } else {
-            // normal java object that needs to get the methods to access.
-            Class clazz = object.getClass();
-            Method[] accessors = getAccessors(clazz);
-            for (int i = 0; i < accessors.length; i++) {
-
-                if (accessors[i].getName().substring(ACCESSOR_METHOD_PREFIX.length()).equals(subProperty)) {
-                    // method name matched.
-                    try {
-                        Object o = accessors[i].invoke(object, EMPTY_CLASS_LIST);
-                        if (isLastProp) {
-                            return o;
-                        } else {
-                            return getObjectByPath(ruleId, conditionId, propertyPath.substring(subProperty.length() + 1), o);
+                Class<?> clazz = current.getClass();
+                Method[] accessors = getAccessors(clazz);
+                boolean found = false;
+                for (Method accessor : accessors) {
+                    if (accessor.getName().substring(ACCESSOR_METHOD_PREFIX.length()).equals(subProperty)) {
+                        try {
+                            current = accessor.invoke(current, EMPTY_CLASS_LIST);
+                            found = true;
+                            break;
+                        } catch (Exception e) {
+                            String errorMsg = "Invocation error with object " + object + " in getObjectByPath for propertyPath " + propertyPath;
+                            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg, e);
+                            throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
                         }
-                    } catch (Exception e) {
-                        String errorMsg = "Invocation error with object " + object + " in getObjectByPath for propertyPath " + propertyPath;
-                        logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg, e);
-                        throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
                     }
+                }
+                if(!found) {
+                    return null;
                 }
             }
         }
-        return null;
+        cache.put(key, current);
+        return current;
     }
 
     private boolean evaluateEquals(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
