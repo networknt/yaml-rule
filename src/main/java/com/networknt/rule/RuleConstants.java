@@ -2,9 +2,6 @@ package com.networknt.rule;
 
 public class RuleConstants {
 
-    /** Code for the string match */
-    public static final String CR_OP_MATCH = "MATCH";
-
     /** Key of the result in the resultMap after the condition evaluation. */
     public static final String RESULT = "result";
     /** Key in the result map while exception happens */

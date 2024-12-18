@@ -58,14 +58,14 @@ public class RuleEvaluatorRegexCacheTest {
         try (var mockedStatic = Mockito.mockStatic(Pattern.class)) {
             mockedStatic.when(() -> Pattern.compile("test.*", 0)).thenReturn(mockPattern);
             condition.setPropertyPath("name");
-            condition.setOperatorCode(RuleConstants.CR_OP_MATCH);
+            condition.setOperatorCode(RuleOperator.MATCH.getOperator());
             conditionValue.setConditionValue("test.*");
             List<RuleConditionValue> conditionValues = new ArrayList<>();
             conditionValues.add(conditionValue);
 
             // call evaluateMatch twice with same regex and flags
-            Object result1 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "Name", RuleConstants.CR_OP_MATCH, conditionValues, testObject);
-            Object result2 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "Name", RuleConstants.CR_OP_MATCH, conditionValues, testObject);
+            Object result1 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "Name", RuleOperator.MATCH.getOperator(), conditionValues, testObject);
+            Object result2 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "Name", RuleOperator.MATCH.getOperator(), conditionValues, testObject);
 
             assertTrue((Boolean)result1);
             assertTrue((Boolean)result2);
@@ -90,19 +90,19 @@ public class RuleEvaluatorRegexCacheTest {
             mockedStatic.when(() -> Pattern.compile("test.*", 0)).thenReturn(mockPattern2);
 
             condition.setPropertyPath("name");
-            condition.setOperatorCode(RuleConstants.CR_OP_MATCH);
+            condition.setOperatorCode(RuleOperator.MATCH.getOperator());
             conditionValue.setConditionValue("test.*");
             conditionValue.setRegexFlags("i");
             List<RuleConditionValue> conditionValues = new ArrayList<>();
             conditionValues.add(conditionValue);
 
-            Object result1 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "Name", RuleConstants.CR_OP_MATCH, conditionValues, testObject);
+            Object result1 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "Name", RuleOperator.MATCH.getOperator(), conditionValues, testObject);
             RuleConditionValue conditionValue2 = new RuleConditionValue();
             conditionValue2.setConditionValue("test.*");
             List<RuleConditionValue> conditionValues2 = new ArrayList<>();
             conditionValues2.add(conditionValue2);
 
-            Object result2 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "Name", RuleConstants.CR_OP_MATCH, conditionValues2, testObject);
+            Object result2 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "Name", RuleOperator.MATCH.getOperator(), conditionValues2, testObject);
 
 
             assertTrue((Boolean)result1);
@@ -130,18 +130,18 @@ public class RuleEvaluatorRegexCacheTest {
             mockedStatic.when(() -> Pattern.compile("test.*", 0)).thenReturn(mockPattern);
 
             condition.setPropertyPath("name");
-            condition.setOperatorCode(RuleConstants.CR_OP_MATCH);
+            condition.setOperatorCode(RuleOperator.MATCH.getOperator());
             conditionValue.setConditionValue("test.*");
             List<RuleConditionValue> conditionValues = new ArrayList<>();
             conditionValues.add(conditionValue);
 
 
             // First evaluation
-            Object result1 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "name", RuleConstants.CR_OP_MATCH, conditionValues, testObject);
+            Object result1 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "name", RuleOperator.MATCH.getOperator(), conditionValues, testObject);
             assertTrue((Boolean)result1);
 
             // Second Evaluation
-            Object result2 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "name", RuleConstants.CR_OP_MATCH, conditionValues, testObject);
+            Object result2 = ruleEvaluator.evaluateCondition(ruleId, conditionId, "name", RuleOperator.MATCH.getOperator(), conditionValues, testObject);
             assertTrue((Boolean)result2);
 
 
