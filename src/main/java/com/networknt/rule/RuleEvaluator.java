@@ -28,7 +28,6 @@ public class RuleEvaluator {
     private static final Map accessorMap = new HashMap();
     private static final Class[] EMPTY_CLASS_LIST = new Class[0];
 
-    private static final String ACCESSOR_METHOD_PREFIX = "get";
 
     private static HashSet simpleTypes;
 
@@ -109,17 +108,17 @@ public class RuleEvaluator {
             String token = tokenizer.nextToken().trim();
             if (token.isEmpty()) continue; // Skip empty tokens
 
-            if (token.equals("(")) {
+            if (token.equals(RuleConstants.LEFT_PARENTHESIS)) {
                 operatorStack.push(token);
-            } else if (token.equals(")")) {
-                while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(")) {
+            } else if (token.equals(RuleConstants.RIGHT_PARENTHESIS)) {
+                while (!operatorStack.isEmpty() && !operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS)) {
                     processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
                 }
-                if (!operatorStack.isEmpty() && operatorStack.peek().equals("(")) {
+                if (!operatorStack.isEmpty() && operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS)) {
                     operatorStack.pop();
                 }
             } else if (token.equalsIgnoreCase("AND") || token.equalsIgnoreCase("OR")) {
-                while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(") && hasHigherPrecedence(operatorStack.peek(), token)) {
+                while (!operatorStack.isEmpty() && !operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS) && hasHigherPrecedence(operatorStack.peek(), token)) {
                     processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
                 }
                 operatorStack.push(token);
@@ -155,10 +154,10 @@ public class RuleEvaluator {
 
 
     private boolean hasHigherPrecedence(String op1, String op2) {
-        if (op1.equals("(") || op1.equals(")")) {
+        if (op1.equals(RuleConstants.LEFT_PARENTHESIS) || op1.equals(RuleConstants.RIGHT_PARENTHESIS)) {
             return false;
         }
-        if (op2.equals("(") || op2.equals(")")) {
+        if (op2.equals(RuleConstants.LEFT_PARENTHESIS) || op2.equals(RuleConstants.RIGHT_PARENTHESIS)) {
             return true;
         }
         return op1.equalsIgnoreCase("AND") && op2.equalsIgnoreCase("OR");
@@ -301,7 +300,7 @@ public class RuleEvaluator {
                 Method[] accessors = getAccessors(clazz);
                 boolean found = false;
                 for (Method accessor : accessors) {
-                    if (accessor.getName().substring(ACCESSOR_METHOD_PREFIX.length()).equals(capitalizeFirstLetter(subProperty))) {
+                    if (accessor.getName().substring(RuleConstants.GET_METHOD_PREFIX.length()).equals(capitalizeFirstLetter(subProperty))) {
                         try {
                             current = accessor.invoke(current, EMPTY_CLASS_LIST);
                             found = true;
@@ -724,12 +723,12 @@ public class RuleEvaluator {
             if (dateFormat != null) {
                 df = new SimpleDateFormat(dateFormat);
             } else {
-                df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                df = new SimpleDateFormat(RuleConstants.DEFAULT_DATE_FORMAT);
             }
             try {
                 oret = df.parse(valueStr);
             } catch (ParseException e) {
-                String errorMsg = "Error parsing date string " + valueStr + " with format " + (dateFormat != null ? dateFormat : "yyyy-MM-dd HH:mm:ss");
+                String errorMsg = "Error parsing date string " + valueStr + " with format " + (dateFormat != null ? dateFormat : RuleConstants.DEFAULT_DATE_FORMAT);
                 logger.error("Error parsing date string in rule {}, condition {}: {}", ruleId, conditionId, errorMsg, e);
                 throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
             }
@@ -748,7 +747,7 @@ public class RuleEvaluator {
             ArrayList accessors = new ArrayList(allMethods.length);
             for (int i = 0; i < allMethods.length; i++) {
                 allMethods[i].setAccessible(true);
-                if (allMethods[i].getName().startsWith(ACCESSOR_METHOD_PREFIX)
+                if (allMethods[i].getName().startsWith(RuleConstants.GET_METHOD_PREFIX)
                         && allMethods[i].getParameterTypes().length == 0) {
                     accessors.add(allMethods[i]);
                 }
