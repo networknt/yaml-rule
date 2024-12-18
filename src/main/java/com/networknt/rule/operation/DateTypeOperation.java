@@ -1,5 +1,6 @@
-package com.networknt.rule;
+package com.networknt.rule.operation;
 
+import com.networknt.rule.RuleConstants;
 import com.networknt.rule.exception.ConditionEvaluationException;
 import com.networknt.rule.exception.RuleEngineException;
 import org.slf4j.Logger;

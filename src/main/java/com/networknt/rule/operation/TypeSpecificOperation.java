@@ -1,8 +1,6 @@
-package com.networknt.rule;
+package com.networknt.rule.operation;
 
 import com.networknt.rule.exception.RuleEngineException;
-
-import java.util.Date;
 
 public interface TypeSpecificOperation<T> {
     T convert(String ruleId, String conditionId, Object object, String valueStr, String dateFormat) throws RuleEngineException;
