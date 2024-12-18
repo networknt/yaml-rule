@@ -112,7 +112,7 @@ public class RuleEvaluator {
     /**
      * Evaluate a logical expression with condition ids
      */
-    private boolean evaluateConditionExpression(String ruleId, String expression, Collection<RuleCondition> conditions, Map objMap, Map resultMap) throws RuleEngineException {
+    boolean evaluateConditionExpression(String ruleId, String expression, Collection<RuleCondition> conditions, Map objMap, Map resultMap) throws RuleEngineException {
         // A simple stack-based parser for expressions like "(cid1 OR (cid2 AND cid3))"
         Stack<Boolean> stack = new Stack<>();
         Stack<String> operatorStack = new Stack<>();
