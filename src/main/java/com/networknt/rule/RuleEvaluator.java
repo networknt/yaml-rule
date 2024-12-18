@@ -1,5 +1,8 @@
 package com.networknt.rule;
 
+import com.networknt.rule.exception.ConditionEvaluationException;
+import com.networknt.rule.exception.InvalidOperatorException;
+import com.networknt.rule.exception.RuleEngineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -57,22 +61,22 @@ public class RuleEvaluator {
      * @param rule rule
      * @param objMap input map
      * @return true if the rule matches the orphan, false otherwise.
-     * @throws Exception
-     *             if could not evaluate
+     * @throws RuleEngineException if there is an error evaluating the rule
+     *
      */
-    public boolean evaluate(Rule rule, Map objMap, Map resultMap) throws Exception {
+    public boolean evaluate(Rule rule, Map objMap, Map resultMap) throws RuleEngineException {
         boolean result;
         if(rule.getConditions() == null || rule.getConditions().isEmpty()) {
            return true;
         }
 
         if (rule.getConditionExpression() != null && !rule.getConditionExpression().trim().isEmpty()) {
-            result = evaluateConditionExpression(rule.getConditionExpression(), rule.getConditions(), objMap, resultMap);
+            result = evaluateConditionExpression(rule.getRuleId(), rule.getConditionExpression(), rule.getConditions(), objMap, resultMap);
         } else {
             // Default to AND all conditions if no expression is given for backward compatibility.
             result = true;
              for (RuleCondition rc : rule.getConditions()) {
-                boolean r = evaluateCondition(rc.getPropertyPath(), rc.getOperatorCode(),
+                boolean r = evaluateCondition(rule.getRuleId(), rc.getConditionId(), rc.getPropertyPath(), rc.getOperatorCode(),
                         (List) rc.getConditionValues(), objMap);
                 resultMap.put(rc.getConditionId(), r);
                  if(!r) {
@@ -88,7 +92,7 @@ public class RuleEvaluator {
     /**
      * Evaluate a logical expression with condition ids
      */
-    private boolean evaluateConditionExpression(String expression, Collection<RuleCondition> conditions, Map objMap, Map resultMap) throws Exception {
+    private boolean evaluateConditionExpression(String ruleId, String expression, Collection<RuleCondition> conditions, Map objMap, Map resultMap) throws RuleEngineException {
        // A simple stack-based parser for expressions like "(cid1 OR (cid2 AND cid3))"
         Stack<Boolean> stack = new Stack<>();
         Stack<String> operatorStack = new Stack<>();
@@ -103,14 +107,14 @@ public class RuleEvaluator {
                 operatorStack.push(token);
             } else if (token.equals(")")) {
                 while(!operatorStack.isEmpty() && !operatorStack.peek().equals("(")) {
-                   processOperator(stack, operatorStack, objMap, resultMap, conditions);
+                   processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
                 }
                 if(!operatorStack.isEmpty() && operatorStack.peek().equals("(")) {
                    operatorStack.pop();
                 }
             } else if (token.equalsIgnoreCase("AND") || token.equalsIgnoreCase("OR")) {
                 while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(") && hasHigherPrecedence(operatorStack.peek(), token)) {
-                    processOperator(stack, operatorStack, objMap, resultMap, conditions);
+                    processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
                 }
                 operatorStack.push(token);
             } else {
@@ -121,20 +125,24 @@ public class RuleEvaluator {
                 } else {
                    RuleCondition ruleCondition = getRuleCondition(token, conditions);
                     if(ruleCondition == null) {
-                        throw new Exception("Condition with id: " + token + " is not defined");
+                        String errorMsg = "Condition with id: " + token + " is not defined";
+                        logger.error("Error evaluating condition in rule {}: {}", ruleId, errorMsg);
+                        throw new RuleEngineException(errorMsg, ruleId);
                     }
-                   conditionResult = evaluateCondition(ruleCondition.getPropertyPath(), ruleCondition.getOperatorCode(),
+                   conditionResult = evaluateCondition(ruleId, ruleCondition.getConditionId(), ruleCondition.getPropertyPath(), ruleCondition.getOperatorCode(),
                             (List) ruleCondition.getConditionValues(), objMap);
                     resultMap.put(token, conditionResult);
                 }
                 stack.push(conditionResult);
             }
         }
-         while(!operatorStack.isEmpty()) {
-             processOperator(stack, operatorStack, objMap, resultMap, conditions);
-         }
+        while(!operatorStack.isEmpty()) {
+            processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
+        }
         if (stack.size() != 1) {
-            throw new Exception("Invalid expression. Stack size is not 1");
+            String errorMsg = "Invalid expression " + expression + ". Stack size " + stack + " 1";
+            logger.error("Error evaluating condition in rule {}, expression {}: {}", ruleId, expression, errorMsg);
+            throw new RuleEngineException(errorMsg, ruleId);
         }
         return stack.pop();
     }
@@ -150,11 +158,13 @@ public class RuleEvaluator {
         return op1.equalsIgnoreCase("AND") && op2.equalsIgnoreCase("OR");
     }
 
-    private void processOperator(Stack<Boolean> stack, Stack<String> operatorStack, Map objMap, Map resultMap, Collection<RuleCondition> conditions) throws Exception {
+    private void processOperator(String ruleId, Stack<Boolean> stack, Stack<String> operatorStack, Map objMap, Map resultMap, Collection<RuleCondition> conditions) throws RuleEngineException {
       String operator = operatorStack.pop();
       if (operator.equalsIgnoreCase("AND") || operator.equalsIgnoreCase("OR")) {
           if(stack.size() < 2) {
-             throw new Exception("Invalid expression. Stack size is less than 2 for an operator");
+              String errorMsg = "Invalid expression. Stack size " + stack.size() + " is less than 2 for an operator " + operator;
+              logger.error("Error evaluating condition in rule {}: {}", ruleId, errorMsg);
+              throw new RuleEngineException(errorMsg, ruleId);
           }
           boolean operand2 = stack.pop();
           boolean operand1 = stack.pop();
@@ -180,11 +190,12 @@ public class RuleEvaluator {
      * Evaluates values passed as strings based on their type and the operator.
      *
      */
-    private boolean evaluateCondition(String propertyPath,
-                                      String opCode, List conditionValues, Object object) throws Exception {
+    private boolean evaluateCondition(String ruleId, String conditionId, String propertyPath,
+                                      String opCode, List<RuleConditionValue> conditionValues, Object object) throws RuleEngineException {
         if(object == null) {
-            logger.warn("Input object is null for operator " + opCode);
-            throw new Exception("Input object is null for operator " + opCode);
+            String errorMsg = "Input object is null for operator " + opCode;
+            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+            throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
         }
         Object valueObject = null;
         RuleConditionValue conditionValue = null;
@@ -192,67 +203,68 @@ public class RuleEvaluator {
             conditionValue = (RuleConditionValue) conditionValues.get(0);
             if(conditionValue != null) {
                 if (conditionValue.isExpression()) {
-                    valueObject = getObjectByPath(conditionValue.getConditionValue(), object);
+                    valueObject = getObjectByPath(ruleId, conditionId, conditionValue.getConditionValue(), object);
                 } else {
                     valueObject = conditionValue.getConditionValue();
                 }
             }
         }
         if (RuleConstants.CR_OP_EQUALS.equals(opCode)) {
-            return evaluateEquals(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateEquals(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_NOT_EQUALS.equals(opCode)) {
-            return !evaluateEquals(getObjectByPath(propertyPath, object), valueObject);
+            return !evaluateEquals(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_CONTAINS.equals(opCode)) {
-            return evaluateContains(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateContains(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_NOT_CONTAINS.equals(opCode)) {
-            return !evaluateContains(getObjectByPath(propertyPath, object), valueObject);
+            return !evaluateContains(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_IN_LIST.equals(opCode)) {
-            return evaluateInList(getObjectByPath(propertyPath, object), conditionValues);
+            return evaluateInList(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), conditionValues);
         } else if (RuleConstants.CR_OP_NOT_IN_LIST.equals(opCode)) {
-            return !evaluateInList(getObjectByPath(propertyPath, object), conditionValues);
+            return !evaluateInList(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), conditionValues);
         } else if (RuleConstants.CR_OP_GT.equals(opCode)) {
-            return evaluateGreaterThan(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateGreaterThan(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_GTE.equals(opCode)) {
-            return evaluateGreaterThanOrEqual(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateGreaterThanOrEqual(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LT.equals(opCode)) {
-            return evaluateLessThan(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateLessThan(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_LTE.equals(opCode)) {
-            return evaluateLessThanOrEqual(getObjectByPath(propertyPath, object), valueObject);
+            return evaluateLessThanOrEqual(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
         } else if (RuleConstants.CR_OP_NULL.equals(opCode)) {
-            return isNull(getObjectByPath(propertyPath, object));
+            return isNull(getObjectByPath(ruleId, conditionId, propertyPath, object));
         } else if (RuleConstants.CR_OP_NOT_NULL.equals(opCode)) {
-            return !isNull(getObjectByPath(propertyPath, object));
+            return !isNull(getObjectByPath(ruleId, conditionId, propertyPath, object));
         } else if (RuleConstants.CR_OP_IS_EMPTY.equals(opCode)) {
-            return isEmpty(getObjectByPath(propertyPath, object));
+            return isEmpty(getObjectByPath(ruleId, conditionId, propertyPath, object));
         } else if (RuleConstants.CR_OP_IS_NOT_EMPTY.equals(opCode)) {
-            return !isEmpty(getObjectByPath(propertyPath, object));
+            return !isEmpty(getObjectByPath(ruleId, conditionId, propertyPath, object));
         } else if (RuleConstants.CR_OP_IS_BLANK.equals(opCode)) {
-            return isBlank(getObjectByPath(propertyPath, object));
+            return isBlank(getObjectByPath(ruleId, conditionId, propertyPath, object));
         } else if (RuleConstants.CR_OP_IS_NOT_BLANK.equals(opCode)) {
-            return !isBlank(getObjectByPath(propertyPath, object));
+            return !isBlank(getObjectByPath(ruleId, conditionId, propertyPath, object));
         }else if (RuleConstants.CR_OP_BEFORE.equals(opCode)) {
-            return evaluateBefore(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
+            return evaluateBefore(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
         } else if (RuleConstants.CR_OP_AFTER.equals(opCode)) {
-            return evaluateAfter(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
+            return evaluateAfter(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
         } else if (RuleConstants.CR_OP_ON.equals(opCode)) {
-            return evaluateOn(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
+            return evaluateOn(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
         } else if (RuleConstants.CR_OP_LEN_EQ.equals(opCode)) {
-            return evaluateLenEq(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
+            return evaluateLenEq(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_LEN_GT.equals(opCode)) {
-            return evaluateLenGt(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
+            return evaluateLenGt(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_LEN_LT.equals(opCode)) {
-            return evaluateLenLt(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
+            return evaluateLenLt(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
         } else if (RuleConstants.CR_OP_MATCH.equals(opCode)) {
-            return evaluateMatch(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
+            return evaluateMatch(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
         } else if (RuleConstants.CR_OP_NOT_MATCH.equals(opCode)) {
-            return !evaluateMatch(getObjectByPath(propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
+            return !evaluateMatch(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
         } else {
-            logger.warn("Operator " + opCode + " is not supported");
-            throw new Exception("Invalid operator" + opCode);
+            String errorMsg = "Invalid operator! Operator code " + opCode + " is not supported";
+            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+            throw new InvalidOperatorException(errorMsg, ruleId, conditionId, opCode);
         }
     }
 
-    public Object getObjectByPath(String propertyPath, Object object) {
+    public Object getObjectByPath(String ruleId, String conditionId, String propertyPath, Object object) throws RuleEngineException{
         if(object == null) {
             return null;
         } else {
@@ -276,7 +288,7 @@ public class RuleEvaluator {
             if (isLastProp) {
                 return o;
             } else {
-                return getObjectByPath(propertyPath.substring(subProperty.length() + 1), o);
+                return getObjectByPath(ruleId, conditionId, propertyPath.substring(subProperty.length() + 1), o);
             }
         } else if(object instanceof List) {
             // in case of list, the path is the index
@@ -294,10 +306,12 @@ public class RuleEvaluator {
                         if (isLastProp) {
                             return o;
                         } else {
-                            return getObjectByPath(propertyPath.substring(subProperty.length() + 1), o);
+                            return getObjectByPath(ruleId, conditionId, propertyPath.substring(subProperty.length() + 1), o);
                         }
                     } catch (Exception e) {
-                        logger.error("invoke error", e);
+                        String errorMsg = "Invocation error with object " + object + " in getObjectByPath for propertyPath " + propertyPath;
+                        logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg, e);
+                        throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
                     }
                 }
             }
@@ -305,12 +319,12 @@ public class RuleEvaluator {
         return null;
     }
 
-    private boolean evaluateEquals(Object object, Object valueObject) throws Exception {
+    private boolean evaluateEquals(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
         if (object == null || valueObject == null) {
             return (object == null && valueObject == null);
         } else {
             if(valueObject instanceof String) {
-                Object convertedValueObject = convertConditionValue(object, (String)valueObject, null);
+                Object convertedValueObject = convertConditionValue(ruleId, conditionId, object, (String)valueObject, null);
                 return object.equals(convertedValueObject);
             } else {
                 return object.equals(valueObject);
@@ -322,7 +336,7 @@ public class RuleEvaluator {
      * Checks if string version of object is contained within ConditionValue
      *
      */
-    private boolean evaluateContains(Object object, Object valueObject) throws Exception {
+    private boolean evaluateContains(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
         // null contains null
         if (object == null || valueObject == null) {
             return (object == null && valueObject == null);
@@ -330,7 +344,8 @@ public class RuleEvaluator {
         if(valueObject instanceof String) {
             return (object.toString().indexOf((String)valueObject) >= 0);
         } else {
-            logger.error("Contains evaluation with type different than string " + object.getClass());
+            String errorMsg = "Contains evaluation with type different than string " + object.getClass();
+            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
             return false;
         }
     }
@@ -340,7 +355,7 @@ public class RuleEvaluator {
      * Checks if object value is contained in the list of condition values
      *
      */
-    private boolean evaluateInList(Object object, List valueConditions) throws Exception {
+    private boolean evaluateInList(String ruleId, String conditionId, Object object, List valueConditions) throws RuleEngineException {
         // empty list contains null
         if (object == null || valueConditions == null || valueConditions.isEmpty()) {
             return (object == null
@@ -351,7 +366,7 @@ public class RuleEvaluator {
         ListIterator it = valueConditions.listIterator();
         while (!match && it.hasNext()) {
             RuleConditionValue value = (RuleConditionValue) it.next();
-            Object valueObject = convertConditionValue(object, value.getConditionValue(), null);
+            Object valueObject = convertConditionValue(ruleId, conditionId, object, value.getConditionValue(), null);
             if (object == null || valueObject == null) {
                 match = (object == null && valueObject == null);
             } else {
@@ -364,32 +379,32 @@ public class RuleEvaluator {
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateGreaterThan(Object object, Object valueObject) throws Exception {
-        boolean result = (compareNumeric(object, valueObject) > 0);
+    private boolean evaluateGreaterThan(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
+        boolean result = (compareNumeric(ruleId, conditionId, object, valueObject) > 0);
         return result;
     }
 
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateGreaterThanOrEqual(Object object, Object valueObject) throws Exception {
-        boolean result = (compareNumeric(object, valueObject) >= 0);
+    private boolean evaluateGreaterThanOrEqual(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
+        boolean result = (compareNumeric(ruleId, conditionId, object, valueObject) >= 0);
         return result;
     }
 
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateLessThan(Object object, Object valueObject) throws Exception {
-        boolean result = (compareNumeric(object, valueObject) < 0);
+    private boolean evaluateLessThan(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
+        boolean result = (compareNumeric(ruleId, conditionId, object, valueObject) < 0);
         return result;
     }
 
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateLessThanOrEqual(Object object, Object valueObject) throws Exception {
-        boolean result = (compareNumeric(object, valueObject) <= 0);
+    private boolean evaluateLessThanOrEqual(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
+        boolean result = (compareNumeric(ruleId, conditionId, object, valueObject) <= 0);
         return result;
     }
 
@@ -397,12 +412,14 @@ public class RuleEvaluator {
      * Compare two numeric values.
      *
      */
-    private int compareNumeric(Object object, Object valueObject) throws Exception {
+    private int compareNumeric(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
 
         if(!(object instanceof java.lang.Number)) {
-            throw new Exception("Object is not a number:" + object.getClass());
+            String errorMsg = "Object is not a number:" + object.getClass();
+            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+            throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
         }
-        if(evaluateEquals(object, valueObject)) {
+        if(evaluateEquals(ruleId, conditionId, object, valueObject)) {
             return 0;
         }
 
@@ -417,7 +434,7 @@ public class RuleEvaluator {
         }
         Object value = valueObject;
         if(valueObject instanceof String) {
-            value = convertConditionValue(object, (String) valueObject, null);
+            value = convertConditionValue(ruleId, conditionId, object, (String) valueObject, null);
         }
 
         if (value == null && object == null) {
@@ -460,25 +477,25 @@ public class RuleEvaluator {
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateBefore(Object object, Object valueObject, String dateFormat) throws Exception {
-        boolean result = (compareDate(object, valueObject, dateFormat) < 0);
+    private boolean evaluateBefore(String ruleId, String conditionId, Object object, Object valueObject, String dateFormat) throws RuleEngineException {
+        boolean result = (compareDate(ruleId, conditionId, object, valueObject, dateFormat) < 0);
         return result;
     }
 
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateAfter(Object object, Object valueObject, String dateFormat) throws Exception {
+    private boolean evaluateAfter(String ruleId, String conditionId, Object object, Object valueObject, String dateFormat) throws RuleEngineException {
 
-        boolean result = (compareDate(object, valueObject, dateFormat) > 0);
+        boolean result = (compareDate(ruleId, conditionId, object, valueObject, dateFormat) > 0);
         return result;
     }
 
     /**
      * Evaluates whether the object value matches the criteria.
      */
-    private boolean evaluateOn(Object object, Object valueObject, String dateFormat) throws Exception {
-        boolean result = (compareDate(object, valueObject, dateFormat) == 0);
+    private boolean evaluateOn(String ruleId, String conditionId, Object object, Object valueObject, String dateFormat) throws RuleEngineException {
+        boolean result = (compareDate(ruleId, conditionId, object, valueObject, dateFormat) == 0);
         return result;
     }
 
@@ -486,13 +503,15 @@ public class RuleEvaluator {
      * Compare two Date values.
      *
      */
-    private int compareDate(Object object, Object valueObject, String dateFormat) throws Exception {
+    private int compareDate(String ruleId, String conditionId, Object object, Object valueObject, String dateFormat) throws RuleEngineException {
 
         if(!(object instanceof java.util.Date)) {
-            throw new Exception("Object is not a Date");
+            String errorMsg = "Object is not a Date";
+            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+            throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
         }
 
-        if(evaluateEquals(object, valueObject)) {
+        if(evaluateEquals(ruleId, conditionId, object, valueObject)) {
             return 0;
         }
 
@@ -507,7 +526,7 @@ public class RuleEvaluator {
         }
         Object value = valueObject;
         if(valueObject instanceof String) {
-            value = convertConditionValue(object, (String)valueObject, dateFormat);
+            value = convertConditionValue(ruleId, conditionId, object, (String)valueObject, dateFormat);
         }
 
         if (value == null && object == null) {
@@ -532,31 +551,33 @@ public class RuleEvaluator {
         return 0;
     }
 
-    private boolean evaluateLenEq(Object object, Object valueObject, String valueTypeCode) throws Exception {
+    private boolean evaluateLenEq(String ruleId, String conditionId, Object object, Object valueObject, String valueTypeCode) throws RuleEngineException {
         if (valueObject == null) return false;
-        return (compareStringLength(object, valueObject, valueTypeCode) == 0);
+        return (compareStringLength(ruleId, conditionId, object, valueObject, valueTypeCode) == 0);
     }
 
-    private boolean evaluateLenGt(Object object, Object valueObject, String valueTypeCode) throws Exception {
+    private boolean evaluateLenGt(String ruleId, String conditionId, Object object, Object valueObject, String valueTypeCode) throws RuleEngineException {
         if (valueObject == null) return false;
-        return (compareStringLength(object, valueObject, valueTypeCode) > 0);
+        return (compareStringLength(ruleId, conditionId, object, valueObject, valueTypeCode) > 0);
     }
 
-    private boolean evaluateLenLt(Object object, Object valueObject, String valueTypeCode) throws Exception {
+    private boolean evaluateLenLt(String ruleId, String conditionId, Object object, Object valueObject, String valueTypeCode) throws RuleEngineException {
         if (valueObject == null) return false;
-        return (compareStringLength(object, valueObject, valueTypeCode) < 0);
+        return (compareStringLength(ruleId, conditionId, object, valueObject, valueTypeCode) < 0);
     }
 
     /**
      * Compare two string's length
      *
      */
-    private int compareStringLength(Object object, Object valueObject, String valueTypeCode) throws Exception {
+    private int compareStringLength(String ruleId, String conditionId, Object object, Object valueObject, String valueTypeCode) throws RuleEngineException {
 
         if(!(object instanceof java.lang.String)) {
-            throw new Exception("Object is not a String:" + object.getClass());
+            String errorMsg = "Object is not a String:" + object.getClass();
+            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+            throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
         }
-        if(evaluateEquals(object, valueObject)) {
+        if(evaluateEquals(ruleId, conditionId, object, valueObject)) {
             return 0;
         }
 
@@ -588,22 +609,30 @@ public class RuleEvaluator {
             if(object.getClass().getName().equals("java.lang.String")) {
                 return ((java.lang.String)object).length() - ((String)value).length();
             } else {
-                throw new Exception("Incompatible object to compare length of String with " + object.getClass().getName());
+                String errorMsg = "Incompatible object to compare length of String with " + object.getClass().getName();
+                logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+                throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
             }
         } else if ("INTEGER".equals(valueTypeCode)) {
             if(object.getClass().getName().equals("java.lang.String")) {
                 return ((java.lang.String)object).length() - Integer.valueOf(value.toString());
             } else {
-                throw new Exception("Incompatible object to compare length of String with " + object.getClass().getName());
+                String errorMsg = "Incompatible object to compare length of String with " + object.getClass().getName();
+                logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+                throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
             }
         } else {
-           throw new Exception("Incompatible value type " + valueTypeCode);
+            String errorMsg = "Incompatible value type " + valueTypeCode;
+            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+            throw new ConditionEvaluationException(errorMsg,  ruleId, conditionId);
         }
     }
 
-    private boolean evaluateMatch(Object object, Object valueObject, String regexFlags) throws Exception {
+    private boolean evaluateMatch(String ruleId, String conditionId, Object object, Object valueObject, String regexFlags) throws RuleEngineException {
         if(!(object instanceof java.lang.String)) {
-            throw new Exception("Object is not a String:" + object.getClass());
+            String errorMsg = "Object is not a String:" + object.getClass();
+            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+            throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
         }
         Object value = valueObject;
         if(!(valueObject instanceof java.lang.String)) {
@@ -620,7 +649,9 @@ public class RuleEvaluator {
             }
             return Pattern.compile((String)value, flags).matcher((String)object).matches();
         } else {
-            throw new Exception("Condition Value is empty");
+            String errorMsg = "Condition Value is empty";
+            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+            throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
         }
     }
 
@@ -646,7 +677,7 @@ public class RuleEvaluator {
     }
 
 
-    private Object convertConditionValue(Object object, String valueStr, String dateFormat) throws Exception {
+    private Object convertConditionValue(String ruleId, String conditionId, Object object, String valueStr, String dateFormat) throws RuleEngineException {
         Class clazz = object.getClass();
         Object oret = null;
         if(clazz.getName().equals("java.lang.String")) {
@@ -692,7 +723,13 @@ public class RuleEvaluator {
             } else {
                 df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             }
-            oret = df.parse(valueStr);
+            try {
+                oret = df.parse(valueStr);
+            } catch (ParseException e) {
+                String errorMsg = "Error parsing date string " + valueStr + " with format " + (dateFormat != null ? dateFormat : "yyyy-MM-dd HH:mm:ss");
+                logger.error("Error parsing date string in rule {}, condition {}: {}", ruleId, conditionId, errorMsg, e);
+                throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
+            }
         }
         if(clazz.getName().equals("java.sql.Date")) {
             oret = java.sql.Date.valueOf(valueStr);

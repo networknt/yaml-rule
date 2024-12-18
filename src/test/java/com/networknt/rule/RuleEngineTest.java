@@ -1,5 +1,6 @@
 package com.networknt.rule;
 
+import com.networknt.rule.exception.RuleEngineException;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
@@ -65,8 +66,9 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
 
-        engine.executeRule("rule2", objMap);
-    }
+        Assertions.assertThrows(RuleEngineException.class, () -> {
+            engine.executeRule("rule2", objMap);
+        });    }
 
     @Test
     public void testRoleAuthWithCcToken() throws Exception {
