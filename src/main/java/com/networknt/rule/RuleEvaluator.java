@@ -117,28 +117,36 @@ public class RuleEvaluator {
                 if (!operatorStack.isEmpty() && operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS)) {
                     operatorStack.pop();
                 }
-            } else if (token.equalsIgnoreCase("AND") || token.equalsIgnoreCase("OR")) {
-                while (!operatorStack.isEmpty() && !operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS) && hasHigherPrecedence(operatorStack.peek(), token)) {
-                    processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
-                }
-                operatorStack.push(token);
             } else {
-                // Assume this is a condition id
-                boolean conditionResult;
-                if (resultMap.containsKey(token)) {
-                    conditionResult = (Boolean) resultMap.get(token);
-                } else {
-                    RuleCondition ruleCondition = getRuleCondition(token, conditions);
-                    if (ruleCondition == null) {
-                        String errorMsg = "Condition with id: " + token + " is not defined";
-                        logger.error("Error evaluating condition in rule {} missing condition {}: {}", ruleId, token, errorMsg);
-                        throw new RuleEngineException(errorMsg, ruleId);
-                    }
-                    conditionResult = evaluateCondition(ruleId, ruleCondition.getConditionId(), ruleCondition.getPropertyPath(), ruleCondition.getOperatorCode(),
-                            (List) ruleCondition.getConditionValues(), objMap);
-                    resultMap.put(token, conditionResult);
+                LogicalOperator logicalOperator = null;
+                try {
+                    logicalOperator =  LogicalOperator.fromString(token);
+                } catch (IllegalArgumentException e) {
+                    // Token is not a logical operator, assume it's a condition ID
                 }
-                stack.push(conditionResult);
+                if (logicalOperator == LogicalOperator.AND || logicalOperator ==  LogicalOperator.OR) {
+                    while (!operatorStack.isEmpty() && !operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS) && hasHigherPrecedence(operatorStack.peek(), token)) {
+                        processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
+                    }
+                    operatorStack.push(token);
+                } else {
+                    // Assume this is a condition id
+                    boolean conditionResult;
+                    if (resultMap.containsKey(token)) {
+                        conditionResult = (Boolean) resultMap.get(token);
+                    } else {
+                        RuleCondition ruleCondition = getRuleCondition(token, conditions);
+                        if (ruleCondition == null) {
+                            String errorMsg = "Condition with id: " + token + " is not defined";
+                            logger.error("Error evaluating condition in rule {} missing condition {}: {}", ruleId, token, errorMsg);
+                            throw new RuleEngineException(errorMsg, ruleId);
+                        }
+                        conditionResult = evaluateCondition(ruleId, ruleCondition.getConditionId(), ruleCondition.getPropertyPath(), ruleCondition.getOperatorCode(),
+                                (List) ruleCondition.getConditionValues(), objMap);
+                        resultMap.put(token, conditionResult);
+                    }
+                    stack.push(conditionResult);
+                }
             }
         }
         while (!operatorStack.isEmpty()) {
@@ -160,12 +168,12 @@ public class RuleEvaluator {
         if (op2.equals(RuleConstants.LEFT_PARENTHESIS) || op2.equals(RuleConstants.RIGHT_PARENTHESIS)) {
             return true;
         }
-        return op1.equalsIgnoreCase("AND") && op2.equalsIgnoreCase("OR");
+        return LogicalOperator.fromString(op1) == LogicalOperator.AND && LogicalOperator.fromString(op2) == LogicalOperator.OR;
     }
 
     private void processOperator(String ruleId, Stack<Boolean> stack, Stack<String> operatorStack, Map objMap, Map resultMap, Collection<RuleCondition> conditions) throws RuleEngineException {
         String operator = operatorStack.pop();
-        if (operator.equalsIgnoreCase("AND") || operator.equalsIgnoreCase("OR")) {
+        if (LogicalOperator.fromString(operator) == LogicalOperator.AND || LogicalOperator.fromString(operator) == LogicalOperator.OR) {
             if (stack.size() < 2) {
                 String errorMsg = "Invalid expression. Stack size " + stack.size() + " is less than 2 for an operator " + operator;
                 logger.error("Error evaluating condition in rule {}: {}", ruleId, errorMsg);
@@ -173,9 +181,9 @@ public class RuleEvaluator {
             }
             boolean operand2 = stack.pop();
             boolean operand1 = stack.pop();
-            if (operator.equalsIgnoreCase("AND")) {
+            if (LogicalOperator.fromString(operator) == LogicalOperator.AND) {
                 stack.push(operand1 && operand2);
-            } else if (operator.equalsIgnoreCase("OR")) {
+            } else if (LogicalOperator.fromString(operator) == LogicalOperator.OR) {
                 stack.push(operand1 || operand2);
             }
         }
@@ -213,59 +221,63 @@ public class RuleEvaluator {
                 }
             }
         }
-        if (RuleConstants.CR_OP_EQUALS.equals(opCode)) {
-            return evaluateEquals(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-        } else if (RuleConstants.CR_OP_NOT_EQUALS.equals(opCode)) {
-            return !evaluateEquals(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-        } else if (RuleConstants.CR_OP_CONTAINS.equals(opCode)) {
-            return evaluateContains(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-        } else if (RuleConstants.CR_OP_NOT_CONTAINS.equals(opCode)) {
-            return !evaluateContains(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-        } else if (RuleConstants.CR_OP_IN_LIST.equals(opCode)) {
-            return evaluateInList(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), conditionValues);
-        } else if (RuleConstants.CR_OP_NOT_IN_LIST.equals(opCode)) {
-            return !evaluateInList(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), conditionValues);
-        } else if (RuleConstants.CR_OP_GT.equals(opCode)) {
-            return evaluateGreaterThan(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-        } else if (RuleConstants.CR_OP_GTE.equals(opCode)) {
-            return evaluateGreaterThanOrEqual(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-        } else if (RuleConstants.CR_OP_LT.equals(opCode)) {
-            return evaluateLessThan(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-        } else if (RuleConstants.CR_OP_LTE.equals(opCode)) {
-            return evaluateLessThanOrEqual(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-        } else if (RuleConstants.CR_OP_NULL.equals(opCode)) {
-            return isNull(getObjectByPath(ruleId, conditionId, propertyPath, object));
-        } else if (RuleConstants.CR_OP_NOT_NULL.equals(opCode)) {
-            return !isNull(getObjectByPath(ruleId, conditionId, propertyPath, object));
-        } else if (RuleConstants.CR_OP_IS_EMPTY.equals(opCode)) {
-            return isEmpty(getObjectByPath(ruleId, conditionId, propertyPath, object));
-        } else if (RuleConstants.CR_OP_IS_NOT_EMPTY.equals(opCode)) {
-            return !isEmpty(getObjectByPath(ruleId, conditionId, propertyPath, object));
-        } else if (RuleConstants.CR_OP_IS_BLANK.equals(opCode)) {
-            return isBlank(getObjectByPath(ruleId, conditionId, propertyPath, object));
-        } else if (RuleConstants.CR_OP_IS_NOT_BLANK.equals(opCode)) {
-            return !isBlank(getObjectByPath(ruleId, conditionId, propertyPath, object));
-        } else if (RuleConstants.CR_OP_BEFORE.equals(opCode)) {
-            return evaluateBefore(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
-        } else if (RuleConstants.CR_OP_AFTER.equals(opCode)) {
-            return evaluateAfter(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
-        } else if (RuleConstants.CR_OP_ON.equals(opCode)) {
-            return evaluateOn(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
-        } else if (RuleConstants.CR_OP_LEN_EQ.equals(opCode)) {
-            return evaluateLenEq(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
-        } else if (RuleConstants.CR_OP_LEN_GT.equals(opCode)) {
-            return evaluateLenGt(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
-        } else if (RuleConstants.CR_OP_LEN_LT.equals(opCode)) {
-            return evaluateLenLt(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
-        } else if (RuleConstants.CR_OP_MATCH.equals(opCode)) {
-            return evaluateMatch(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
-        } else if (RuleConstants.CR_OP_NOT_MATCH.equals(opCode)) {
-            return !evaluateMatch(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
-        } else {
-            String errorMsg = "Invalid operator! Operator code " + opCode + " is not supported";
-            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
-            throw new InvalidOperatorException(errorMsg, ruleId, conditionId, opCode);
+
+        RuleOperator operator = RuleOperator.fromString(opCode);
+        switch (operator) {
+            case EQUALS:
+                return evaluateEquals(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
+            case NOT_EQUALS:
+                return !evaluateEquals(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
+            case CONTAINS:
+                return evaluateContains(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
+            case NOT_CONTAINS:
+                return !evaluateContains(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
+            case IN_LIST:
+                return evaluateInList(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), conditionValues);
+            case NOT_IN_LIST:
+                return !evaluateInList(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), conditionValues);
+            case GREATER_THAN:
+                return evaluateGreaterThan(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
+            case GREATER_THAN_OR_EQUAL:
+                return evaluateGreaterThanOrEqual(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
+            case LESS_THAN:
+                return evaluateLessThan(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
+            case LESS_THAN_OR_EQUAL:
+                return evaluateLessThanOrEqual(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
+            case IS_NULL:
+                return isNull(getObjectByPath(ruleId, conditionId, propertyPath, object));
+            case IS_NOT_NULL:
+                return !isNull(getObjectByPath(ruleId, conditionId, propertyPath, object));
+            case IS_EMPTY:
+                return isEmpty(getObjectByPath(ruleId, conditionId, propertyPath, object));
+            case IS_NOT_EMPTY:
+                return !isEmpty(getObjectByPath(ruleId, conditionId, propertyPath, object));
+            case IS_BLANK:
+                return isBlank(getObjectByPath(ruleId, conditionId, propertyPath, object));
+            case IS_NOT_BLANK:
+                return !isBlank(getObjectByPath(ruleId, conditionId, propertyPath, object));
+            case BEFORE:
+                return evaluateBefore(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
+            case AFTER:
+                return evaluateAfter(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
+            case ON:
+                return evaluateOn(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
+            case LENGTH_EQUALS:
+                return evaluateLenEq(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
+            case LENGTH_GREATER_THAN:
+                return evaluateLenGt(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
+            case LENGTH_LESS_THAN:
+                return evaluateLenLt(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
+            case MATCH:
+                return evaluateMatch(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
+            case NOT_MATCH:
+                return !evaluateMatch(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
+            default:
+                String errorMsg = "Invalid operator! Operator code " + opCode + " is not supported";
+                logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+                throw new InvalidOperatorException(errorMsg, ruleId, conditionId, opCode);
         }
+
     }
 
     public Object getObjectByPath(String ruleId, String conditionId, String propertyPath, Object object) throws RuleEngineException {

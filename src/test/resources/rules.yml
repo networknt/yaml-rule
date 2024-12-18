@@ -7,7 +7,7 @@ rule1:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
-      operatorCode: EQ
+      operatorCode: equals
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -27,7 +27,7 @@ test-on-date-format-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
-      operatorCode: ON
+      operatorCode: on
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -46,7 +46,7 @@ test-before-date-format-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
-      operatorCode: BF
+      operatorCode: before
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -65,7 +65,7 @@ test-after-date-format-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
-      operatorCode: AF
+      operatorCode: after
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -84,7 +84,7 @@ test-before-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
-      operatorCode: BF
+      operatorCode: before
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -102,7 +102,7 @@ test-after-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
-      operatorCode: AF
+      operatorCode: after
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -120,7 +120,7 @@ test-on-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
-      operatorCode: ON
+      operatorCode: on
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -138,7 +138,7 @@ test-len-eq-int-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
-      operatorCode: LEN_EQ
+      operatorCode: lengthEquals
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -157,7 +157,7 @@ test-gte-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
-      operatorCode: GTE
+      operatorCode: greaterThanOrEqual
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -176,7 +176,7 @@ test-lte-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
-      operatorCode: LTE
+      operatorCode: lessThanOrEqual
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -195,7 +195,7 @@ role-based-auth:
   conditions:
     - conditionId: allow-role
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 1
   actions:
     - actionId: match-role
@@ -213,11 +213,11 @@ role-based-auth-skip-cc:
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
-      operatorCode: NIL
+      operatorCode: isNull
       index: 1
     - conditionId: allow-role
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 2
   conditionExpression: (allow-cc OR allow-role)
   actions:
@@ -236,25 +236,25 @@ cc-group-role-auth:
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
-      operatorCode: NIL
+      operatorCode: isNull
       index: 1
     - conditionId: manager
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
-      operatorCode: CS
+      operatorCode: contains
       index: 2
       conditionValues:
         - conditionValueId: manager
           conditionValue: admin
     - conditionId: teller
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
-      operatorCode: CS
+      operatorCode: contains
       index: 3
       conditionValues:
         - conditionValueId: teller
           conditionValue: frontOffice
     - conditionId: allow-role-jwt
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 4
   conditionExpression: (allow-cc OR manager OR teller OR allow-role-jwt)
   actions:
@@ -273,15 +273,15 @@ ccsid-group-role-auth:
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
-      operatorCode: NIL
+      operatorCode: isNull
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 2
     - conditionId: manager
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
-      operatorCode: CS
+      operatorCode: contains
       index: 3
       conditionValues:
         - conditionValueId: manager
@@ -295,7 +295,7 @@ ccsid-group-role-auth:
           conditionValue: frontOffice
     - conditionId: allow-role-jwt
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 5
   conditionExpression: (allow-cc AND has-sid AND (manager OR teller OR allow-role-jwt))
   actions:
@@ -314,15 +314,15 @@ controller-register-access:
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
-      operatorCode: NIL
+      operatorCode: isNull
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 2
     - conditionId: has-sid-match-body
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
-      operatorCode: EQ
+      operatorCode: equals
       index: 3
       conditionValues:
         - conditionValueId: body-serviceId
@@ -345,15 +345,15 @@ controller-check-access:
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
-      operatorCode: NIL
+      operatorCode: isNull
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 2
     - conditionId: body-id-has-sid
       propertyPath: requestBody.id
-      operatorCode: CS
+      operatorCode: contains
       index: 3
       conditionValues:
         - conditionValueId: sid
@@ -376,15 +376,15 @@ controller-deregister-access:
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
-      operatorCode: NIL
+      operatorCode: isNull
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 2
     - conditionId: has-sid-match-query
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
-      operatorCode: EQ
+      operatorCode: equals
       index: 3
       conditionValues:
         - conditionValueId: query-serviceId
@@ -407,21 +407,21 @@ controller-group-role:
   conditions:
     - conditionId: CtlPltRead
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
-      operatorCode: CS
+      operatorCode: contains
       index: 1
       conditionValues:
         - conditionValueId: CtlPltRead
           conditionValue: User_API_Dev_R
     - conditionId: CtlPltWrite
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
-      operatorCode: CS
+      operatorCode: contains
       index: 2
       conditionValues:
         - conditionValueId: CtlPltWrite
           conditionValue: User_API_Dev_W
     - conditionId: CtlPltAdmin
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
-      operatorCode: CS
+      operatorCode: contains
       index: 2
       conditionValues:
         - conditionValueId: CtlPltAdmin
@@ -440,15 +440,15 @@ config-service-access:
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
-      operatorCode: NIL
+      operatorCode: isNull
       index: 1
     - conditionId: has-sid
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 2
     - conditionId: sid-match-path
       propertyPath: auditInfo.subject_claims.ClaimsMap.sid
-      operatorCode: EQ
+      operatorCode: equals
       index: 3
       conditionValues:
         - conditionValueId: path-service
@@ -473,7 +473,7 @@ portal-role-access:
   conditions:
     - conditionId: allow-role-jwt
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
-      operatorCode: NNIL
+      operatorCode: isNotNull
       index: 1
   actions:
     - actionId: match-role
@@ -491,7 +491,7 @@ get-config-filter:
   conditions:
     - conditionId: row-filter-role
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
-      operatorCode: IN
+      operatorCode: inList
       index: 1
       conditionValues:
         - conditionValueId: role-list
@@ -513,14 +513,14 @@ petstore-group-role-transform:
   conditions:
     - conditionId: manager
       propertyPath: groups
-      operatorCode: CS
+      operatorCode: contains
       index: 1
       conditionValues:
         - conditionValueId: manager
           conditionValue: admin
     - conditionId: teller
       propertyPath: groups
-      operatorCode: CS
+      operatorCode: contains
       index: 2
       conditionValues:
         - conditionValueId: teller
@@ -536,21 +536,21 @@ petstore-response-header-replace:
   conditions:
     - conditionId: path-pets
       propertyPath: requestPath
-      operatorCode: EQ
+      operatorCode: equals
       index: 1
       conditionValues:
         - conditionValueId: path
           conditionValue: /v1/pets
     - conditionId: path-dogs
       propertyPath: requestPath
-      operatorCode: EQ
+      operatorCode: equals
       index: 2
       conditionValues:
         - conditionValueId: path
           conditionValue: /v1/dogs
     - conditionId: path-cats
       propertyPath: requestPath
-      operatorCode: EQ
+      operatorCode: equals
       index: 3
       conditionValues:
         - conditionValueId: path
@@ -574,7 +574,7 @@ petstore-response-header-replace-in:
   conditions:
     - conditionId: path-pets
       propertyPath: requestPath
-      operatorCode: IN
+      operatorCode: inList
       index: 1
       conditionValues:
         - conditionValueId: pets
@@ -601,28 +601,28 @@ petstore-response-header-replace-match:
   conditions:
     - conditionId: BankingServices
       propertyPath: requestPath
-      operatorCode: MATCH
+      operatorCode: match
       index: 1
       conditionValues:
         - conditionValueId: path
           conditionValue: /v3/(.*)/BankingServices/(.*)
     - conditionId: insight
       propertyPath: requestPath
-      operatorCode: MATCH
+      operatorCode: match
       index: 2
       conditionValues:
         - conditionValueId: path
           conditionValue: /v3/(.*)/insight/login/(.*)/attributes/(.*)
     - conditionId: Investments
       propertyPath: requestPath
-      operatorCode: MATCH
+      operatorCode: match
       index: 3
       conditionValues:
         - conditionValueId: path
           conditionValue: /v3/(.*)/Investments
     - conditionId: attributes
       propertyPath: requestPath
-      operatorCode: MATCH
+      operatorCode: match
       index: 4
       conditionValues:
         - conditionValueId: path
@@ -639,7 +639,7 @@ test-priority-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
-      operatorCode: GT
+      operatorCode: greaterThan
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -658,7 +658,7 @@ test-priority-rule2:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
-      operatorCode: GT
+      operatorCode: greaterThan
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -677,7 +677,7 @@ test-len-eq-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
-      operatorCode: LEN_EQ
+      operatorCode: lengthEquals
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -696,7 +696,7 @@ test-len-gt-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
-      operatorCode: LEN_GT
+      operatorCode: lengthGreaterThan
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -715,7 +715,7 @@ test-len-gt-rule-int:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
-      operatorCode: LEN_GT
+      operatorCode: lengthGreaterThan
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -734,7 +734,7 @@ test-len-lt-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
-      operatorCode: LEN_LT
+      operatorCode: lengthLessThan
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -753,7 +753,7 @@ test-match-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
-      operatorCode: MATCH
+      operatorCode: match
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -772,7 +772,7 @@ test-not-match-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
-      operatorCode: NMATCH
+      operatorCode: notMatch
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -790,7 +790,7 @@ test-match-rule-flags:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
-      operatorCode: MATCH
+      operatorCode: match
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -809,7 +809,7 @@ test-empty-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
-      operatorCode: EMPTY
+      operatorCode: isEmpty
       index: 0
   actions:
     - actionId: act1
@@ -824,7 +824,7 @@ test-not-empty-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
-      operatorCode: NEMPTY
+      operatorCode: isNotEmpty
       index: 0
   actions:
     - actionId: act1
@@ -839,7 +839,7 @@ test-blank-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
-      operatorCode: BLANK
+      operatorCode: isBlank
       index: 0
   actions:
     - actionId: act1
@@ -854,7 +854,7 @@ test-not-blank-rule:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
-      operatorCode: NBLANK
+      operatorCode: isNotBlank
       index: 0
   actions:
     - actionId: act1
@@ -870,7 +870,7 @@ test-single-action-true:
     - conditionId: cid1
       conditionDesc: The name is ClassA and its length is greater than 4, so the condition is true
       propertyPath: "name"
-      operatorCode: LEN_GT
+      operatorCode: lengthGreaterThan
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -891,7 +891,7 @@ test-single-action-false:
     - conditionId: cid1
       conditionDesc: The name is ClassA and its length is less than 10, so the condition is false
       propertyPath: "name"
-      operatorCode: LEN_GT
+      operatorCode: lengthGreaterThan
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -911,7 +911,7 @@ test-multiple-actions:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
-      operatorCode: NEMPTY
+      operatorCode: isNotEmpty
       index: 0
   actions:
     - actionId: actionOne
@@ -935,7 +935,7 @@ condition_id_reference:
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
-      operatorCode: EQ
+      operatorCode: equals
       index: 0
       conditionValues:
         - conditionValueId: cv1
@@ -943,7 +943,7 @@ condition_id_reference:
           valueTypeCode: STRING
     - conditionId: cid2
       propertyPath: ClassA.Bobject.Cobject.Cint
-      operatorCode: GT
+      operatorCode: greaterThan
       index: 1
       conditionValues:
         - conditionValueId: cv2
@@ -951,7 +951,7 @@ condition_id_reference:
           valueTypeCode: STRING
     - conditionId: cid3
       propertyPath: ClassA.Aname
-      operatorCode: NEMPTY
+      operatorCode: isNotEmpty
       index: 2
   conditionExpression: "(cid1 OR (cid2 AND cid3))"
   actions:
