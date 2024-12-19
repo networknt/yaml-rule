@@ -28,5 +28,8 @@
         <appender-ref ref="log"/>
     </logger>
 
+    <logger name="rule.trace" level="trace" additivity="false">
+        <appender-ref ref="log"/>
+    </logger>
 
 </configuration>

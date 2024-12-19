@@ -25,6 +25,7 @@ public class RuleEvaluator {
      * Logger instance for this class
      */
     private static final Logger logger = LoggerFactory.getLogger(RuleEvaluator.class);
+    private static final Logger traceLogger = LoggerFactory.getLogger("rule.trace");
 
     private static final Map accessorMap = new HashMap();
     private static final Class[] EMPTY_CLASS_LIST = new Class[0];
@@ -123,6 +124,7 @@ public class RuleEvaluator {
      */
     boolean evaluateConditionExpression(String ruleId, String expression, Collection<RuleCondition> conditions, Map objMap, Map resultMap) throws RuleEngineException {
         // A simple stack-based parser for expressions like "(cid1 OR (cid2 AND cid3))"
+         traceLogger.debug("Evaluating expression: {} for rule: {}", expression, ruleId);
         Stack<Boolean> stack = new Stack<>();
         Stack<String> operatorStack = new Stack<>();
 
@@ -131,17 +133,19 @@ public class RuleEvaluator {
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken().trim();
             if (token.isEmpty()) continue; // Skip empty tokens
-
+                traceLogger.debug("Evaluating expression: {}, token: {}", expression, token);
             if (token.equals(RuleConstants.LEFT_PARENTHESIS)) {
-                operatorStack.push(token);
+                 operatorStack.push(token);
+                traceLogger.debug("Pushing opening parenthesis to the stack: {}, operator stack size: {}", token, operatorStack.size());
             } else if (token.equals(RuleConstants.RIGHT_PARENTHESIS)) {
                 while (!operatorStack.isEmpty() && !operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS)) {
                     processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
+                 }
+               if (!operatorStack.isEmpty() && operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS)) {
+                     operatorStack.pop();
+                      traceLogger.debug("Popping opening parenthesis from the stack, operator stack size: {}", operatorStack.size());
                 }
-                if (!operatorStack.isEmpty() && operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS)) {
-                    operatorStack.pop();
-                }
-            } else {
+             } else {
                 LogicalOperator logicalOperator = null;
                 try {
                     logicalOperator =  LogicalOperator.fromString(token);
@@ -150,9 +154,10 @@ public class RuleEvaluator {
                 }
                 if (logicalOperator == LogicalOperator.AND || logicalOperator ==  LogicalOperator.OR) {
                     while (!operatorStack.isEmpty() && !operatorStack.peek().equals(RuleConstants.LEFT_PARENTHESIS) && hasHigherPrecedence(operatorStack.peek(), token)) {
-                        processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
-                    }
-                    operatorStack.push(token);
+                         processOperator(ruleId, stack, operatorStack, objMap, resultMap, conditions);
+                   }
+                     operatorStack.push(token);
+                      traceLogger.debug("Pushing operator to the stack: {}, operator stack size: {}", token, operatorStack.size());
                 } else {
                     // Assume this is a condition id
                     boolean conditionResult;
@@ -167,9 +172,10 @@ public class RuleEvaluator {
                         }
                         conditionResult = evaluateCondition(ruleId, ruleCondition.getConditionId(), ruleCondition.getPropertyPath(), ruleCondition.getOperatorCode(),
                                 (List) ruleCondition.getConditionValues(), objMap);
-                        resultMap.put(token, conditionResult);
-                    }
-                    stack.push(conditionResult);
+                         resultMap.put(token, conditionResult);
+                     }
+                     traceLogger.debug("Pushing condition result to the stack: {}, for conditionId: {}, stack size: {}", conditionResult, token, stack.size() + 1);
+                     stack.push(conditionResult);
                 }
             }
         }
@@ -181,7 +187,9 @@ public class RuleEvaluator {
             logger.error("Error evaluating condition in rule {}, expression {}: {}", ruleId, expression, errorMsg);
             throw new RuleEngineException(errorMsg, ruleId);
         }
-        return stack.pop();
+       boolean result = stack.pop();
+        traceLogger.debug("Result for the expression: {} is: {}", expression, result);
+         return result;
     }
 
 
@@ -197,6 +205,8 @@ public class RuleEvaluator {
 
     private void processOperator(String ruleId, Stack<Boolean> stack, Stack<String> operatorStack, Map objMap, Map resultMap, Collection<RuleCondition> conditions) throws RuleEngineException {
         String operator = operatorStack.pop();
+        traceLogger.debug("Processing operator: {}, operator stack size: {}", operator, operatorStack.size());
+
         if (LogicalOperator.fromString(operator) == LogicalOperator.AND || LogicalOperator.fromString(operator) == LogicalOperator.OR) {
             if (stack.size() < 2) {
                 String errorMsg = "Invalid expression. Stack size " + stack.size() + " is less than 2 for an operator " + operator;
@@ -205,12 +215,16 @@ public class RuleEvaluator {
             }
             boolean operand2 = stack.pop();
             boolean operand1 = stack.pop();
+             traceLogger.debug("popped two operands: {} and {} from the stack. stack size: {}. ", operand1, operand2, stack.size());
+              boolean result = false;
             if (LogicalOperator.fromString(operator) == LogicalOperator.AND) {
-                stack.push(operand1 && operand2);
+               result = operand1 && operand2;
             } else if (LogicalOperator.fromString(operator) == LogicalOperator.OR) {
-                stack.push(operand1 || operand2);
-            }
-        }
+               result = operand1 || operand2;
+             }
+           traceLogger.debug("Result of operator {}: {} is: {} and push the result to the stack.", operator, operand1 + " " + operator + " " + operand2, result);
+           stack.push(result);
+         }
     }
 
     private RuleCondition getRuleCondition(String conditionId, Collection<RuleCondition> conditions) {
@@ -245,6 +259,8 @@ public class RuleEvaluator {
                 }
             }
         }
+        Object resolvedObject = getObjectByPath(ruleId, conditionId, propertyPath, object);
+        traceLogger.debug("Rule: {}, Condition: {}. PropertyPath: {}, Object: {}, valueObject: {}", ruleId, conditionId, propertyPath, resolvedObject, valueObject);
 
         RuleOperator operator = null;
         try {
@@ -252,6 +268,7 @@ public class RuleEvaluator {
         } catch (IllegalArgumentException e) {
             // if the operator is not one of the built-in operators, check if we have a custom operator
         }
+        boolean result = false;
         if (operator != null) {
             switch (operator) {
                 case EQUALS:
