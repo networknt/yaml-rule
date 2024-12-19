@@ -1,5 +1,6 @@
 package com.networknt.rule;
 
+import com.networknt.rule.custom.CustomOperator;
 import com.networknt.rule.exception.ActionExecutionException;
 import com.networknt.rule.exception.RuleEngineException;
 import org.slf4j.Logger;
@@ -145,5 +146,19 @@ public class RuleEngine {
             throw new RuleEngineException(errorMsg, ruleId);
         }
         return resultMap;
+    }
+
+    /**
+     * Register a custom operator
+     * @param operatorName The name of the operator that will be used in the rule definition.
+     * @param operator The custom operator implementation.
+     *
+     */
+    public void registerCustomOperator(String operatorName, CustomOperator operator) {
+        RuleEvaluator.customOperatorRegistry.put(operatorName, operator);
+    }
+
+    public CustomOperator getCustomOperator(String operatorName) {
+        return RuleEvaluator.customOperatorRegistry.get(operatorName);
     }
 }

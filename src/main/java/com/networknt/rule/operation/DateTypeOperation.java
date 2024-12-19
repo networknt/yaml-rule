@@ -77,14 +77,8 @@ public class DateTypeOperation  implements TypeSpecificOperation<Date> {
             return 1;
         }
 
-        if (object.getClass().equals(java.util.Date.class)) {
+        if (object instanceof java.util.Date) {
             return ((java.util.Date) object).compareTo(value);
-        }
-        if (object.getClass().equals(java.sql.Date.class)) {
-            return ((java.sql.Date) object).compareTo(value);
-        }
-        if (object.getClass().equals(java.sql.Timestamp.class)) {
-            return ((Timestamp) object).compareTo((Timestamp)value);
         }
         return 0;
     }

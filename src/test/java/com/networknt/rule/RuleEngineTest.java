@@ -1,5 +1,7 @@
 package com.networknt.rule;
 
+import com.networknt.rule.custom.CustomOperator;
+import com.networknt.rule.custom.StartsWithOperator;
 import com.networknt.rule.exception.RuleEngineException;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.JwtConsumer;
@@ -8,6 +10,8 @@ import org.jose4j.jwt.consumer.JwtContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,7 +20,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class RuleEngineTest {
+    static Logger logger = LoggerFactory.getLogger(RuleEngineTest.class);
+
     static Map<String, Rule> ruleMap;
     static Map<String, Collection<Rule>> groupMap;
 
@@ -89,7 +98,7 @@ public class RuleEngineTest {
         objMap.put("roles", "manager,teller");
         Map<String, Object> result = engine.executeRule("cc-group-role-auth", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -111,7 +120,7 @@ public class RuleEngineTest {
         objMap.put("roles", "manager teller customer");
         Map<String, Object> result = engine.executeRule("cc-group-role-auth", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -155,7 +164,7 @@ public class RuleEngineTest {
         objMap.put("roles", "manager teller customer");
         Map<String, Object> result = engine.executeRule("cc-group-role-auth", objMap);
         System.out.println("allowed = " + result.get(RuleConstants.RESULT));
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -187,8 +196,8 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("groups", groups);
         Map<String, Object> result = engine.executeRule("petstore-group-role-transform", objMap);
-        Assertions.assertTrue((Boolean)result.get("manager"));
-        Assertions.assertTrue((Boolean)result.get("teller"));
+        assertTrue((Boolean)result.get("manager"));
+        assertTrue((Boolean)result.get("teller"));
     }
 
     @Test
@@ -198,7 +207,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("groups", groups);
         Map<String, Object> result = engine.executeRule("petstore-group-role-transform", objMap);
-        Assertions.assertTrue((Boolean)result.get("manager"));
+        assertTrue((Boolean)result.get("manager"));
         Assertions.assertFalse((Boolean)result.get("teller"));
     }
 
@@ -208,7 +217,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("requestPath", "/v1/dogs");
         Map<String, Object> result = engine.executeRule("petstore-response-header-replace", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -226,7 +235,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("requestPath", "/v1/dogs");
         Map<String, Object> result = engine.executeRule("petstore-response-header-replace-in", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -238,7 +247,7 @@ public class RuleEngineTest {
         // objMap.put("requestPath", "/v3/customerId/insight/login/loginId/attributes/requestId/GetLendingAttributes");
         objMap.put("requestPath", "/v3/customerId/attributes/library");
         Map<String, Object> result = engine.executeRule("petstore-response-header-replace-match", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -256,10 +265,10 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-priority-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
         objectC.setCint(7);
         result = engine.executeRule("test-priority-rule2", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -294,7 +303,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-empty-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -311,7 +320,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-not-empty-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -328,7 +337,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-blank-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -345,7 +354,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-not-blank-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -363,7 +372,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-len-eq-int-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -381,7 +390,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-gte-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -399,7 +408,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-lte-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -417,7 +426,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-len-gt-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -453,7 +462,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-len-lt-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -471,7 +480,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-match-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -489,7 +498,7 @@ public class RuleEngineTest {
         Map<String, Object> objMap = new HashMap<>();
         objMap.put("ClassA", objectA);
         Map result = engine.executeRule("test-not-match-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -508,7 +517,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-before-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -527,7 +536,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-after-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -566,11 +575,11 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-on-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
-    public void testRuleOnDateFormat() throws Exception {
+    public void testRuleOnDateFormatWithObject() throws Exception {
         RuleEngine engine = new RuleEngine(ruleMap, null);
         ClassC objectC = new ClassC();
         objectC.setCname("ClassC");
@@ -586,7 +595,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-on-date-format-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -606,7 +615,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-before-date-format-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -626,7 +635,7 @@ public class RuleEngineTest {
         Map objMap = new HashMap();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-after-date-format-rule", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
     }
 
     @Test
@@ -637,9 +646,9 @@ public class RuleEngineTest {
         Map<String, Object> objMap = new HashMap<>();
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-multiple-actions", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
-        Assertions.assertTrue((Boolean)result.get("MultipleActionOne"));
-        Assertions.assertTrue((Boolean)result.get("MultipleActionThree"));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get("MultipleActionOne"));
+        assertTrue((Boolean)result.get("MultipleActionThree"));
         Assertions.assertFalse(result.containsKey("MultipleActionTwo"));
     }
 
@@ -651,8 +660,8 @@ public class RuleEngineTest {
         objMap.put("ClassA", objectA);
         Map<String, Object> result = engine.executeRule("test-multiple-actions", objMap);
         Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
-        Assertions.assertTrue((Boolean)result.get("MultipleActionTwo"));
-        Assertions.assertTrue((Boolean)result.get("MultipleActionThree"));
+        assertTrue((Boolean)result.get("MultipleActionTwo"));
+        assertTrue((Boolean)result.get("MultipleActionThree"));
         Assertions.assertFalse(result.containsKey("MultipleActionOne"));
     }
 
@@ -666,8 +675,8 @@ public class RuleEngineTest {
         Map<String, Object> objMap = new HashMap<>();
         objMap.put("name", "ClassA");
         Map<String, Object> result = engine.executeRule("test-single-action-true", objMap);
-        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
-        Assertions.assertTrue((Boolean)result.get("MultipleActionOne"));
+        assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        assertTrue((Boolean)result.get("MultipleActionOne"));
     }
 
     /**
@@ -682,6 +691,153 @@ public class RuleEngineTest {
         Map<String, Object> result = engine.executeRule("test-single-action-false", objMap);
         Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
         Assertions.assertFalse(result.containsKey("MultipleActionOne"));
+    }
+
+    @Test
+    void testCustomOperatorContainsIgnoreCase() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        String ruleId = "test-contains-ignore-case-rule";
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("name", "Test String");
+        Map<String, Object> result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", "not match");
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", null);
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", "test");
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", "tEsT");
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+
+    @Test
+    void testCustomOperatorStartsWith() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        String ruleId = "test-starts-with-rule";
+
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("name", "Test String");
+        Map<String, Object> result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", "not match");
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", null);
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", "Test");
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", "test");
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+
+    }
+    @Test
+    void testRuleWithBuiltInOperators() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        String ruleId = "test-built-in-operators-rule";
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("age", 35);
+        objMap.put("city", "New York");
+        objMap.put("country", "USA");
+        Map<String, Object> result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("age", 25);
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+    }
+
+    @Test
+    void testCustomOperatorRegistration() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        String ruleId = "test-starts-with-rule";
+
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("name", "Test String");
+        Map<String, Object> result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+
+        CustomOperator customOperator = engine.getCustomOperator("startsWith");
+        Assertions.assertNotNull(customOperator);
+        assertEquals("startsWith", customOperator.getOperatorName());
+
+        StartsWithOperator startsWithOperator = new StartsWithOperator();
+        engine.registerCustomOperator("startsWith1", startsWithOperator );
+        CustomOperator customOperator1 = engine.getCustomOperator("startsWith1");
+        Assertions.assertNotNull(customOperator1);
+        assertEquals("startsWith", customOperator1.getOperatorName());
+
+    }
+
+    @Test
+    void testRuleWithRegexOperator() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        String ruleId = "test-regex-rule";
+
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("name", "test String");
+        Map<String, Object> result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", "abc");
+        logger.trace("objMap = " + objMap);
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+
+    }
+    @Test
+    void testRuleOnDateFormat() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        String ruleId = "test-date-rule";
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("eventDate", java.sql.Timestamp.valueOf("2024-05-03 10:00:00"));
+        Map<String, Object> result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        objMap.put("eventDate", java.sql.Timestamp.valueOf("2024-05-04 10:00:00"));
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+        objMap.put("eventDate", "2024-05-03 10:00:00");
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+
+
+    }
+
+    @Test
+    void testRuleWithLengthOperator() throws Exception {
+        RuleEngine engine = new RuleEngine(ruleMap, null);
+        String ruleId = "test-length-rule";
+
+        Map<String, Object> objMap = new HashMap<>();
+        objMap.put("name", "Test");
+        Map<String, Object> result = engine.executeRule(ruleId, objMap);
+        Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
+        objMap.put("name", "Test1");
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
+
+        objMap.put("name", null);
+        result = engine.executeRule(ruleId, objMap);
+        Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
     }
 
     static class ClassA {

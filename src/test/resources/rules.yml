@@ -957,3 +957,135 @@ condition_id_reference:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
+
+
+test-contains-ignore-case-rule:
+  ruleId: test-contains-ignore-case-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test rule with containsIgnoreCase custom operator
+  priority: 1
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: containsIgnoreCase
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "test"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-starts-with-rule:
+  ruleId: test-starts-with-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test rule with startsWith custom operator
+  priority: 1
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: startsWith
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "Test"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-built-in-operators-rule:
+  ruleId: test-built-in-operators-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test rule with built-in operators and expressions
+  priority: 1
+  conditionExpression: "cid1 AND (cid2 OR cid3)"
+  conditions:
+    - conditionId: cid1
+      propertyPath: age
+      operatorCode: greaterThan
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 30
+    - conditionId: cid2
+      propertyPath: city
+      operatorCode: equals
+      index: 0
+      conditionValues:
+        - conditionValueId: cv2
+          conditionValue: "New York"
+    - conditionId: cid3
+      propertyPath: country
+      operatorCode: contains
+      index: 0
+      conditionValues:
+        - conditionValueId: cv3
+          conditionValue: "US"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-regex-rule:
+  ruleId: test-regex-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test rule with regex
+  priority: 1
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: match
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "test.*"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-date-rule:
+  ruleId: test-date-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test rule with date operator
+  priority: 1
+  conditions:
+    - conditionId: cid1
+      propertyPath: eventDate
+      operatorCode: on
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2024-05-03 10:00:00"
+          dateFormat: "yyyy-MM-dd HH:mm:ss"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-length-rule:
+  ruleId: test-length-rule
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test rule with length operator
+  priority: 1
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: lengthEquals
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 4
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
