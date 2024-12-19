@@ -794,12 +794,11 @@ public class RuleEngineTest {
         String ruleId = "test-regex-rule";
 
         Map<String, Object> objMap = new HashMap<>();
-        objMap.put("name", "test String");
+        objMap.put("name", "abc String");
         Map<String, Object> result = engine.executeRule(ruleId, objMap);
         Assertions.assertTrue((Boolean)result.get(RuleConstants.RESULT));
 
-        objMap.put("name", "abc");
-        logger.trace("objMap = " + objMap);
+        objMap.put("name", "def String");
         result = engine.executeRule(ruleId, objMap);
         Assertions.assertFalse((Boolean)result.get(RuleConstants.RESULT));
 

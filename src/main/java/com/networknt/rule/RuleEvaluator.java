@@ -557,6 +557,15 @@ public class RuleEvaluator {
     }
 
     private boolean evaluateMatch(String ruleId, String conditionId, Object object, Object valueObject, String regexFlags) throws RuleEngineException {
+        if(object == null) {
+            if (valueObject == null) {
+                traceLogger.debug("evaluateMatch in rule {} and condition {} : result {} with object {} and valueObject {}", ruleId, conditionId, true, null, null);
+                return true; // null matches null
+            } else {
+                traceLogger.debug("evaluateMatch in rule {} and condition {} : result {} with object {} and valueObject {}", ruleId, conditionId, false, null, valueObject);
+                return false; // null does not match any string
+            }
+        }
         if(!(object instanceof java.lang.String)) {
             String errorMsg = "Object is not a String:" + object.getClass();
             logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
@@ -565,8 +574,9 @@ public class RuleEvaluator {
         Object value = valueObject;
         if(!(valueObject instanceof java.lang.String)) {
             value = valueObject.toString();
+            traceLogger.debug("evaluateMatch in rule {} and condition {} : valueObject {} is not a string and it is converted to string {}", ruleId, conditionId, valueObject, value);
         }
-        if(value != null && ((String)value).length() > 0) {
+        if(value != null && !((String) value).isEmpty()) {
             String regex = (String)value;
             int flags = 0;
             if(regexFlags != null) {
@@ -575,11 +585,22 @@ public class RuleEvaluator {
                 if(regexFlags.contains("s")) flags = flags | Pattern.DOTALL;
                 if(regexFlags.contains("u")) flags = flags | Pattern.UNICODE_CASE;
                 if(regexFlags.contains("x")) flags = flags | Pattern.COMMENTS;
+                traceLogger.debug("evaluateMatch in rule {} and condition {} : regexFlags {} is not null.", ruleId, conditionId, regexFlags);
             }
             final int finalFlags = flags; // Create a final variable to use in the lambda
             String key = regex + ":" + finalFlags;
-            Pattern pattern = patternCache.computeIfAbsent(key, k -> Pattern.compile(regex, finalFlags));
-            return pattern.matcher((String)object).matches();
+            traceLogger.debug("evaluateMatch in rule {} and condition {} : finalFlags {} and key {}.", ruleId, conditionId, finalFlags, key);
+            Pattern pattern = patternCache.get(key);
+            if(pattern == null) {
+                pattern = Pattern.compile(regex, finalFlags);
+                patternCache.put(key, pattern);
+                traceLogger.debug("evaluateMatch in rule {} and condition {} : create a new pattern {} and save it into cache for key {}.", ruleId, conditionId, pattern, key);
+            } else {
+                traceLogger.debug("evaluateMatch in rule {} and condition {} : found a pattern {} from cache for key {}.", ruleId, conditionId, pattern, key);
+            }
+            boolean result = pattern.matcher((String)object).matches();
+            traceLogger.debug("evaluateMatch in rule {} and condition {} : result is {}.", ruleId, conditionId, result);
+            return result;
 
         } else {
             String errorMsg = "Condition Value is empty";

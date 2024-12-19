@@ -1045,7 +1045,7 @@ test-regex-rule:
       index: 0
       conditionValues:
         - conditionValueId: cv1
-          conditionValue: "test.*"
+          conditionValue: "abc.*"
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.ValidationAction
