@@ -10,7 +10,7 @@ import java.util.Map;
 public class ValidationAction implements IAction {
     private static final Logger logger= LoggerFactory.getLogger(ValidationAction.class);
     @Override
-    public void performAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Map<String, Object> parameters) throws RuleEngineException {
-        if(logger.isInfoEnabled()) logger.info("parameters: {}", parameters);
+    public void performAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap,Collection<RuleActionValue> actionValues) throws RuleEngineException {
+        if(logger.isInfoEnabled()) logger.info("actionValues: {}", actionValues);
     }
 }

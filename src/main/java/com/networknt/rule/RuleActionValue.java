@@ -6,6 +6,7 @@ public class RuleActionValue {
     private String actionValueId;
     private String valueTypeCode;
     private String value;
+    private Object resolvedValue;
 
     public RuleActionValue() {
     }
@@ -40,16 +41,23 @@ public class RuleActionValue {
         this.value = value;
     }
 
+    public Object getResolvedValue() {
+        return resolvedValue;
+    }
+
+    public void setResolvedValue(Object resolvedValue) {
+        this.resolvedValue = resolvedValue;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RuleActionValue that = (RuleActionValue) o;
-        return Objects.equals(actionValueId, that.actionValueId) && Objects.equals(valueTypeCode, that.valueTypeCode) && Objects.equals(value, that.value);
+        return Objects.equals(actionValueId, that.actionValueId) && Objects.equals(valueTypeCode, that.valueTypeCode) && Objects.equals(value, that.value) && Objects.equals(resolvedValue, that.resolvedValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(actionValueId, valueTypeCode, value);
+        return Objects.hash(actionValueId, valueTypeCode, value, resolvedValue);
     }
 }

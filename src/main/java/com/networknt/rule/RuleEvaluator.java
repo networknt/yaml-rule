@@ -677,7 +677,7 @@ public class RuleEvaluator {
                   return null;
               }
 
-        } else  if(variable.startsWith("#{") && variable.endsWith("}")) {
+        } else  if(variable.startsWith("^{") && variable.endsWith("}")) {
             String conditionId = variable.substring(2, variable.length() - 1);
             if(resultMap != null && resultMap.containsKey(conditionId)) {
                 return resultMap.get(conditionId);

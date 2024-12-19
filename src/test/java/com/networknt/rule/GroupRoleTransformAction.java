@@ -17,7 +17,7 @@ public class GroupRoleTransformAction implements IAction {
     private static final Logger logger = LoggerFactory.getLogger(GroupRoleTransformAction.class);
 
     @Override
-    public void performAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Map<String, Object> parameters) throws RuleEngineException {
+    public void performAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues) throws RuleEngineException {
         // need to make sure that the result is true.
         boolean result = (Boolean)resultMap.get(RuleConstants.RESULT);
         if(result) {

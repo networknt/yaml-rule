@@ -1107,9 +1107,10 @@ test-set-header-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.TestSetHeaderAction
-      parameters:
-          headerName: "X-Test-Name"
-          headerValue: "${name}"
+      actionValues:
+        - actionValueId: X-Test-Name
+          value: ${name}
+
 test-set-header-with-result-rule:
   ruleId: test-set-header-with-result-rule
   host: lightapi.net
@@ -1126,9 +1127,10 @@ test-set-header-with-result-rule:
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.TestSetHeaderAction
-      parameters:
-          headerName: "X-Test-Result"
-          headerValue: "#{cid1}"
+      actionValues:
+        - actionValueId: X-Test-Result
+          value: ^{cid1}
+
 test-set-header-nested-rule:
   ruleId: test-set-header-nested-rule
   host: lightapi.net
@@ -1137,17 +1139,17 @@ test-set-header-nested-rule:
   description: test rule that sets a header with value from a nested property
   priority: 1
   conditions:
-     - conditionId: cid1
-       propertyPath: address.city
-       operatorCode: equals
-       conditionValues:
-          - conditionValue: "New York"
+    - conditionId: cid1
+      propertyPath: address.city
+      operatorCode: equals
+      conditionValues:
+        - conditionValue: "New York"
   actions:
     - actionId: act1
       actionClassName: com.networknt.rule.TestSetHeaderAction
-      parameters:
-          headerName: "X-Test-City"
-          headerValue: "${address.city}"
+      actionValues:
+        - actionValueId: X-Test-City
+          value: ${address.city}
 test-set-header-no-match-rule:
   ruleId: test-set-header-no-match-rule
   host: lightapi.net
@@ -1162,30 +1164,29 @@ test-set-header-no-match-rule:
       conditionValues:
         - conditionValue: "abc"
   actions:
-     - actionId: act1
-       actionClassName: com.networknt.rule.TestSetHeaderAction
-       parameters:
-          headerName: "X-Test-Name"
-          headerValue: "${name}"
+    - actionId: act1
+      actionClassName: com.networknt.rule.TestSetHeaderAction
+      actionValues:
+        - actionValueId: X-Test-Name
+          value: ${name}
 
 
 test-set-header-optional-code:
-    ruleId: test-set-header-optional-code
-    host: lightapi.net
-    ruleType: generic
-    visibility: public
-    description: test set header action without valueTypeCode
-    priority: 1
-    conditions:
-        - conditionId: cid1
-          propertyPath: age
-          operatorCode: equals
-          conditionValues:
-              - conditionValue: 30
-    actions:
-        - actionId: setHeader1
-          actionClassName: com.networknt.rule.TestSetHeaderAction
-          parameters:
-            headerName: X-Test-Age
-            headerValue: ${age}
-            
+  ruleId: test-set-header-optional-code
+  host: lightapi.net
+  ruleType: generic
+  visibility: public
+  description: test set header action without valueTypeCode
+  priority: 1
+  conditions:
+    - conditionId: cid1
+      propertyPath: age
+      operatorCode: equals
+      conditionValues:
+        - conditionValue: 30
+  actions:
+    - actionId: setHeader1
+      actionClassName: com.networknt.rule.TestSetHeaderAction
+      actionValues:
+        - actionValueId: X-Test-Age
+          value: ${age}

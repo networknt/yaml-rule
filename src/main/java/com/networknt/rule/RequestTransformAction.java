@@ -2,6 +2,7 @@ package com.networknt.rule;
 
 import com.networknt.rule.exception.RuleEngineException;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -14,8 +15,8 @@ import java.util.Map;
 public interface RequestTransformAction extends TransformAction {
     String REQUEST_BODY = "requestBody";
 
-    default void postPerformAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Map<String, Object> parameters) throws RuleEngineException {
-        TransformAction.super.postPerformAction(ruleId, actionId, objMap, resultMap, parameters);
+    default void postPerformAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues) throws RuleEngineException {
+        TransformAction.super.postPerformAction(ruleId, actionId, objMap, resultMap, actionValues);
         // The previous action might change the requestBody, so let's replace it in the objMap from the resultMap
         // if it exists.
         if(resultMap.get(REQUEST_BODY) != null) {

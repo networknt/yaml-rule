@@ -6,6 +6,7 @@ import com.networknt.rule.exception.RuleEngineException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,7 +91,7 @@ public class RuleEngine {
 
     private void performAction(String ruleId, RuleAction ra, Map<String, Object> objMap, Map<String, Object> resultMap) throws RuleEngineException {
         String actionType = ra.getActionClassName();
-        Map<String, Object> parameters = ra.getParameters();
+        Collection<RuleActionValue> actionValues = ra.getActionValues();
         // first check the cache to see if the action class is already loaded. If not, load it.
         // the RuleLoaderStartupHook will load all the action classes during server startup.
         IAction ia = actionClassCache.get(actionType);
@@ -108,16 +109,14 @@ public class RuleEngine {
             }
             actionClassCache.put(actionType, ia);
         }
-        Map<String, Object> resolvedParameters = new HashMap<>();
-        if (parameters != null) {
-            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-                resolvedParameters.put(entry.getKey(), RuleEvaluator.getInstance().resolveVariable(entry.getValue() != null ? entry.getValue().toString() : null, objMap, resultMap));
+        if (actionValues != null) {
+            for (RuleActionValue actionValue: actionValues) {
+                actionValue.setResolvedValue(RuleEvaluator.getInstance().resolveVariable(actionValue.getValue(), objMap, resultMap));
             }
         }
-
-        ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, resolvedParameters);
+        ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, actionValues);
          // execute the post perform action.
-        ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, resolvedParameters);
+        ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, actionValues);
     }
 
     /**
