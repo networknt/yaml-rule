@@ -1,5 +1,7 @@
 package com.networknt.rule;
 
+import com.networknt.rule.exception.RuleEngineException;
+
 import java.util.Map;
 
 /**
@@ -12,8 +14,8 @@ import java.util.Map;
 public interface ResponseTransformAction extends TransformAction {
     String RESPONSE_BODY = "responseBody";
 
-    default void postPerformAction(Map<String, Object> objMap, Map<String, Object> resultMap) {
-        TransformAction.super.postPerformAction(objMap, resultMap);
+    default void postPerformAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Map<String, Object> parameters) throws RuleEngineException {
+        TransformAction.super.postPerformAction(ruleId, actionId, objMap, resultMap, parameters);
         // The previous action might change the responseBody, so let's replace it in the objMap from the resultMap
         // if it exists.
         if(resultMap.get(RESPONSE_BODY) != null) {

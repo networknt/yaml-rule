@@ -1,20 +1,31 @@
 package com.networknt.rule;
 
-import java.util.Collection;
+import com.networknt.rule.exception.RuleEngineException;
 import java.util.Map;
+
 
 public interface IAction {
     /**
-     * The performAction is call while evaluate result is true. It takes the input
-     * Map and return another Map as result of rule engine execution.
-     * @param inputMap input map
-     * @param resultMap result map
-     * @param actionValues action values
+     * Action to be performed
+     * @param ruleId rule id
+     * @param actionId action id
+     * @param objMap input object
+     * @param resultMap rule evaluation result map.
+     * @param parameters configuration parameters including the result from the variable binding.
+     * @throws RuleEngineException exception thrown during performAction execution.
      */
-    void performAction(Map<String, Object> inputMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues);
+    void performAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Map<String, Object> parameters) throws RuleEngineException;
 
-    default void postPerformAction(Map<String, Object> objMap, Map<String, Object> resultMap) {
+    /**
+     * post action to be performed
+     * @param ruleId rule id
+     * @param actionId action id
+     * @param objMap input object
+     * @param resultMap rule evaluation result map.
+     * @param parameters configuration parameters including the result from the variable binding.
+     * @throws RuleEngineException exception thrown during postPerformAction execution.
+     */
+    default void postPerformAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Map<String, Object> parameters) throws RuleEngineException {
         // NOOP for classes implement IAction.
-    }
-
+    };
 }

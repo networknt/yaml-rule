@@ -206,7 +206,6 @@ public class RuleEvaluator {
     private void processOperator(String ruleId, Stack<Boolean> stack, Stack<String> operatorStack, Map objMap, Map resultMap, Collection<RuleCondition> conditions) throws RuleEngineException {
         String operator = operatorStack.pop();
         traceLogger.debug("Processing operator: {}, operator stack size: {}", operator, operatorStack.size());
-
         if (LogicalOperator.fromString(operator) == LogicalOperator.AND || LogicalOperator.fromString(operator) == LogicalOperator.OR) {
             if (stack.size() < 2) {
                 String errorMsg = "Invalid expression. Stack size " + stack.size() + " is less than 2 for an operator " + operator;
@@ -261,7 +260,6 @@ public class RuleEvaluator {
         }
         Object resolvedObject = getObjectByPath(ruleId, conditionId, propertyPath, object);
         traceLogger.debug("Rule: {}, Condition: {}. PropertyPath: {}, Object: {}, valueObject: {}", ruleId, conditionId, propertyPath, resolvedObject, valueObject);
-
         RuleOperator operator = null;
         try {
             operator = RuleOperator.fromString(opCode);
@@ -270,69 +268,95 @@ public class RuleEvaluator {
         }
         boolean result = false;
         if (operator != null) {
+             traceLogger.debug("Rule: {}, Condition: {}. Operator: {}", ruleId, conditionId, operator);
             switch (operator) {
                 case EQUALS:
-                    return evaluateEquals(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-                case NOT_EQUALS:
-                    return !evaluateEquals(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-                case CONTAINS:
-                    return evaluateContains(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-                case NOT_CONTAINS:
-                    return !evaluateContains(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-                case IN_LIST:
-                    return evaluateInList(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), conditionValues);
-                case NOT_IN_LIST:
-                    return !evaluateInList(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), conditionValues);
-                case GREATER_THAN:
-                    return evaluateGreaterThan(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-                case GREATER_THAN_OR_EQUAL:
-                    return evaluateGreaterThanOrEqual(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-                case LESS_THAN:
-                    return evaluateLessThan(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-                case LESS_THAN_OR_EQUAL:
-                    return evaluateLessThanOrEqual(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject);
-                case IS_NULL:
-                    return isNull(getObjectByPath(ruleId, conditionId, propertyPath, object));
-                case IS_NOT_NULL:
-                    return !isNull(getObjectByPath(ruleId, conditionId, propertyPath, object));
-                case IS_EMPTY:
-                    return isEmpty(getObjectByPath(ruleId, conditionId, propertyPath, object));
-                case IS_NOT_EMPTY:
-                    return !isEmpty(getObjectByPath(ruleId, conditionId, propertyPath, object));
-                case IS_BLANK:
-                    return isBlank(getObjectByPath(ruleId, conditionId, propertyPath, object));
-                case IS_NOT_BLANK:
-                    return !isBlank(getObjectByPath(ruleId, conditionId, propertyPath, object));
-                case BEFORE:
-                    return evaluateBefore(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
-                case AFTER:
-                    return evaluateAfter(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
-                case ON:
-                    return evaluateOn(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
-                case LENGTH_EQUALS:
-                    return evaluateLenEq(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
-                case LENGTH_GREATER_THAN:
-                    return evaluateLenGt(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
-                case LENGTH_LESS_THAN:
-                    return evaluateLenLt(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
-                case MATCH:
-                    return evaluateMatch(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
-                case NOT_MATCH:
-                    return !evaluateMatch(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
-                 default:
-                     // not a built-in operator
+                   result = evaluateEquals(ruleId, conditionId, resolvedObject, valueObject);
                      break;
+                 case NOT_EQUALS:
+                    result = !evaluateEquals(ruleId, conditionId, resolvedObject, valueObject);
+                     break;
+                case CONTAINS:
+                     result = evaluateContains(ruleId, conditionId, resolvedObject, valueObject);
+                    break;
+                case NOT_CONTAINS:
+                   result = !evaluateContains(ruleId, conditionId, resolvedObject, valueObject);
+                     break;
+                case IN_LIST:
+                     result =  evaluateInList(ruleId, conditionId, resolvedObject, conditionValues);
+                     break;
+                case NOT_IN_LIST:
+                    result =  !evaluateInList(ruleId, conditionId, resolvedObject, conditionValues);
+                      break;
+                case GREATER_THAN:
+                     result = evaluateGreaterThan(ruleId, conditionId, resolvedObject, valueObject);
+                    break;
+               case GREATER_THAN_OR_EQUAL:
+                     result = evaluateGreaterThanOrEqual(ruleId, conditionId, resolvedObject, valueObject);
+                     break;
+                case LESS_THAN:
+                     result =  evaluateLessThan(ruleId, conditionId, resolvedObject, valueObject);
+                   break;
+                 case LESS_THAN_OR_EQUAL:
+                    result = evaluateLessThanOrEqual(ruleId, conditionId, resolvedObject, valueObject);
+                     break;
+                case IS_NULL:
+                    result =  isNull(resolvedObject);
+                     break;
+                case IS_NOT_NULL:
+                   result = !isNull(resolvedObject);
+                    break;
+               case IS_EMPTY:
+                    result = isEmpty(resolvedObject);
+                     break;
+                case IS_NOT_EMPTY:
+                    result =  !isEmpty(resolvedObject);
+                     break;
+                case IS_BLANK:
+                    result =  isBlank(resolvedObject);
+                     break;
+                 case IS_NOT_BLANK:
+                    result = !isBlank(resolvedObject);
+                     break;
+               case BEFORE:
+                     result = evaluateBefore(ruleId, conditionId, resolvedObject, valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
+                   break;
+               case AFTER:
+                    result = evaluateAfter(ruleId, conditionId, resolvedObject, valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
+                    break;
+                case ON:
+                     result = evaluateOn(ruleId, conditionId, resolvedObject, valueObject, conditionValue == null ? null : conditionValue.getDateFormat());
+                    break;
+                case LENGTH_EQUALS:
+                     result =  evaluateLenEq(ruleId, conditionId, resolvedObject, valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
+                     break;
+               case LENGTH_GREATER_THAN:
+                    result =  evaluateLenGt(ruleId, conditionId, resolvedObject, valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
+                    break;
+               case LENGTH_LESS_THAN:
+                    result = evaluateLenLt(ruleId, conditionId, resolvedObject, valueObject, conditionValue == null ? null : conditionValue.getValueTypeCode());
+                     break;
+                case MATCH:
+                     result =  evaluateMatch(ruleId, conditionId, resolvedObject, valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
+                    break;
+               case NOT_MATCH:
+                    result =  !evaluateMatch(ruleId, conditionId, resolvedObject, valueObject, conditionValue == null ? null : conditionValue.getRegexFlags());
+                    break;
+           }
+        } else {
+             // lookup the custom operator if not a built in one.
+            CustomOperator customOperator = customOperatorRegistry.get(opCode);
+            if (customOperator != null) {
+                 traceLogger.debug("Rule: {}, Condition: {}. CustomOperator: {}", ruleId, conditionId, customOperator.getOperatorName());
+                result =  customOperator.evaluate(ruleId, conditionId, resolvedObject, valueObject, conditionValues);
+             } else {
+                 String errorMsg = "Invalid operator! Operator code " + opCode + " is not supported";
+               logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
+                throw new InvalidOperatorException(errorMsg, ruleId, conditionId, opCode);
             }
         }
-        // lookup the custom operator if not a built in one.
-        CustomOperator customOperator = customOperatorRegistry.get(opCode);
-        if (customOperator != null) {
-            return customOperator.evaluate(ruleId, conditionId, getObjectByPath(ruleId, conditionId, propertyPath, object), valueObject, conditionValues);
-        } else {
-            String errorMsg = "Invalid operator! Operator code " + opCode + " is not supported";
-            logger.error("Error evaluating condition in rule {}, condition {}: {}", ruleId, conditionId, errorMsg);
-            throw new InvalidOperatorException(errorMsg, ruleId, conditionId, opCode);
-        }
+        traceLogger.debug("Rule: {}, Condition: {}. Result: {}", ruleId, conditionId, result);
+        return result;
     }
 
     public Object getObjectByPath(String ruleId, String conditionId, String propertyPath, Object object) throws RuleEngineException {
@@ -396,7 +420,7 @@ public class RuleEvaluator {
             if (typeSpecificOperation == null) {
                 return object.equals(valueObject);
             }
-            return typeSpecificOperation.equals(object, valueObject);
+            return typeSpecificOperation.equals(ruleId, conditionId, object, valueObject);
         }
     }
 
@@ -638,6 +662,31 @@ public class RuleEvaluator {
         }
         return typeSpecificOperation.convert(ruleId, conditionId, object, valueStr, dateFormat);
     }
+
+     public Object resolveVariable(String variable, Map objMap, Map resultMap) {
+        if (variable == null || variable.isEmpty()) {
+             return variable;
+        }
+        if(variable.startsWith("${") && variable.endsWith("}")) {
+            String propertyPath = variable.substring(2, variable.length() - 1);
+             try {
+                Object obj = getObjectByPath(null, null, propertyPath, objMap);
+                  return obj;
+              } catch(Exception e) {
+                  // if object does not exist in objMap, return null
+                  return null;
+              }
+
+        } else  if(variable.startsWith("#{") && variable.endsWith("}")) {
+            String conditionId = variable.substring(2, variable.length() - 1);
+            if(resultMap != null && resultMap.containsKey(conditionId)) {
+                return resultMap.get(conditionId);
+            }
+           return null;
+       }
+        return variable;
+    }
+
 
     private Method[] getAccessors(Class clazz) {
 

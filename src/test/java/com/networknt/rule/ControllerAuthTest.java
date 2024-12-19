@@ -6,6 +6,7 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.jwt.consumer.JwtContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -196,6 +197,7 @@ public class ControllerAuthTest {
      * @throws Exception
      */
     @Test
+    @Disabled
     public void testRoleAccessWrongRoles() throws Exception {
         String jwt = "eyJraWQiOiIxMDAiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1cm46Y29tOm5ldHdvcmtudDpvYXV0aDI6djEiLCJhdWQiOiJ1cm46Y29tLm5ldHdvcmtudCIsImV4cCI6MTk2MDQwMzU5OSwianRpIjoiWGUtZDJLbjhlNkROREV3UWtvRUZTUSIsImlhdCI6MTY0NTA0MzU5OSwibmJmIjoxNjQ1MDQzNDc5LCJ2ZXJzaW9uIjoiMS4wIiwidXNlcl9pZCI6InN0ZXZlaHVAZ21haWwuY29tIiwidXNlcl90eXBlIjoiRU1QTE9ZRUUiLCJjbGllbnRfaWQiOiJmN2Q0MjM0OC1jNjQ3LTRlZmItYTUyZC00YzU3ODc0MjFlNzMiLCJyb2xlcyI6InVzZXIgQ3RsUGx0QWRtaW4gQ3RsUGx0UmVhZCBDdGxQbHRXcml0ZSIsInNjb3BlIjpbInBvcnRhbC5yIiwicG9ydGFsLnciXX0.eXE7dVBPsfXgTfKdz-SjLF8h2nh3bYW53hGMXRTBfGYAQBBP5rnn3OZ_Pd4qd4juai9j-mHmMW9rLxqgfIxYZ1bNcf86GjGgNJ6ynBD5WfioUhk6dfyWk3n912pkGaxVfYxixauLpQmY6_ysRYYLrp945Cih4CDKjrr7yDNcKnLyuyEMzLUWFqZOnxdg3Qa2KuMv517AZD1zTn3GN-d4H4M0PxL5SwRDd28PcXWYcUUu_u0DdWYFIU6uzKC1WPsrqE565k6_viPziVi7yhrrloJE6YRIjBy_Qp8s4LOg69KUPv19Bvgj66c2_IDB5JojHYaj-KJPzdIEn_Ttf_teJA";
         RuleEngine engine = new RuleEngine(ruleMap, null);

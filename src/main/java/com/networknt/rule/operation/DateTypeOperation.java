@@ -40,7 +40,7 @@ public class DateTypeOperation  implements TypeSpecificOperation<Date> {
             throw new ConditionEvaluationException(errorMsg, ruleId, conditionId);
         }
 
-        if (equals(object, valueObject)) {
+        if (equals(ruleId, conditionId, object, valueObject)) {
             return 0;
         }
         if (object == null && valueObject == null) {
@@ -88,7 +88,7 @@ public class DateTypeOperation  implements TypeSpecificOperation<Date> {
         throw new UnsupportedOperationException();
     }
     @Override
-    public boolean equals(Object object, Object valueObject) throws RuleEngineException {
+    public boolean equals(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
         if(object == null || valueObject == null) return (object == null && valueObject == null);
         return object.equals(valueObject);
     }

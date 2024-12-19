@@ -44,7 +44,7 @@ public class StringTypeOperation implements TypeSpecificOperation<String> {
     }
 
     @Override
-    public boolean equals(Object object, Object valueObject) throws RuleEngineException {
+    public boolean equals(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
         if(object == null || valueObject == null) return (object == null && valueObject == null);
         return object.equals(valueObject);
     }

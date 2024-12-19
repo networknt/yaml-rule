@@ -90,7 +90,7 @@ public class RuleEngine {
 
     private void performAction(String ruleId, RuleAction ra, Map<String, Object> objMap, Map<String, Object> resultMap) throws RuleEngineException {
         String actionType = ra.getActionClassName();
-        Collection<RuleActionValue> ravs = ra.getActionValues();
+        Map<String, Object> parameters = ra.getParameters();
         // first check the cache to see if the action class is already loaded. If not, load it.
         // the RuleLoaderStartupHook will load all the action classes during server startup.
         IAction ia = actionClassCache.get(actionType);
@@ -108,9 +108,16 @@ public class RuleEngine {
             }
             actionClassCache.put(actionType, ia);
         }
-        ia.performAction(objMap, resultMap, ravs);
-        // execute the post perform action.
-        ia.postPerformAction(objMap, resultMap);
+        Map<String, Object> resolvedParameters = new HashMap<>();
+        if (parameters != null) {
+            for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+                resolvedParameters.put(entry.getKey(), RuleEvaluator.getInstance().resolveVariable(entry.getValue() != null ? entry.getValue().toString() : null, objMap, resultMap));
+            }
+        }
+
+        ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, resolvedParameters);
+         // execute the post perform action.
+        ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, resolvedParameters);
     }
 
     /**

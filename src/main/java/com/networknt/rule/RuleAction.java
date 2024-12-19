@@ -1,6 +1,7 @@
 package com.networknt.rule;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 
 public class RuleAction {
@@ -9,16 +10,18 @@ public class RuleAction {
     private String actionClassName;
     private Boolean conditionResult;
     private Collection<RuleActionValue> actionValues;
+    private Map<String, Object> parameters;
 
     public RuleAction() {
     }
 
-    public RuleAction(String actionId, String actionDesc, String actionClassName, Boolean conditionResult, Collection<RuleActionValue> actionValues) {
+    public RuleAction(String actionId, String actionDesc, String actionClassName, Boolean conditionResult, Collection<RuleActionValue> actionValues, Map<String, Object> parameters) {
         this.actionId = actionId;
         this.actionDesc = actionDesc;
         this.actionClassName = actionClassName;
         this.conditionResult = conditionResult;
         this.actionValues = actionValues;
+        this.parameters = parameters;
     }
 
     public String getActionId() {
@@ -60,16 +63,23 @@ public class RuleAction {
         this.actionValues = actionValues;
     }
 
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RuleAction that = (RuleAction) o;
-        return conditionResult == that.conditionResult && Objects.equals(actionId, that.actionId) && Objects.equals(actionDesc, that.actionDesc) && Objects.equals(actionClassName, that.actionClassName) && Objects.equals(actionValues, that.actionValues);
+        return Objects.equals(actionId, that.actionId) && Objects.equals(actionDesc, that.actionDesc) && Objects.equals(actionClassName, that.actionClassName) && Objects.equals(conditionResult, that.conditionResult) && Objects.equals(actionValues, that.actionValues) && Objects.equals(parameters, that.parameters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(actionId, actionDesc, actionClassName, conditionResult, actionValues);
+        return Objects.hash(actionId, actionDesc, actionClassName, conditionResult, actionValues, parameters);
     }
 }

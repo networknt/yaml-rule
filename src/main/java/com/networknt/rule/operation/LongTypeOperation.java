@@ -32,8 +32,7 @@ public class LongTypeOperation implements TypeSpecificOperation<Long> {
         throw new UnsupportedOperationException();
     }
     @Override
-    public boolean equals(Object object, Object valueObject) throws RuleEngineException {
-        if(object == null || valueObject == null) return (object == null && valueObject == null);
-        return object.equals(valueObject);
+    public boolean equals(String ruleId, String conditionId, Object object, Object valueObject) throws RuleEngineException {
+        return compare(ruleId, conditionId, object, valueObject) == 0;
     }
 }

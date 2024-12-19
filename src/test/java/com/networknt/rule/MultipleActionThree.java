@@ -1,12 +1,13 @@
 package com.networknt.rule;
 
+import com.networknt.rule.exception.RuleEngineException;
+
 import java.util.Collection;
 import java.util.Map;
 
 public class MultipleActionThree implements IAction {
     @Override
-    public void performAction(Map<String, Object> inputMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues) {
+    public void performAction(String ruleId, String actionId, Map<String, Object> inputMap, Map<String, Object> resultMap, Map<String, Object> parameters) throws RuleEngineException {
         resultMap.put("MultipleActionThree", true);
-        System.out.println("MultipleActionThree performAction is called");
     }
 }
