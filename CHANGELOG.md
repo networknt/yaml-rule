@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## 2.0.0 - 2024-12-25
+
+### Added
+- change the specification and add a lot of new feaures.
+
 ## 1.0.5 - 2024-10-22
 
 ### Added
