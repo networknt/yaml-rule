@@ -1,9 +1,9 @@
 rule1:
   ruleId: rule1
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: first rule for unit test
+  common: Y
+  ruleDesc: first rule for unit test
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
@@ -20,10 +20,10 @@ rule1:
 
 test-on-date-format-rule:
   ruleId: test-on-date-format-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test date on with date format
+  common: Y
+  ruleDesc: test date on with date format
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
@@ -39,10 +39,10 @@ test-on-date-format-rule:
 
 test-before-date-format-rule:
   ruleId: test-before-date-format-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test date before with date format
+  common: Y
+  ruleDesc: test date before with date format
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
@@ -58,10 +58,10 @@ test-before-date-format-rule:
 
 test-after-date-format-rule:
   ruleId: test-after-date-format-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test date after with date format
+  common: Y
+  ruleDesc: test date after with date format
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
@@ -77,10 +77,10 @@ test-after-date-format-rule:
 
 test-before-rule:
   ruleId: test-before-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test date before
+  common: Y
+  ruleDesc: test date before
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
@@ -95,10 +95,10 @@ test-before-rule:
 
 test-after-rule:
   ruleId: test-after-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test date after
+  common: Y
+  ruleDesc: test date after
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
@@ -113,10 +113,10 @@ test-after-rule:
 
 test-on-rule:
   ruleId: test-on-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test date on
+  common: Y
+  ruleDesc: test date on
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cdate
@@ -131,10 +131,10 @@ test-on-rule:
 
 test-len-eq-int-rule:
   ruleId: test-len-eq-int-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string length equal to an integer
+  common: Y
+  ruleDesc: test string length equal to an integer
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -150,10 +150,10 @@ test-len-eq-int-rule:
 
 test-gte-rule:
   ruleId: test-gte-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test greater than or equal to
+  common: Y
+  ruleDesc: test greater than or equal to
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
@@ -169,10 +169,10 @@ test-gte-rule:
 
 test-lte-rule:
   ruleId: test-lte-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test less than or equal to
+  common: Y
+  ruleDesc: test less than or equal to
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
@@ -188,10 +188,10 @@ test-lte-rule:
 
 role-based-auth:
   ruleId: role-based-auth
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Role-based authorization rule for a particuler service with parameters different per endpoint.
+  common: Y
+  ruleDesc: Role-based authorization rule for a particuler service with parameters different per endpoint.
   conditions:
     - conditionId: allow-role
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
@@ -206,10 +206,10 @@ role-based-auth:
 
 role-based-auth-skip-cc:
   ruleId: role-based-auth-skip-cc
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Role-based authorization rule for a particuler service with parameters different per endpoint. Client Credentials token is allowed without role in claims
+  common: Y
+  ruleDesc: Role-based authorization rule for a particuler service with parameters different per endpoint. Client Credentials token is allowed without role in claims
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
@@ -229,10 +229,10 @@ role-based-auth-skip-cc:
 
 cc-group-role-auth:
   ruleId: cc-group-role-auth
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Role-based authorization rule for account service and allow cc token and transform group to role.
+  common: Y
+  ruleDesc: Role-based authorization rule for account service and allow cc token and transform group to role.
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
@@ -266,10 +266,10 @@ cc-group-role-auth:
 
 ccsid-group-role-auth:
   ruleId: ccsid-group-role-auth
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Role-based authorization rule for account service and allow cc token with sid claim and transform group to role. This is for the controller and config server.
+  common: Y
+  ruleDesc: Role-based authorization rule for account service and allow cc token with sid claim and transform group to role. This is for the controller and config server.
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
@@ -307,10 +307,10 @@ ccsid-group-role-auth:
 
 controller-register-access:
   ruleId: controller-register-access
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Allow client credentials token with sid as customized claim. The sid should match the request body serviceId. The register will only accept cc token. It means that only the a running service can register itself. This endpoint shouldn't be called by the portal view at all.
+  common: Y
+  ruleDesc: Allow client credentials token with sid as customized claim. The sid should match the request body serviceId. The register will only accept cc token. It means that only the a running service can register itself. This endpoint shouldn't be called by the portal view at all.
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
@@ -338,10 +338,10 @@ controller-register-access:
 
 controller-check-access:
   ruleId: controller-check-access
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Allow client credentials token with sid as customized claim. The sid should be contained in the id property of the body in the put request. The check will only accept cc token. It means that only the a running service can check itself to let controler know it is healthy. This endpoint shouldn't be called by the portal view at all.
+  common: Y
+  ruleDesc: Allow client credentials token with sid as customized claim. The sid should be contained in the id property of the body in the put request. The check will only accept cc token. It means that only the a running service can check itself to let controler know it is healthy. This endpoint shouldn't be called by the portal view at all.
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
@@ -369,10 +369,10 @@ controller-check-access:
 
 controller-deregister-access:
   ruleId: controller-deregister-access
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Allow client credentail token access with sid as customized claim. The sid should match the query parameter serviceId and only cc token is allowed to access. It means that only the a running service can register itself. This endpoint shouldn't be called by the portal view at all.
+  common: Y
+  ruleDesc: Allow client credentail token access with sid as customized claim. The sid should match the query parameter serviceId and only cc token is allowed to access. It means that only the a running service can register itself. This endpoint shouldn't be called by the portal view at all.
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
@@ -400,10 +400,10 @@ controller-deregister-access:
 
 controller-group-role:
   ruleId: controller-group-role
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Rule that converts a list of AD groups to controller roles before invoking the portal-role-access rule for role-based authentication
+  common: Y
+  ruleDesc: Rule that converts a list of AD groups to controller roles before invoking the portal-role-access rule for role-based authentication
   conditions:
     - conditionId: CtlPltRead
       propertyPath: auditInfo.subject_claims.ClaimsMap.groups
@@ -433,10 +433,10 @@ controller-group-role:
 
 config-service-access:
   ruleId: config-service-access
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Rule-based authorization for portal service and allow cc token with sid claim to access the config server configs, certs and files endpoint during the service startup to get config files.
+  common: Y
+  ruleDesc: Rule-based authorization for portal service and allow cc token with sid claim to access the config server configs, certs and files endpoint during the service startup to get config files.
   conditions:
     - conditionId: allow-cc
       propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
@@ -466,10 +466,10 @@ config-service-access:
 
 portal-role-access:
   ruleId: portal-role-access
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: Rule-based authorization for portal service and allow certain roles to access certain endpoints. For AD integration, it transforms the group into a role. This is for the portal services like controller and config server access from the portal view.
+  common: Y
+  ruleDesc: Rule-based authorization for portal service and allow certain roles to access certain endpoints. For AD integration, it transforms the group into a role. This is for the portal services like controller and config server access from the portal view.
   conditions:
     - conditionId: allow-role-jwt
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
@@ -484,10 +484,10 @@ portal-role-access:
 
 get-config-filter:
   ruleId: get-config-filter
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: response-filter
-  visibility: public
-  description: For CfgAppRead and CfgAppAdmin roles, the list result will be filtered by the service-name that the user has access in the user profile.
+  common: Y
+  ruleDesc: For CfgAppRead and CfgAppAdmin roles, the list result will be filtered by the service-name that the user has access in the user profile.
   conditions:
     - conditionId: row-filter-role
       propertyPath: auditInfo.subject_claims.ClaimsMap.roles
@@ -506,10 +506,10 @@ get-config-filter:
 
 petstore-group-role-transform:
   ruleId: petstore-group-role-transform
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: request-access
-  visibility: public
-  description: A rule to transform a list of Active Directory groups to a list of roles for petstore API
+  common: Y
+  ruleDesc: A rule to transform a list of Active Directory groups to a list of roles for petstore API
   conditions:
     - conditionId: manager
       propertyPath: groups
@@ -529,10 +529,10 @@ petstore-group-role-transform:
 
 petstore-response-header-replace:
   ruleId: petstore-response-header-replace
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: response-transform
-  visibility: public
-  description: Transform the response to replace one header with the other header.
+  common: Y
+  ruleDesc: Transform the response to replace one header with the other header.
   conditions:
     - conditionId: path-pets
       propertyPath: requestPath
@@ -567,10 +567,10 @@ petstore-response-header-replace:
 
 petstore-response-header-replace-in:
   ruleId: petstore-response-header-replace-in
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: response-transform
-  visibility: public
-  description: Transform the response to replace one header with the other header.
+  common: Y
+  ruleDesc: Transform the response to replace one header with the other header.
   conditions:
     - conditionId: path-pets
       propertyPath: requestPath
@@ -594,10 +594,10 @@ petstore-response-header-replace-in:
 
 petstore-response-header-replace-match:
   ruleId: petstore-response-header-replace-match
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: response-transform
-  visibility: public
-  description: Transform the response to replace one header with the other header.
+  common: Y
+  ruleDesc: Transform the response to replace one header with the other header.
   conditions:
     - conditionId: BankingServices
       propertyPath: requestPath
@@ -631,11 +631,10 @@ petstore-response-header-replace-match:
 
 test-priority-rule:
   ruleId: test-priority-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule priority
-  priority: 1
+  common: Y
+  ruleDesc: test rule priority
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
@@ -650,11 +649,10 @@ test-priority-rule:
 
 test-priority-rule2:
   ruleId: test-priority-rule2
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule priority
-  priority: 2
+  common: Y
+  ruleDesc: test rule priority
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
@@ -670,10 +668,10 @@ test-priority-rule2:
 
 test-len-eq-rule:
   ruleId: test-len-eq-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string length equal
+  common: Y
+  ruleDesc: test string length equal
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -689,10 +687,10 @@ test-len-eq-rule:
 
 test-len-gt-rule:
   ruleId: test-len-gt-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string "ClassAA" length greater than another string length "6" and the result is true
+  common: Y
+  ruleDesc: test string "ClassAA" length greater than another string length "6" and the result is true
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -708,10 +706,10 @@ test-len-gt-rule:
 
 test-len-gt-rule-int:
   ruleId: test-len-gt-rule-int
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string "ClassAA" length greater than an integer 9 and the result is false
+  common: Y
+  ruleDesc: test string "ClassAA" length greater than an integer 9 and the result is false
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -727,10 +725,10 @@ test-len-gt-rule-int:
 
 test-len-lt-rule:
   ruleId: test-len-lt-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string length less than
+  common: Y
+  ruleDesc: test string length less than
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -746,10 +744,10 @@ test-len-lt-rule:
 
 test-match-rule:
   ruleId: test-match-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string match
+  common: Y
+  ruleDesc: test string match
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -765,10 +763,10 @@ test-match-rule:
 
 test-not-match-rule:
   ruleId: test-not-match-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string not match
+  common: Y
+  ruleDesc: test string not match
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -783,10 +781,10 @@ test-not-match-rule:
 
 test-match-rule-flags:
   ruleId: test-match-rule-flags
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string match with flags
+  common: Y
+  ruleDesc: test string match with flags
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -802,10 +800,10 @@ test-match-rule-flags:
 
 test-empty-rule:
   ruleId: test-empty-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string empty
+  common: Y
+  ruleDesc: test string empty
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
@@ -817,10 +815,10 @@ test-empty-rule:
 
 test-not-empty-rule:
   ruleId: test-not-empty-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string not empty
+  common: Y
+  ruleDesc: test string not empty
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
@@ -832,10 +830,10 @@ test-not-empty-rule:
 
 test-blank-rule:
   ruleId: test-blank-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string blank
+  common: Y
+  ruleDesc: test string blank
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
@@ -847,10 +845,10 @@ test-blank-rule:
 
 test-not-blank-rule:
   ruleId: test-not-blank-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test string not blank
+  common: Y
+  ruleDesc: test string not blank
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cname
@@ -862,10 +860,10 @@ test-not-blank-rule:
 
 test-single-action-true:
   ruleId: test-single-action-true
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: If a rule has only one action, it is executed only if the evaluation result is true
+  common: Y
+  ruleDesc: If a rule has only one action, it is executed only if the evaluation result is true
   conditions:
     - conditionId: cid1
       conditionDesc: The name is ClassA and its length is greater than 4, so the condition is true
@@ -883,10 +881,10 @@ test-single-action-true:
 
 test-single-action-false:
   ruleId: test-single-action-false
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: If a rule has only one action, it won't be executed if the evaluation result is false
+  common: Y
+  ruleDesc: If a rule has only one action, it won't be executed if the evaluation result is false
   conditions:
     - conditionId: cid1
       conditionDesc: The name is ClassA and its length is less than 10, so the condition is false
@@ -904,10 +902,10 @@ test-single-action-false:
 
 test-multiple-actions:
   ruleId: test-multiple-actions
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test multiple actions, MultipleActionOne is executed if the condition is true, MultipleActionTwo is executed if the condition is false. MultipleActionThree is executed regardless of the evaluation result.
+  common: Y
+  ruleDesc: test multiple actions, MultipleActionOne is executed if the condition is true, MultipleActionTwo is executed if the condition is false. MultipleActionThree is executed regardless of the evaluation result.
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Aname
@@ -928,10 +926,10 @@ test-multiple-actions:
 
 condition_id_reference:
   ruleId: condition_id_reference
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: first rule for unit test
+  common: Y
+  ruleDesc: first rule for unit test
   conditions:
     - conditionId: cid1
       propertyPath: ClassA.Bobject.Cobject.Cint
@@ -961,11 +959,10 @@ condition_id_reference:
 
 test-contains-ignore-case-rule:
   ruleId: test-contains-ignore-case-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule with containsIgnoreCase custom operator
-  priority: 1
+  common: Y
+  ruleDesc: test rule with containsIgnoreCase custom operator
   conditions:
     - conditionId: cid1
       propertyPath: name
@@ -980,11 +977,10 @@ test-contains-ignore-case-rule:
 
 test-starts-with-rule:
   ruleId: test-starts-with-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule with startsWith custom operator
-  priority: 1
+  common: Y
+  ruleDesc: test rule with startsWith custom operator
   conditions:
     - conditionId: cid1
       propertyPath: name
@@ -999,11 +995,10 @@ test-starts-with-rule:
 
 test-built-in-operators-rule:
   ruleId: test-built-in-operators-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule with built-in operators and expressions
-  priority: 1
+  common: Y
+  ruleDesc: test rule with built-in operators and expressions
   conditionExpression: "cid1 AND (cid2 OR cid3)"
   conditions:
     - conditionId: cid1
@@ -1033,11 +1028,10 @@ test-built-in-operators-rule:
 
 test-regex-rule:
   ruleId: test-regex-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule with regex
-  priority: 1
+  common: Y
+  ruleDesc: test rule with regex
   conditions:
     - conditionId: cid1
       propertyPath: name
@@ -1052,11 +1046,10 @@ test-regex-rule:
 
 test-date-rule:
   ruleId: test-date-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule with date operator
-  priority: 1
+  common: Y
+  ruleDesc: test rule with date operator
   conditions:
     - conditionId: cid1
       propertyPath: eventDate
@@ -1072,11 +1065,10 @@ test-date-rule:
 
 test-length-rule:
   ruleId: test-length-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule with length operator
-  priority: 1
+  common: Y
+  ruleDesc: test rule with length operator
   conditions:
     - conditionId: cid1
       propertyPath: name
@@ -1093,11 +1085,10 @@ test-length-rule:
 
 test-set-header-rule:
   ruleId: test-set-header-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule that sets a header with value from objMap
-  priority: 1
+  common: Y
+  ruleDesc: test rule that sets a header with value from objMap
   conditions:
     - conditionId: cid1
       propertyPath: name
@@ -1113,11 +1104,10 @@ test-set-header-rule:
 
 test-set-header-with-result-rule:
   ruleId: test-set-header-with-result-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule that sets a header with result from conditions
-  priority: 1
+  common: Y
+  ruleDesc: test rule that sets a header with result from conditions
   conditions:
     - conditionId: cid1
       propertyPath: name
@@ -1133,11 +1123,10 @@ test-set-header-with-result-rule:
 
 test-set-header-nested-rule:
   ruleId: test-set-header-nested-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule that sets a header with value from a nested property
-  priority: 1
+  common: Y
+  ruleDesc: test rule that sets a header with value from a nested property
   conditions:
     - conditionId: cid1
       propertyPath: address.city
@@ -1152,11 +1141,10 @@ test-set-header-nested-rule:
           value: ${address.city}
 test-set-header-no-match-rule:
   ruleId: test-set-header-no-match-rule
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test rule with no match and no header is set
-  priority: 1
+  common: Y
+  ruleDesc: test rule with no match and no header is set
   conditions:
     - conditionId: cid1
       propertyPath: name
@@ -1173,11 +1161,10 @@ test-set-header-no-match-rule:
 
 test-set-header-optional-code:
   ruleId: test-set-header-optional-code
-  host: lightapi.net
+  hostId: N2CMw0HGQXeLvC1wBfln2A
   ruleType: generic
-  visibility: public
-  description: test set header action without valueTypeCode
-  priority: 1
+  common: Y
+  ruleDesc: test set header action without valueTypeCode
   conditions:
     - conditionId: cid1
       propertyPath: age

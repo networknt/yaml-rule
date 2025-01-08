@@ -5,12 +5,14 @@ import java.util.Objects;
 
 public class Rule {
     private String ruleId;
-    private String host;        // rule is always associated with a host.
+    private String ruleName;
+    private String ruleVersion;
+    private String hostId;        // rule is always associated with a host.
     private String ruleType;    // each host has a defined list of rule types from the rule-type ref table.
-    private String visibility;  // public or private. only public rules can be shared or subscribed by other hosts.
-    private String groupId;     // a group of rules can be executed together for example a list of validation rules.
-    private String description;
-    private Integer priority;
+    private String common;  // public or private. only public rules can be shared or subscribed by other hosts.
+    private String ruleGroup;     // a group of rules can be executed together for example a list of validation rules.
+    private String ruleDesc;
+    private String ruleOwner;
     private Collection<RuleCondition> conditions;
     private String conditionExpression;
     private Collection<RuleAction> actions;
@@ -26,12 +28,12 @@ public class Rule {
         this.ruleId = ruleId;
     }
 
-    public String getHost() {
-        return host;
+    public String getHostId() {
+        return hostId;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setHostId(String hostId) {
+        this.hostId = hostId;
     }
 
     public String getRuleType() {
@@ -42,28 +44,44 @@ public class Rule {
         this.ruleType = ruleType;
     }
 
-    public String getGroupId() {
-        return groupId;
+    public String getRuleName() {
+        return ruleName;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setRuleName(String ruleName) {
+        this.ruleName = ruleName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getRuleVersion() {
+        return ruleVersion;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setRuleVersion(String ruleVersion) {
+        this.ruleVersion = ruleVersion;
     }
 
-    public Integer getPriority() {
-        return priority;
+    public String getRuleGroup() {
+        return ruleGroup;
     }
 
-    public void setPriority(Integer priority) {
-        this.priority = priority;
+    public void setRuleGroup(String ruleGroup) {
+        this.ruleGroup = ruleGroup;
+    }
+
+    public String getRuleDesc() {
+        return ruleDesc;
+    }
+
+    public void setRuleDesc(String ruleDesc) {
+        this.ruleDesc = ruleDesc;
+    }
+
+    public String getRuleOwner() {
+        return ruleOwner;
+    }
+
+    public void setRuleOwner(String ruleOwner) {
+        this.ruleOwner = ruleOwner;
     }
 
     public Collection<RuleCondition> getConditions() {
@@ -90,23 +108,23 @@ public class Rule {
         this.actions = actions;
     }
 
-    public String getVisibility() {
-        return visibility;
+    public String getCommon() {
+        return common;
     }
 
-    public void setVisibility(String visibility) {
-        this.visibility = visibility;
+    public void setCommon(String common) {
+        this.common = common;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(host, rule.host) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(visibility, rule.visibility) && Objects.equals(groupId, rule.groupId) && Objects.equals(description, rule.description) && Objects.equals(priority, rule.priority) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditionExpression, rule.conditionExpression) && Objects.equals(actions, rule.actions);
+        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(ruleName, rule.ruleName) && Objects.equals(ruleVersion, rule.ruleVersion) && Objects.equals(hostId, rule.hostId) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(common, rule.common) && Objects.equals(ruleGroup, rule.ruleGroup) && Objects.equals(ruleDesc, rule.ruleDesc) && Objects.equals(ruleOwner, rule.ruleOwner) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditionExpression, rule.conditionExpression) && Objects.equals(actions, rule.actions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ruleId, host, ruleType, visibility, groupId, description, priority, conditions, conditionExpression, actions);
+        return Objects.hash(ruleId, ruleName, ruleVersion, hostId, ruleType, common, ruleGroup, ruleDesc, ruleOwner, conditions, conditionExpression, actions);
     }
 }
