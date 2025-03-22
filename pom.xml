@@ -68,6 +68,7 @@
         <version.junit>5.11.3</version.junit>
         <version.jose4j>0.9.6</version.jose4j>
         <version.mockito>5.11.0</version.mockito>
+        <version.nexus-staging-maven>1.7.0</version.nexus-staging-maven>
     </properties>
     <dependencies>
         <dependency>
@@ -135,7 +136,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <version>${version.nexus-staging-maven}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
