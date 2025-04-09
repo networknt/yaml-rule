@@ -1,3 +1,26 @@
+---
+equisoft-product-bundle-api-v1.dev.lightapi.net:
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: req-tra
+  common: "Y"
+  ruleId: equisoft-product-bundle-api-v1.dev.lightapi.net
+  ruleName: equisoft product bundle
+  ruleVersion: 1.0.0
+  ruleOwner: steve.hu@networknt.com
+  ruleDesc: get token from Equisoft
+  conditions:
+    - operatorCode: match
+      conditionId: path-equisoft
+      propertyPath: requestPath
+      index: 1
+      conditionValues:
+        - expression: false
+          valueTypeCode: 'STRING'
+          conditionValueId: path
+          conditionValue: "/dmzgateway/product-bundle-api/v1/(.*)"
+  actions:
+    - actionId: equisoft-product-bundle-api-v1-transform
+      actionClassName: com.networknt.rule.generic.token.TokenTransformerAction
 rule1:
   ruleId: rule1
   hostId: N2CMw0HGQXeLvC1wBfln2A
