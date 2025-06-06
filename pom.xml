@@ -69,6 +69,7 @@
         <version.jose4j>0.9.6</version.jose4j>
         <version.mockito>5.11.0</version.mockito>
         <version.nexus-staging-maven>1.7.0</version.nexus-staging-maven>
+        <version.maven-gpg>3.2.7</version.maven-gpg>
     </properties>
     <dependencies>
         <dependency>
@@ -329,7 +330,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${version.maven-gpg}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -339,6 +340,16 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
