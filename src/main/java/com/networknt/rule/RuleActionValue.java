@@ -18,6 +18,7 @@ public class RuleActionValue {
     }
 
     public RuleActionValue(RuleActionValue other) {
+        Objects.requireNonNull(other, "source RuleActionValue to copy cannot be null");
         this.actionValueId = other.actionValueId;
         this.valueTypeCode = other.valueTypeCode;
         this.value = other.value;
