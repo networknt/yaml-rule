@@ -16,6 +16,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 
 public class RuleEvaluator {
@@ -27,7 +28,7 @@ public class RuleEvaluator {
     private static final Logger logger = LoggerFactory.getLogger(RuleEvaluator.class);
     private static final Logger traceLogger = LoggerFactory.getLogger("rule.trace");
 
-    private static final Map accessorMap = new HashMap();
+    private static final ConcurrentMap<Class<?>, Method[]> accessorMap = new ConcurrentHashMap<>();
     private static final Class[] EMPTY_CLASS_LIST = new Class[0];
 
 
@@ -39,7 +40,7 @@ public class RuleEvaluator {
 
     private final Map<Class<?>, TypeSpecificOperation<?>> typeStrategies = new HashMap<>();
 
-    protected static final Map<String, CustomOperator> customOperatorRegistry = new HashMap<>();
+    protected static final Map<String, CustomOperator> customOperatorRegistry = new ConcurrentHashMap<>();
 
 
     static {
@@ -690,7 +691,7 @@ public class RuleEvaluator {
 
     private Method[] getAccessors(Class clazz) {
 
-        Method[] allMethods = (Method[]) accessorMap.get(clazz);
+        Method[] allMethods = accessorMap.get(clazz);
         if (allMethods == null) {
             allMethods = clazz.getMethods();
             ArrayList accessors = new ArrayList(allMethods.length);

@@ -17,6 +17,14 @@ public class RuleActionValue {
         this.value = value;
     }
 
+    public RuleActionValue(RuleActionValue other) {
+        Objects.requireNonNull(other, "source RuleActionValue to copy cannot be null");
+        this.actionValueId = other.actionValueId;
+        this.valueTypeCode = other.valueTypeCode;
+        this.value = other.value;
+        this.resolvedValue = other.resolvedValue;
+    }
+
     public String getActionValueId() {
         return actionValueId;
     }

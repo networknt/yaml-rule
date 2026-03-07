@@ -94,29 +94,45 @@ public class RuleEngine {
         Collection<RuleActionValue> actionValues = ra.getActionValues();
         // first check the cache to see if the action class is already loaded. If not, load it.
         // the RuleLoaderStartupHook will load all the action classes during server startup.
-        IAction ia = actionClassCache.get(actionType);
-        if (ia == null) {
-            try {
-                ia = (IAction) Class.forName(actionType).getDeclaredConstructor().newInstance();
-            } catch (ClassNotFoundException e) {
+        // Use computeIfAbsent to ensure atomic, single-instantiation per actionType under concurrency.
+        IAction ia;
+        try {
+            ia = actionClassCache.computeIfAbsent(actionType, key -> {
+                try {
+                    return (IAction) Class.forName(key).getDeclaredConstructor().newInstance();
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | java.lang.reflect.InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } catch (RuntimeException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof ClassNotFoundException) {
                 String errorMsg = "IAction class " + actionType + " not found";
-                logger.error("Error executing action in rule {}, action {}: {}", ruleId, ra.getActionId(), errorMsg, e);
+                logger.error("Error executing action in rule {}, action {}: {}", ruleId, ra.getActionId(), errorMsg, cause);
                 throw new ActionExecutionException(errorMsg, ruleId, ra.getActionId());
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | java.lang.reflect.InvocationTargetException e) {
+            } else if (cause instanceof InstantiationException || cause instanceof IllegalAccessException
+                    || cause instanceof NoSuchMethodException || cause instanceof java.lang.reflect.InvocationTargetException) {
                 String errorMsg = "IAction class " + actionType + " cannot be initialized";
-                logger.error("Error executing action in rule {}, action {}: {}", ruleId, ra.getActionId(), errorMsg, e);
+                logger.error("Error executing action in rule {}, action {}: {}", ruleId, ra.getActionId(), errorMsg, cause);
                 throw new ActionExecutionException(errorMsg, ruleId, ra.getActionId());
+            } else {
+                throw e;
             }
-            actionClassCache.put(actionType, ia);
         }
+        Collection<RuleActionValue> clonedValues = null;
         if (actionValues != null) {
+            clonedValues = new ArrayList<>(actionValues.size());
             for (RuleActionValue actionValue: actionValues) {
-                actionValue.setResolvedValue(RuleEvaluator.getInstance().resolveVariable(actionValue.getValue(), objMap, resultMap));
+                RuleActionValue clonedValue = new RuleActionValue(actionValue);
+                clonedValue.setResolvedValue(RuleEvaluator.getInstance().resolveVariable(clonedValue.getValue(), objMap, resultMap));
+                clonedValues.add(clonedValue);
             }
         }
-        ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, actionValues);
+        ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, clonedValues);
          // execute the post perform action.
-        ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, actionValues);
+        ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, clonedValues);
     }
 
     /**
