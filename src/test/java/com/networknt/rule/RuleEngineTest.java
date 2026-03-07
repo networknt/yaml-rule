@@ -19,6 +19,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -909,6 +913,56 @@ public class RuleEngineTest {
         assertEquals(30, result.get("X-Test-Age"));
     }
 
+    @Test
+    void testConcurrentExecuteRuleDoesNotMutateActionValues() throws Exception {
+        // Verify that concurrent executions of the same rule with different inputs
+        // each get the correct result, and that the shared rule definition's
+        // RuleActionValue objects are not mutated between calls.
+        final String ruleId = "test-set-header-rule";
+        final RuleEngine engine = new RuleEngine(ruleMap, null);
+        final int threadCount = 20;
+
+        // Capture the original action value template before any execution
+        Rule rule = ruleMap.get(ruleId);
+        RuleAction sharedAction = rule.getActions().iterator().next();
+        RuleActionValue sharedActionValue = sharedAction.getActionValues().iterator().next();
+        String originalValue = sharedActionValue.getValue();
+        Object originalResolvedValue = sharedActionValue.getResolvedValue();
+
+        CountDownLatch startLatch = new CountDownLatch(1);
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        List<Future<Map<String, Object>>> futures = new ArrayList<>();
+
+        for (int i = 0; i < threadCount; i++) {
+            futures.add(executor.submit(() -> {
+                Map<String, Object> objMap = new HashMap<>();
+                objMap.put("name", "test");
+                startLatch.await();
+                return engine.executeRule(ruleId, objMap);
+            }));
+        }
+
+        // Release all threads simultaneously to maximise concurrency
+        startLatch.countDown();
+
+        try {
+            for (Future<Map<String, Object>> future : futures) {
+                Map<String, Object> result = future.get();
+                // Each thread should resolve ${name} to "test"
+                assertEquals("test", result.get("X-Test-Name"),
+                        "Each concurrent execution must return the correct thread-specific result");
+            }
+        } finally {
+            executor.shutdown();
+            executor.awaitTermination(10, java.util.concurrent.TimeUnit.SECONDS);
+        }
+
+        // The shared RuleActionValue must not have been mutated
+        assertEquals(originalValue, sharedActionValue.getValue(),
+                "The original action value template must not be modified by concurrent executions");
+        assertEquals(originalResolvedValue, sharedActionValue.getResolvedValue(),
+                "The original action value resolvedValue must remain null after concurrent executions");
+    }
 
     static class ClassA {
         String aname;
