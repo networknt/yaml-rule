@@ -27,7 +27,7 @@ public class RuleEvaluator {
     private static final Logger logger = LoggerFactory.getLogger(RuleEvaluator.class);
     private static final Logger traceLogger = LoggerFactory.getLogger("rule.trace");
 
-    private static final Map accessorMap = new HashMap();
+    private static final Map accessorMap = new ConcurrentHashMap();
     private static final Class[] EMPTY_CLASS_LIST = new Class[0];
 
 
@@ -39,7 +39,7 @@ public class RuleEvaluator {
 
     private final Map<Class<?>, TypeSpecificOperation<?>> typeStrategies = new HashMap<>();
 
-    protected static final Map<String, CustomOperator> customOperatorRegistry = new HashMap<>();
+    protected static final Map<String, CustomOperator> customOperatorRegistry = new ConcurrentHashMap<>();
 
 
     static {

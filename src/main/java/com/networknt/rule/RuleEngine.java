@@ -109,14 +109,18 @@ public class RuleEngine {
             }
             actionClassCache.put(actionType, ia);
         }
+        Collection<RuleActionValue> clonedValues = null;
         if (actionValues != null) {
+            clonedValues = new ArrayList<>(actionValues.size());
             for (RuleActionValue actionValue: actionValues) {
-                actionValue.setResolvedValue(RuleEvaluator.getInstance().resolveVariable(actionValue.getValue(), objMap, resultMap));
+                RuleActionValue clonedValue = new RuleActionValue(actionValue);
+                clonedValue.setResolvedValue(RuleEvaluator.getInstance().resolveVariable(clonedValue.getValue(), objMap, resultMap));
+                clonedValues.add(clonedValue);
             }
         }
-        ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, actionValues);
+        ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, clonedValues);
          // execute the post perform action.
-        ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, actionValues);
+        ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, clonedValues);
     }
 
     /**

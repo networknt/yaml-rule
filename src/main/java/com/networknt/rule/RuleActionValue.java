@@ -17,6 +17,13 @@ public class RuleActionValue {
         this.value = value;
     }
 
+    public RuleActionValue(RuleActionValue other) {
+        this.actionValueId = other.actionValueId;
+        this.valueTypeCode = other.valueTypeCode;
+        this.value = other.value;
+        this.resolvedValue = other.resolvedValue;
+    }
+
     public String getActionValueId() {
         return actionValueId;
     }
