@@ -93,7 +93,7 @@ public class RuleEngine {
         String actionType = ra.getActionClassName();
         Collection<RuleActionValue> actionValues = ra.getActionValues();
         // first check the cache to see if the action class is already loaded. If not, load it.
-        // the RuleLoaderStartupHook will load all the action classes during server startup.
+        // the MultiThreadRuleExecutor will load all the action classes during server startup.
         // Use computeIfAbsent to ensure atomic, single-instantiation per actionType under concurrency.
         IAction ia;
         try {
