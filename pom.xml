@@ -67,7 +67,9 @@
         <version.logback>1.5.26</version.logback>
         <version.junit>5.11.4</version.junit>
         <version.jose4j>0.9.6</version.jose4j>
-        <version.mockito>5.11.0</version.mockito>
+        <version.mockito>5.21.0</version.mockito>
+        <version.maven-surefire-plugin>3.5.4</version.maven-surefire-plugin>
+        <version.jacoco-maven-plugin>0.8.14</version.jacoco-maven-plugin>
         <version.nexus-staging-maven>1.7.0</version.nexus-staging-maven>
         <version.maven-gpg>3.2.7</version.maven-gpg>
     </properties>
@@ -204,13 +206,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>${version.maven-surefire-plugin}</version>
             </plugin>
             <!-- JACOCO added for code coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.6</version>
+                <version>${version.jacoco-maven-plugin}</version>
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>
@@ -278,7 +280,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.6</version>
+                        <version>${version.jacoco-maven-plugin}</version>
                         <executions>
                             <!-- The Executions for merging -->
                             <execution>

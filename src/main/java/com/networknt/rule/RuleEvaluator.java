@@ -2,6 +2,7 @@ package com.networknt.rule;
 
 import com.networknt.rule.custom.ContainsIgnoreCaseOperator;
 import com.networknt.rule.custom.CustomOperator;
+import com.networknt.rule.custom.EndsWithOperator;
 import com.networknt.rule.custom.StartsWithOperator;
 import com.networknt.rule.exception.ConditionEvaluationException;
 import com.networknt.rule.exception.InvalidOperatorException;
@@ -10,6 +11,7 @@ import com.networknt.rule.operation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -74,6 +76,7 @@ public class RuleEvaluator {
         typeStrategies.put(Timestamp.class, new DateTypeOperation());
         customOperatorRegistry.put("containsIgnoreCase", new ContainsIgnoreCaseOperator());
         customOperatorRegistry.put("startsWith", new StartsWithOperator());
+        customOperatorRegistry.put("endsWith", new EndsWithOperator());
 
     }
 
@@ -289,6 +292,15 @@ public class RuleEvaluator {
                 case NOT_IN_LIST:
                     result =  !evaluateInList(ruleId, conditionId, resolvedObject, conditionValues);
                       break;
+                case CONTAINS_ANY:
+                    result = evaluateContainsAny(ruleId, conditionId, resolvedObject, conditionValues);
+                    break;
+                case CONTAINS_ALL:
+                    result = evaluateContainsAll(ruleId, conditionId, resolvedObject, conditionValues);
+                    break;
+                case CONTAINS_NONE:
+                    result = !evaluateContainsAny(ruleId, conditionId, resolvedObject, conditionValues);
+                    break;
                 case GREATER_THAN:
                      result = evaluateGreaterThan(ruleId, conditionId, resolvedObject, valueObject);
                     break;
@@ -465,6 +477,63 @@ public class RuleEvaluator {
             }
         }
         return match;
+    }
+
+    private boolean evaluateContainsAny(String ruleId, String conditionId, Object object, List valueConditions) throws RuleEngineException {
+        if (object == null || valueConditions == null || valueConditions.isEmpty()) {
+            return false;
+        }
+        ListIterator it = valueConditions.listIterator();
+        while (it.hasNext()) {
+            RuleConditionValue value = (RuleConditionValue) it.next();
+            if (objectContainsExpected(ruleId, conditionId, object, value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean evaluateContainsAll(String ruleId, String conditionId, Object object, List valueConditions) throws RuleEngineException {
+        if (object == null || valueConditions == null || valueConditions.isEmpty()) {
+            return false;
+        }
+        ListIterator it = valueConditions.listIterator();
+        while (it.hasNext()) {
+            RuleConditionValue value = (RuleConditionValue) it.next();
+            if (!objectContainsExpected(ruleId, conditionId, object, value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean objectContainsExpected(String ruleId, String conditionId, Object object, RuleConditionValue value) throws RuleEngineException {
+        if (object instanceof Collection<?>) {
+            for (Object item : (Collection<?>) object) {
+                if (valueMatchesObject(ruleId, conditionId, item, value)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (object != null && object.getClass().isArray()) {
+            int len = Array.getLength(object);
+            for (int i = 0; i < len; i++) {
+                if (valueMatchesObject(ruleId, conditionId, Array.get(object, i), value)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return object.toString().contains(value.getConditionValue());
+    }
+
+    private boolean valueMatchesObject(String ruleId, String conditionId, Object object, RuleConditionValue value) throws RuleEngineException {
+        Object valueObject = object == null ? value.getConditionValue() : convertConditionValue(ruleId, conditionId, object, value.getConditionValue(), null);
+        if (object == null || valueObject == null) {
+            return object == null && valueObject == null;
+        }
+        return object.equals(valueObject);
     }
 
     /**

@@ -60,6 +60,14 @@ public class Rule {
         this.ruleVersion = ruleVersion;
     }
 
+    public String getVersion() {
+        return ruleVersion;
+    }
+
+    public void setVersion(String version) {
+        this.ruleVersion = version;
+    }
+
     public String getRuleGroup() {
         return ruleGroup;
     }
@@ -82,6 +90,14 @@ public class Rule {
 
     public void setRuleOwner(String ruleOwner) {
         this.ruleOwner = ruleOwner;
+    }
+
+    public String getAuthor() {
+        return ruleOwner;
+    }
+
+    public void setAuthor(String author) {
+        this.ruleOwner = author;
     }
 
     public Collection<RuleCondition> getConditions() {

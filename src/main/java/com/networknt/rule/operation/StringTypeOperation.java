@@ -31,7 +31,7 @@ public class StringTypeOperation implements TypeSpecificOperation<String> {
             } else {
                 return 0;
             }
-        } else if(valueTypeCode.equals("INTEGER")) {
+        } else if(valueTypeCode.equals("INTEGER") || valueTypeCode.equals("LONG") || valueTypeCode.equals("DOUBLE")) {
             if(object instanceof String) {
                 return ((String)object).length() - Integer.valueOf(valueObject.toString());
             } else {
