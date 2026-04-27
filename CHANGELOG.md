@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+## 3.0.0 - 2026-04-27
+
+### Added
+- fixes #29 update rule handlers to support new spec
+
 ## 2.0.1 - 2025-02-13
 
 ### Added
