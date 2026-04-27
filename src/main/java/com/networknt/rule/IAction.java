@@ -16,7 +16,13 @@ public interface IAction {
      * @param actionValues action values
      * @throws RuleEngineException exception thrown during performAction execution.
      */
-    void performAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues) throws RuleEngineException;
+    default void performAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues) throws RuleEngineException {
+        throw new UnsupportedOperationException("Action must implement collection or map actionValues");
+    }
+
+    default void performAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Map<String, Object> actionValues) throws RuleEngineException {
+        performAction(ruleId, actionId, objMap, resultMap, RuleAction.toActionValueCollection(actionValues));
+    }
 
     /**
      * post action to be performed
@@ -29,5 +35,9 @@ public interface IAction {
      */
     default void postPerformAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Collection<RuleActionValue> actionValues) throws RuleEngineException {
         // NOOP for classes implement IAction.
+    };
+
+    default void postPerformAction(String ruleId, String actionId, Map<String, Object> objMap, Map<String, Object> resultMap, Map<String, Object> actionValues) throws RuleEngineException {
+        postPerformAction(ruleId, actionId, objMap, resultMap, RuleAction.toActionValueCollection(actionValues));
     };
 }

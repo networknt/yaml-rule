@@ -7,6 +7,9 @@ public enum RuleOperator {
     NOT_CONTAINS("notContains"),
     IN_LIST("inList"),
     NOT_IN_LIST("notInList"),
+    CONTAINS_ANY("containsAny"),
+    CONTAINS_ALL("containsAll"),
+    CONTAINS_NONE("containsNone"),
     GREATER_THAN("greaterThan"),
     GREATER_THAN_OR_EQUAL("greaterThanOrEqual"),
     LESS_THAN("lessThan"),
@@ -35,7 +38,38 @@ public enum RuleOperator {
         return this.operator;
     }
 
+    public static String normalize(String text) {
+        if (text == null) return null;
+        switch (text) {
+            case "==":
+            case "eq":
+            case "EQ":
+                return EQUALS.operator;
+            case "!=":
+            case "ne":
+            case "NE":
+                return NOT_EQUALS.operator;
+            case ">":
+                return GREATER_THAN.operator;
+            case ">=":
+                return GREATER_THAN_OR_EQUAL.operator;
+            case "<":
+                return LESS_THAN.operator;
+            case "<=":
+                return LESS_THAN_OR_EQUAL.operator;
+            case "matches":
+                return MATCH.operator;
+            case "exists":
+                return IS_NOT_NULL.operator;
+            case "notExists":
+                return IS_NULL.operator;
+            default:
+                return text;
+        }
+    }
+
     public static RuleOperator fromString(String text) {
+        text = normalize(text);
         for (RuleOperator op : RuleOperator.values()) {
             if (op.operator.equalsIgnoreCase(text)) {
                 return op;

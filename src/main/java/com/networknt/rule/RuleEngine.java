@@ -16,8 +16,9 @@ public class RuleEngine {
     private static final Logger logger = LoggerFactory.getLogger(RuleEngine.class);
     private final Map<String, Rule> ruleMap;
     private final Map<String, Collection<Rule>> groupMap;
-    // cache for the rule action classes
+    // cache for rule action implementations resolved by actionRef
     public final Map<String, IAction> actionClassCache = new ConcurrentHashMap<>();
+    private final Map<String, IAction> actionRegistry = new ConcurrentHashMap<>();
 
     public RuleEngine(Map<String, Rule> ruleMap, Map<String, Collection<Rule>> groupMap) {
         this.ruleMap = ruleMap;
@@ -90,39 +91,53 @@ public class RuleEngine {
     }
 
     private void performAction(String ruleId, RuleAction ra, Map<String, Object> objMap, Map<String, Object> resultMap) throws RuleEngineException {
-        String actionType = ra.getActionClassName();
+        String actionType = ra.getActionRef();
         Collection<RuleActionValue> actionValues = ra.getActionValues();
-        // first check the cache to see if the action class is already loaded. If not, load it.
-        // the MultiThreadRuleExecutor will load all the action classes during server startup.
-        // Use computeIfAbsent to ensure atomic, single-instantiation per actionType under concurrency.
-        IAction ia;
+        IAction ia = actionRegistry.get(actionType);
         try {
-            ia = actionClassCache.computeIfAbsent(actionType, key -> {
-                try {
-                    return (IAction) Class.forName(key).getDeclaredConstructor().newInstance();
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | java.lang.reflect.InvocationTargetException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            if (ia == null) {
+                // Compatibility fallback: existing Java deployments can keep using a fully-qualified
+                // class name as the actionRef until they register a neutral action name.
+                ia = actionClassCache.computeIfAbsent(actionType, key -> {
+                    try {
+                        return (IAction) Class.forName(key).getDeclaredConstructor().newInstance();
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException(e);
+                    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | java.lang.reflect.InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
         } catch (RuntimeException e) {
             Throwable cause = e.getCause();
             if (cause instanceof ClassNotFoundException) {
-                String errorMsg = "IAction class " + actionType + " not found";
+                String errorMsg = "IAction actionRef " + actionType + " not found";
                 logger.error("Error executing action in rule {}, action {}: {}", ruleId, ra.getActionId(), errorMsg, cause);
                 throw new ActionExecutionException(errorMsg, ruleId, ra.getActionId());
             } else if (cause instanceof InstantiationException || cause instanceof IllegalAccessException
                     || cause instanceof NoSuchMethodException || cause instanceof java.lang.reflect.InvocationTargetException) {
-                String errorMsg = "IAction class " + actionType + " cannot be initialized";
+                String errorMsg = "IAction actionRef " + actionType + " cannot be initialized";
                 logger.error("Error executing action in rule {}, action {}: {}", ruleId, ra.getActionId(), errorMsg, cause);
                 throw new ActionExecutionException(errorMsg, ruleId, ra.getActionId());
             } else {
                 throw e;
             }
         }
+        Collection<RuleActionValue> clonedValues = cloneAndResolveActionValues(actionValues, objMap, resultMap);
+        Map<String, Object> actionValueMap = ra.getActionValueMap();
+        if (actionValueMap != null) {
+            Map<String, Object> resolvedActionValueMap = resolveActionValueMap(actionValueMap, objMap, resultMap);
+            ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, resolvedActionValueMap);
+            ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, resolvedActionValueMap);
+        } else {
+            ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, clonedValues);
+            ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, clonedValues);
+        }
+    }
+
+    private Collection<RuleActionValue> cloneAndResolveActionValues(Collection<RuleActionValue> actionValues, Map<String, Object> objMap, Map<String, Object> resultMap) throws RuleEngineException {
         Collection<RuleActionValue> clonedValues = null;
-        if (actionValues != null) {
+        if(actionValues != null) {
             clonedValues = new ArrayList<>(actionValues.size());
             for (RuleActionValue actionValue: actionValues) {
                 RuleActionValue clonedValue = new RuleActionValue(actionValue);
@@ -130,9 +145,19 @@ public class RuleEngine {
                 clonedValues.add(clonedValue);
             }
         }
-        ia.performAction(ruleId, ra.getActionId(), objMap, resultMap, clonedValues);
-         // execute the post perform action.
-        ia.postPerformAction(ruleId, ra.getActionId(), objMap, resultMap, clonedValues);
+        return clonedValues;
+    }
+
+    private Map<String, Object> resolveActionValueMap(Map<String, Object> actionValues, Map<String, Object> objMap, Map<String, Object> resultMap) throws RuleEngineException {
+        Map<String, Object> resolvedValues = new HashMap<>();
+        for (Map.Entry<String, Object> entry : actionValues.entrySet()) {
+            Object value = entry.getValue();
+            if (value instanceof String) {
+                value = RuleEvaluator.getInstance().resolveVariable((String)value, objMap, resultMap);
+            }
+            resolvedValues.put(entry.getKey(), value);
+        }
+        return resolvedValues;
     }
 
     /**
@@ -178,6 +203,10 @@ public class RuleEngine {
      */
     public void registerCustomOperator(String operatorName, CustomOperator operator) {
         RuleEvaluator.customOperatorRegistry.put(operatorName, operator);
+    }
+
+    public void registerAction(String actionRef, IAction action) {
+        actionRegistry.put(actionRef, action);
     }
 
     public CustomOperator getCustomOperator(String operatorName) {
