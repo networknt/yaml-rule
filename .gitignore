@@ -26,3 +26,7 @@ target/
 hs_err_pid*
 .aider*
 .env
+.gitnexus
+.claude/
+AGENTS.md
+CLAUDE.md
