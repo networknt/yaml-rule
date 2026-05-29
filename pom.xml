@@ -68,6 +68,7 @@
         <version.junit>5.11.4</version.junit>
         <version.jose4j>0.9.6</version.jose4j>
         <version.mockito>5.21.0</version.mockito>
+        <version.cel-java>0.13.0</version.cel-java>
         <version.maven-surefire-plugin>3.5.4</version.maven-surefire-plugin>
         <version.jacoco-maven-plugin>0.8.14</version.jacoco-maven-plugin>
         <version.nexus-staging-maven>1.7.0</version.nexus-staging-maven>
@@ -88,6 +89,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.cel</groupId>
+            <artifactId>cel</artifactId>
+            <version>${version.cel-java}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

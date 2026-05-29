@@ -48,4 +48,23 @@ public class RuleEvaluatorTest {
         verify(ruleCondition3, times(2)).getConditionId();
 
     }
+
+    @Test
+    public void testEvaluateCelExpression() throws Exception {
+        Rule rule = new Rule();
+        rule.setRuleId("cel-rule");
+        rule.setConditionLanguage("cel");
+        rule.setExpression("context.user.age >= 18 && 'admin' in context.user.roles && contains_ignore_case(context.user.name, 'hu')");
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("age", 21);
+        user.put("name", "Steve Hu");
+        user.put("roles", java.util.List.of("admin", "user"));
+        Map<String,Object> objMap = new HashMap<>();
+        objMap.put("user", user);
+
+        boolean result = RuleEvaluator.getInstance().evaluate(rule, objMap, new HashMap<>());
+
+        Assertions.assertTrue(result);
+    }
 }

@@ -14,6 +14,8 @@ public class Rule {
     private String ruleDesc;
     private String ruleOwner;
     private Collection<RuleCondition> conditions;
+    private String conditionLanguage;
+    private String expression;
     private String conditionExpression;
     private Collection<RuleAction> actions;
 
@@ -107,6 +109,22 @@ public class Rule {
     public void setConditions(Collection<RuleCondition> conditions) {
         this.conditions = conditions;
     }
+
+    public String getConditionLanguage() {
+        return conditionLanguage;
+    }
+
+    public void setConditionLanguage(String conditionLanguage) {
+        this.conditionLanguage = conditionLanguage;
+    }
+
+    public String getExpression() {
+        return expression;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
+    }
     
     public String getConditionExpression() {
         return conditionExpression;
@@ -136,11 +154,11 @@ public class Rule {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(ruleName, rule.ruleName) && Objects.equals(ruleVersion, rule.ruleVersion) && Objects.equals(hostId, rule.hostId) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(common, rule.common) && Objects.equals(ruleGroup, rule.ruleGroup) && Objects.equals(ruleDesc, rule.ruleDesc) && Objects.equals(ruleOwner, rule.ruleOwner) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditionExpression, rule.conditionExpression) && Objects.equals(actions, rule.actions);
+        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(ruleName, rule.ruleName) && Objects.equals(ruleVersion, rule.ruleVersion) && Objects.equals(hostId, rule.hostId) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(common, rule.common) && Objects.equals(ruleGroup, rule.ruleGroup) && Objects.equals(ruleDesc, rule.ruleDesc) && Objects.equals(ruleOwner, rule.ruleOwner) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditionLanguage, rule.conditionLanguage) && Objects.equals(expression, rule.expression) && Objects.equals(conditionExpression, rule.conditionExpression) && Objects.equals(actions, rule.actions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ruleId, ruleName, ruleVersion, hostId, ruleType, common, ruleGroup, ruleDesc, ruleOwner, conditions, conditionExpression, actions);
+        return Objects.hash(ruleId, ruleName, ruleVersion, hostId, ruleType, common, ruleGroup, ruleDesc, ruleOwner, conditions, conditionLanguage, expression, conditionExpression, actions);
     }
 }

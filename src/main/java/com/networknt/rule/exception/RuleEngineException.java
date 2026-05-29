@@ -6,6 +6,10 @@ public class RuleEngineException extends Exception {
         super(message);
         this.ruleId = ruleId;
     }
+    public RuleEngineException(String message, String ruleId, Throwable cause) {
+        super(message, cause);
+        this.ruleId = ruleId;
+    }
     public String getRuleId() {
         return this.ruleId;
     }

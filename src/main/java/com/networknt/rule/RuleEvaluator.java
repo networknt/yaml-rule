@@ -100,6 +100,15 @@ public class RuleEvaluator {
     public boolean evaluate(Rule rule, Map objMap, Map resultMap) throws RuleEngineException {
         objectCache.get().clear();
         boolean result;
+        String conditionLanguage = rule.getConditionLanguage();
+        if (conditionLanguage != null && !conditionLanguage.isBlank() && !"native".equalsIgnoreCase(conditionLanguage)) {
+            if ("cel".equalsIgnoreCase(conditionLanguage)) {
+                return CelRuleEvaluator.evaluate(rule.getRuleId(), rule.getExpression(), objMap);
+            }
+            String errorMsg = "Unsupported conditionLanguage " + conditionLanguage;
+            logger.error("Error evaluating rule {}: {}", rule.getRuleId(), errorMsg);
+            throw new RuleEngineException(errorMsg, rule.getRuleId());
+        }
         if (rule.getConditions() == null || rule.getConditions().isEmpty()) {
             return true;
         }
