@@ -103,7 +103,7 @@ public class RuleEvaluator {
         String conditionLanguage = rule.getConditionLanguage();
         if (conditionLanguage != null && !conditionLanguage.isBlank() && !"native".equalsIgnoreCase(conditionLanguage)) {
             if ("cel".equalsIgnoreCase(conditionLanguage)) {
-                return CelRuleEvaluator.evaluate(rule.getRuleId(), rule.getExpression(), objMap);
+                return CelRuleEvaluator.evaluate(rule.getRuleId(), rule.getExpression(), objMap, rule.getConditionSecurityProfile(), rule.getRuleType());
             }
             String errorMsg = "Unsupported conditionLanguage " + conditionLanguage;
             logger.error("Error evaluating rule {}: {}", rule.getRuleId(), errorMsg);

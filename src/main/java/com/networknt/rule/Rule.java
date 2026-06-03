@@ -15,6 +15,7 @@ public class Rule {
     private String ruleOwner;
     private Collection<RuleCondition> conditions;
     private String conditionLanguage;
+    private String conditionSecurityProfile;
     private String expression;
     private String conditionExpression;
     private Collection<RuleAction> actions;
@@ -118,6 +119,14 @@ public class Rule {
         this.conditionLanguage = conditionLanguage;
     }
 
+    public String getConditionSecurityProfile() {
+        return conditionSecurityProfile;
+    }
+
+    public void setConditionSecurityProfile(String conditionSecurityProfile) {
+        this.conditionSecurityProfile = conditionSecurityProfile;
+    }
+
     public String getExpression() {
         return expression;
     }
@@ -154,11 +163,11 @@ public class Rule {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(ruleName, rule.ruleName) && Objects.equals(ruleVersion, rule.ruleVersion) && Objects.equals(hostId, rule.hostId) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(common, rule.common) && Objects.equals(ruleGroup, rule.ruleGroup) && Objects.equals(ruleDesc, rule.ruleDesc) && Objects.equals(ruleOwner, rule.ruleOwner) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditionLanguage, rule.conditionLanguage) && Objects.equals(expression, rule.expression) && Objects.equals(conditionExpression, rule.conditionExpression) && Objects.equals(actions, rule.actions);
+        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(ruleName, rule.ruleName) && Objects.equals(ruleVersion, rule.ruleVersion) && Objects.equals(hostId, rule.hostId) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(common, rule.common) && Objects.equals(ruleGroup, rule.ruleGroup) && Objects.equals(ruleDesc, rule.ruleDesc) && Objects.equals(ruleOwner, rule.ruleOwner) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditionLanguage, rule.conditionLanguage) && Objects.equals(conditionSecurityProfile, rule.conditionSecurityProfile) && Objects.equals(expression, rule.expression) && Objects.equals(conditionExpression, rule.conditionExpression) && Objects.equals(actions, rule.actions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ruleId, ruleName, ruleVersion, hostId, ruleType, common, ruleGroup, ruleDesc, ruleOwner, conditions, conditionLanguage, expression, conditionExpression, actions);
+        return Objects.hash(ruleId, ruleName, ruleVersion, hostId, ruleType, common, ruleGroup, ruleDesc, ruleOwner, conditions, conditionLanguage, conditionSecurityProfile, expression, conditionExpression, actions);
     }
 }
