@@ -1,16 +1,9 @@
 package com.networknt.rule;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
 public class RuleCondition {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final TypeReference<Collection<Object>> COLLECTION_TYPE = new TypeReference<>() {};
-
     private String conditionId;
     private String conditionDesc;
     private String propertyPath;
@@ -37,14 +30,6 @@ public class RuleCondition {
         this.propertyPath = propertyPath;
     }
 
-    public String getOperand() {
-        return propertyPath;
-    }
-
-    public void setOperand(String operand) {
-        this.propertyPath = operand;
-    }
-
     public String getConditionDesc() {
         return conditionDesc;
     }
@@ -61,14 +46,6 @@ public class RuleCondition {
         this.operatorCode = operatorCode;
     }
 
-    public String getOperator() {
-        return operatorCode;
-    }
-
-    public void setOperator(String operator) {
-        this.operatorCode = RuleOperator.normalize(operator);
-    }
-
     public Integer getIndex() {
         return index;
     }
@@ -83,55 +60,6 @@ public class RuleCondition {
 
     public void setConditionValues(Collection<RuleConditionValue> conditionValues) {
         this.conditionValues = conditionValues;
-    }
-
-    public Object getExpected() {
-        if (conditionValues == null || conditionValues.isEmpty()) {
-            return null;
-        }
-        if (conditionValues.size() == 1) {
-            return conditionValues.iterator().next().getConditionValue();
-        }
-        Collection<Object> expectedValues = new ArrayList<>();
-        for (RuleConditionValue value : conditionValues) {
-            expectedValues.add(value.getConditionValue());
-        }
-        return expectedValues;
-    }
-
-    public void setExpected(Object expected) {
-        Collection<RuleConditionValue> values = new ArrayList<>();
-        if (expected instanceof String) {
-            String value = ((String) expected).trim();
-            if (value.startsWith("[") && value.endsWith("]")) {
-                try {
-                    expected = OBJECT_MAPPER.readValue(value, COLLECTION_TYPE);
-                } catch (Exception ignored) {
-                    // Keep the original string if it is not valid JSON.
-                }
-            }
-        }
-        if (expected instanceof Collection<?>) {
-            for (Object item : (Collection<?>) expected) {
-                values.add(toConditionValue(item));
-            }
-        } else {
-            values.add(toConditionValue(expected));
-        }
-        this.conditionValues = values;
-    }
-
-    private RuleConditionValue toConditionValue(Object expected) {
-        RuleConditionValue value = new RuleConditionValue();
-        value.setConditionValue(expected == null ? null : String.valueOf(expected));
-        if (expected instanceof Number) {
-            value.setValueTypeCode(expected instanceof Float || expected instanceof Double ? "DOUBLE" : "LONG");
-        } else if (expected instanceof Boolean) {
-            value.setValueTypeCode("BOOLEAN");
-        } else {
-            value.setValueTypeCode("STRING");
-        }
-        return value;
     }
 
     @Override

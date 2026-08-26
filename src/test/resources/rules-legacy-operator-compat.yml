@@ -1,0 +1,161 @@
+alias-double-equals:
+  ruleId: alias-double-equals
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: matches-name
+      propertyPath: name
+      operatorCode: "=="
+      conditionValues:
+        - conditionValueId: expected-name
+          conditionValue: Alpha
+
+alias-eq:
+  ruleId: alias-eq
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: matches-name
+      propertyPath: name
+      operatorCode: eq
+      conditionValues:
+        - conditionValueId: expected-name
+          conditionValue: Alpha
+
+alias-matches:
+  ruleId: alias-matches
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: matches-pattern
+      propertyPath: name
+      operatorCode: matches
+      conditionValues:
+        - conditionValueId: expected-pattern
+          conditionValue: "^alpha$"
+          regexFlags: i
+
+alias-exists:
+  ruleId: alias-exists
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: value-exists
+      propertyPath: name
+      operatorCode: exists
+
+alias-not-exists:
+  ruleId: alias-not-exists
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: value-does-not-exist
+      propertyPath: missing
+      operatorCode: notExists
+
+contains-any:
+  ruleId: contains-any
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: contains-one-scope
+      propertyPath: scopes
+      operatorCode: containsAny
+      conditionValues:
+        - conditionValueId: portal-read
+          conditionValue: portal.r
+        - conditionValueId: portal-write
+          conditionValue: portal.w
+
+contains-all:
+  ruleId: contains-all
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: contains-all-scopes
+      propertyPath: scopes
+      operatorCode: containsAll
+      conditionValues:
+        - conditionValueId: portal-read
+          conditionValue: portal.r
+        - conditionValueId: profile-read
+          conditionValue: profile.r
+
+contains-none:
+  ruleId: contains-none
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: contains-no-dangerous-scope
+      propertyPath: scopes
+      operatorCode: containsNone
+      conditionValues:
+        - conditionValueId: admin-delete
+          conditionValue: admin.delete
+
+ends-with:
+  ruleId: ends-with
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: expected-suffix
+      propertyPath: name
+      operatorCode: endsWith
+      conditionValues:
+        - conditionValueId: suffix
+          conditionValue: pha
+
+default-and:
+  ruleId: default-and
+  ruleType: generic
+  common: Y
+  conditions:
+    - conditionId: name-matches
+      propertyPath: name
+      operatorCode: equals
+      conditionValues:
+        - conditionValueId: expected-name
+          conditionValue: Alpha
+    - conditionId: scope-exists
+      propertyPath: scopes
+      operatorCode: isNotNull
+
+explicit-or:
+  ruleId: explicit-or
+  ruleType: generic
+  common: Y
+  conditionExpression: "name-misses OR scope-exists"
+  conditions:
+    - conditionId: name-misses
+      propertyPath: name
+      operatorCode: equals
+      conditionValues:
+        - conditionValueId: wrong-name
+          conditionValue: Beta
+    - conditionId: scope-exists
+      propertyPath: scopes
+      operatorCode: isNotNull
+
+concurrent-action-values:
+  ruleId: concurrent-action-values
+  ruleType: request-transform
+  common: Y
+  conditions:
+    - conditionId: name-exists
+      propertyPath: name
+      operatorCode: isNotNull
+  actions:
+    - actionId: set-name-header
+      actionDesc: Resolve a request-specific value without mutating the rule
+      actionClassName: com.networknt.rule.TestSetHeaderAction
+      conditionResult: true
+      actionValues:
+        - actionValueId: X-Test-Name
+          valueTypeCode: STRING
+          value: "${name}"
+        - actionValueId: X-Static
+          valueTypeCode: STRING
+          value: fixed
+      parameters:
+        headerMode: replace
+        audit: true

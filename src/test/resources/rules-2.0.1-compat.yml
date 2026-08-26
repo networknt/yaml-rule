@@ -1,0 +1,1179 @@
+rule1:
+  ruleId: rule1
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: first rule for unit test
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: equals
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+
+test-on-date-format-rule:
+  ruleId: test-on-date-format-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test date on with date format
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cdate
+      operatorCode: on
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2024-12-16 16:49:00"
+          dateFormat: "yyyy-MM-dd HH:mm:ss"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-before-date-format-rule:
+  ruleId: test-before-date-format-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test date before with date format
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cdate
+      operatorCode: before
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2024-12-16 16:49:00"
+          dateFormat: "yyyy-MM-dd HH:mm:ss"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-after-date-format-rule:
+  ruleId: test-after-date-format-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test date after with date format
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cdate
+      operatorCode: after
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2024-12-16 16:49:00"
+          dateFormat: "yyyy-MM-dd HH:mm:ss"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-before-rule:
+  ruleId: test-before-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test date before
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cdate
+      operatorCode: before
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2099-12-31 23:59:59"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-after-rule:
+  ruleId: test-after-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test date after
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cdate
+      operatorCode: after
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2000-01-01 00:00:00"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-on-rule:
+  ruleId: test-on-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test date on
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cdate
+      operatorCode: on
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2024-12-16 16:49:00"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-len-eq-int-rule:
+  ruleId: test-len-eq-int-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string length equal to an integer
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: lengthEquals
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 7
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-gte-rule:
+  ruleId: test-gte-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test greater than or equal to
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: greaterThanOrEqual
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-lte-rule:
+  ruleId: test-lte-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test less than or equal to
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: lessThanOrEqual
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+role-based-auth:
+  ruleId: role-based-auth
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Role-based authorization rule for a particuler service with parameters different per endpoint.
+  conditions:
+    - conditionId: allow-role
+      propertyPath: auditInfo.subject_claims.ClaimsMap.roles
+      operatorCode: isNotNull
+      index: 1
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+role-based-auth-skip-cc:
+  ruleId: role-based-auth-skip-cc
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Role-based authorization rule for a particuler service with parameters different per endpoint. Client Credentials token is allowed without role in claims
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: isNull
+      index: 1
+    - conditionId: allow-role
+      propertyPath: auditInfo.subject_claims.ClaimsMap.roles
+      operatorCode: isNotNull
+      index: 2
+  conditionExpression: (allow-cc OR allow-role)
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+cc-group-role-auth:
+  ruleId: cc-group-role-auth
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Role-based authorization rule for account service and allow cc token and transform group to role.
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: isNull
+      index: 1
+    - conditionId: manager
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: contains
+      index: 2
+      conditionValues:
+        - conditionValueId: manager
+          conditionValue: admin
+    - conditionId: teller
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: contains
+      index: 3
+      conditionValues:
+        - conditionValueId: teller
+          conditionValue: frontOffice
+    - conditionId: allow-role-jwt
+      propertyPath: auditInfo.subject_claims.ClaimsMap.roles
+      operatorCode: isNotNull
+      index: 4
+  conditionExpression: (allow-cc OR manager OR teller OR allow-role-jwt)
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+ccsid-group-role-auth:
+  ruleId: ccsid-group-role-auth
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Role-based authorization rule for account service and allow cc token with sid claim and transform group to role. This is for the controller and config server.
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: isNull
+      index: 1
+    - conditionId: has-sid
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: isNotNull
+      index: 2
+    - conditionId: manager
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: contains
+      index: 3
+      conditionValues:
+        - conditionValueId: manager
+          conditionValue: admin
+    - conditionId: teller
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: CS
+      index: 4
+      conditionValues:
+        - conditionValueId: teller
+          conditionValue: frontOffice
+    - conditionId: allow-role-jwt
+      propertyPath: auditInfo.subject_claims.ClaimsMap.roles
+      operatorCode: isNotNull
+      index: 5
+  conditionExpression: (allow-cc AND has-sid AND (manager OR teller OR allow-role-jwt))
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+controller-register-access:
+  ruleId: controller-register-access
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Allow client credentials token with sid as customized claim. The sid should match the request body serviceId. The register will only accept cc token. It means that only the a running service can register itself. This endpoint shouldn't be called by the portal view at all.
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: isNull
+      index: 1
+    - conditionId: has-sid
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: isNotNull
+      index: 2
+    - conditionId: has-sid-match-body
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: equals
+      index: 3
+      conditionValues:
+        - conditionValueId: body-serviceId
+          expression: true
+          conditionValue: requestBody.serviceId
+  conditionExpression: (allow-cc AND has-sid AND has-sid-match-body)
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+controller-check-access:
+  ruleId: controller-check-access
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Allow client credentials token with sid as customized claim. The sid should be contained in the id property of the body in the put request. The check will only accept cc token. It means that only the a running service can check itself to let controler know it is healthy. This endpoint shouldn't be called by the portal view at all.
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: isNull
+      index: 1
+    - conditionId: has-sid
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: isNotNull
+      index: 2
+    - conditionId: body-id-has-sid
+      propertyPath: requestBody.id
+      operatorCode: contains
+      index: 3
+      conditionValues:
+        - conditionValueId: sid
+          expression: true
+          conditionValue: auditInfo.subject_claims.ClaimsMap.sid
+  conditionExpression: (allow-cc AND has-sid AND body-id-has-sid)
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+controller-deregister-access:
+  ruleId: controller-deregister-access
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Allow client credentail token access with sid as customized claim. The sid should match the query parameter serviceId and only cc token is allowed to access. It means that only the a running service can register itself. This endpoint shouldn't be called by the portal view at all.
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: isNull
+      index: 1
+    - conditionId: has-sid
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: isNotNull
+      index: 2
+    - conditionId: has-sid-match-query
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: equals
+      index: 3
+      conditionValues:
+        - conditionValueId: query-serviceId
+          expression: true
+          conditionValue: queryParameters.serviceId.First
+  conditionExpression: (allow-cc AND has-sid AND has-sid-match-query)
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+controller-group-role:
+  ruleId: controller-group-role
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Rule that converts a list of AD groups to controller roles before invoking the portal-role-access rule for role-based authentication
+  conditions:
+    - conditionId: CtlPltRead
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: contains
+      index: 1
+      conditionValues:
+        - conditionValueId: CtlPltRead
+          conditionValue: User_API_Dev_R
+    - conditionId: CtlPltWrite
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: contains
+      index: 2
+      conditionValues:
+        - conditionValueId: CtlPltWrite
+          conditionValue: User_API_Dev_W
+    - conditionId: CtlPltAdmin
+      propertyPath: auditInfo.subject_claims.ClaimsMap.groups
+      operatorCode: contains
+      index: 2
+      conditionValues:
+        - conditionValueId: CtlPltAdmin
+          conditionValue: User_API_Dev_A
+  conditionExpression: (CtlPltRead OR CtlPltWrite OR CtlPltAdmin)
+  actions:
+    - actionId: collect-role
+      actionClassName: com.networknt.rule.GroupRoleTransformAction
+
+config-service-access:
+  ruleId: config-service-access
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Rule-based authorization for portal service and allow cc token with sid claim to access the config server configs, certs and files endpoint during the service startup to get config files.
+  conditions:
+    - conditionId: allow-cc
+      propertyPath: auditInfo.subject_claims.ClaimsMap.user_id
+      operatorCode: isNull
+      index: 1
+    - conditionId: has-sid
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: isNotNull
+      index: 2
+    - conditionId: sid-match-path
+      propertyPath: auditInfo.subject_claims.ClaimsMap.sid
+      operatorCode: equals
+      index: 3
+      conditionValues:
+        - conditionValueId: path-service
+          expression: true
+          conditionValue: pathParameters.service-name.First
+  conditionExpression: (allow-cc AND has-sid AND sid-match-path)
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+
+
+portal-role-access:
+  ruleId: portal-role-access
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: Rule-based authorization for portal service and allow certain roles to access certain endpoints. For AD integration, it transforms the group into a role. This is for the portal services like controller and config server access from the portal view.
+  conditions:
+    - conditionId: allow-role-jwt
+      propertyPath: auditInfo.subject_claims.ClaimsMap.roles
+      operatorCode: isNotNull
+      index: 1
+  actions:
+    - actionId: match-role
+      actionClassName: com.networknt.rule.FineGrainedAuthAction
+      actionValues:
+        - actionValueId: roles
+          value: $roles
+
+get-config-filter:
+  ruleId: get-config-filter
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: response-filter
+  common: Y
+  ruleDesc: For CfgAppRead and CfgAppAdmin roles, the list result will be filtered by the service-name that the user has access in the user profile.
+  conditions:
+    - conditionId: row-filter-role
+      propertyPath: auditInfo.subject_claims.ClaimsMap.roles
+      operatorCode: inList
+      index: 1
+      conditionValues:
+        - conditionValueId: role-list
+          conditionValue: CfgAppRead CfgAppAdmin
+  actions:
+    - actionId: filter-row
+      actionClassName: com.networknt.rule.RoleFilterRowAction
+      conditionResult: true
+    - actionId: filter-col
+      actionClassName: com.networknt.rule.RoleFilterColAction
+      conditionResult: true
+
+petstore-group-role-transform:
+  ruleId: petstore-group-role-transform
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: request-access
+  common: Y
+  ruleDesc: A rule to transform a list of Active Directory groups to a list of roles for petstore API
+  conditions:
+    - conditionId: manager
+      propertyPath: groups
+      operatorCode: contains
+      index: 1
+      conditionValues:
+        - conditionValueId: manager
+          conditionValue: admin
+    - conditionId: teller
+      propertyPath: groups
+      operatorCode: contains
+      index: 2
+      conditionValues:
+        - conditionValueId: teller
+          conditionValue: frontOffice
+  conditionExpression: (manager OR teller)
+
+petstore-response-header-replace:
+  ruleId: petstore-response-header-replace
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: response-transform
+  common: Y
+  ruleDesc: Transform the response to replace one header with the other header.
+  conditions:
+    - conditionId: path-pets
+      propertyPath: requestPath
+      operatorCode: equals
+      index: 1
+      conditionValues:
+        - conditionValueId: path
+          conditionValue: /v1/pets
+    - conditionId: path-dogs
+      propertyPath: requestPath
+      operatorCode: equals
+      index: 2
+      conditionValues:
+        - conditionValueId: path
+          conditionValue: /v1/dogs
+    - conditionId: path-cats
+      propertyPath: requestPath
+      operatorCode: equals
+      index: 3
+      conditionValues:
+        - conditionValueId: path
+          conditionValue: /v1/cats
+  conditionExpression: (path-pets OR path-dogs OR path-cats)
+  actions:
+    - actionId: header-transform
+      actionClassName: com.networknt.rule.ValidationAction
+      actionValues:
+        - actionValueId: sourceHeader
+          value: X-Test-1
+        - actionValueId: targetHeader
+          value: My-Header
+
+petstore-response-header-replace-in:
+  ruleId: petstore-response-header-replace-in
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: response-transform
+  common: Y
+  ruleDesc: Transform the response to replace one header with the other header.
+  conditions:
+    - conditionId: path-pets
+      propertyPath: requestPath
+      operatorCode: inList
+      index: 1
+      conditionValues:
+        - conditionValueId: pets
+          conditionValue: /v1/pets
+        - conditionValueId: dogs
+          conditionValue: /v1/dogs
+        - conditionValueId: cats
+          conditionValue: /v1/cats
+  actions:
+    - actionId: header-transform
+      actionClassName: com.networknt.rule.ValidationAction
+      actionValues:
+        - actionValueId: sourceHeader
+          value: X-Test-1
+        - actionValueId: targetHeader
+          value: My-Header
+
+petstore-response-header-replace-match:
+  ruleId: petstore-response-header-replace-match
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: response-transform
+  common: Y
+  ruleDesc: Transform the response to replace one header with the other header.
+  conditions:
+    - conditionId: BankingServices
+      propertyPath: requestPath
+      operatorCode: match
+      index: 1
+      conditionValues:
+        - conditionValueId: path
+          conditionValue: /v3/(.*)/BankingServices/(.*)
+    - conditionId: insight
+      propertyPath: requestPath
+      operatorCode: match
+      index: 2
+      conditionValues:
+        - conditionValueId: path
+          conditionValue: /v3/(.*)/insight/login/(.*)/attributes/(.*)
+    - conditionId: Investments
+      propertyPath: requestPath
+      operatorCode: match
+      index: 3
+      conditionValues:
+        - conditionValueId: path
+          conditionValue: /v3/(.*)/Investments
+    - conditionId: attributes
+      propertyPath: requestPath
+      operatorCode: match
+      index: 4
+      conditionValues:
+        - conditionValueId: path
+          conditionValue: /v3/(.*)/attributes/(.*)
+  conditionExpression: (BankingServices OR insight OR Investments OR attributes)
+
+test-priority-rule:
+  ruleId: test-priority-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule priority
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: greaterThan
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 5
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-priority-rule2:
+  ruleId: test-priority-rule2
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule priority
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: greaterThan
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-len-eq-rule:
+  ruleId: test-len-eq-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string length equal
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: lengthEquals
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-len-gt-rule:
+  ruleId: test-len-gt-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string "ClassAA" length greater than another string length "6" and the result is true
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: lengthGreaterThan
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-len-gt-rule-int:
+  ruleId: test-len-gt-rule-int
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string "ClassAA" length greater than an integer 9 and the result is false
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: lengthGreaterThan
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 9
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-len-lt-rule:
+  ruleId: test-len-lt-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string length less than
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: lengthLessThan
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-match-rule:
+  ruleId: test-match-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string match
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: match
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: Class.*
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+      conditionResult: true
+
+test-not-match-rule:
+  ruleId: test-not-match-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string not match
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: notMatch
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: ClassB.*
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-match-rule-flags:
+  ruleId: test-match-rule-flags
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string match with flags
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: match
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: CLASSa
+          regexFlags: i
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-empty-rule:
+  ruleId: test-empty-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string empty
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cname
+      operatorCode: isEmpty
+      index: 0
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-not-empty-rule:
+  ruleId: test-not-empty-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string not empty
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cname
+      operatorCode: isNotEmpty
+      index: 0
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-blank-rule:
+  ruleId: test-blank-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string blank
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cname
+      operatorCode: isBlank
+      index: 0
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-not-blank-rule:
+  ruleId: test-not-blank-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test string not blank
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cname
+      operatorCode: isNotBlank
+      index: 0
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-single-action-true:
+  ruleId: test-single-action-true
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: If a rule has only one action, it is executed only if the evaluation result is true
+  conditions:
+    - conditionId: cid1
+      conditionDesc: The name is ClassA and its length is greater than 4, so the condition is true
+      propertyPath: "name"
+      operatorCode: lengthGreaterThan
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 4
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: actionIfTrue
+      actionDesc: This action is executed only if the rule evaluation is true
+      actionClassName: com.networknt.rule.MultipleActionOne
+
+test-single-action-false:
+  ruleId: test-single-action-false
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: If a rule has only one action, it won't be executed if the evaluation result is false
+  conditions:
+    - conditionId: cid1
+      conditionDesc: The name is ClassA and its length is less than 10, so the condition is false
+      propertyPath: "name"
+      operatorCode: lengthGreaterThan
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 10
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: actionIfTrue
+      actionDesc: This action will not be executed as the evaluation result is false
+      actionClassName: com.networknt.rule.MultipleActionOne
+
+test-multiple-actions:
+  ruleId: test-multiple-actions
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test multiple actions, MultipleActionOne is executed if the condition is true, MultipleActionTwo is executed if the condition is false. MultipleActionThree is executed regardless of the evaluation result.
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Aname
+      operatorCode: isNotEmpty
+      index: 0
+  actions:
+    - actionId: actionOne
+      actionDesc: This action is executed as the condition is true
+      actionClassName: com.networknt.rule.MultipleActionOne
+      conditionResult: true
+    - actionId: actionTwo
+      actionDesc: This action is not executed as the condition is false
+      actionClassName: com.networknt.rule.MultipleActionTwo
+      conditionResult: false
+    - actionId: actionThree
+      actionDesc: This action is executed regardless evaluation result is true or false
+      actionClassName: com.networknt.rule.MultipleActionThree
+
+condition_id_reference:
+  ruleId: condition_id_reference
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: first rule for unit test
+  conditions:
+    - conditionId: cid1
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: equals
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 6
+          valueTypeCode: STRING
+    - conditionId: cid2
+      propertyPath: ClassA.Bobject.Cobject.Cint
+      operatorCode: greaterThan
+      index: 1
+      conditionValues:
+        - conditionValueId: cv2
+          conditionValue: 7
+          valueTypeCode: STRING
+    - conditionId: cid3
+      propertyPath: ClassA.Aname
+      operatorCode: isNotEmpty
+      index: 2
+  conditionExpression: "(cid1 OR (cid2 AND cid3))"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+
+test-contains-ignore-case-rule:
+  ruleId: test-contains-ignore-case-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule with containsIgnoreCase custom operator
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: containsIgnoreCase
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "test"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-starts-with-rule:
+  ruleId: test-starts-with-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule with startsWith custom operator
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: startsWith
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "Test"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-built-in-operators-rule:
+  ruleId: test-built-in-operators-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule with built-in operators and expressions
+  conditionExpression: "cid1 AND (cid2 OR cid3)"
+  conditions:
+    - conditionId: cid1
+      propertyPath: age
+      operatorCode: greaterThan
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 30
+    - conditionId: cid2
+      propertyPath: city
+      operatorCode: equals
+      index: 0
+      conditionValues:
+        - conditionValueId: cv2
+          conditionValue: "New York"
+    - conditionId: cid3
+      propertyPath: country
+      operatorCode: contains
+      index: 0
+      conditionValues:
+        - conditionValueId: cv3
+          conditionValue: "US"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-regex-rule:
+  ruleId: test-regex-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule with regex
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: match
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "abc.*"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-date-rule:
+  ruleId: test-date-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule with date operator
+  conditions:
+    - conditionId: cid1
+      propertyPath: eventDate
+      operatorCode: on
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: "2024-05-03 10:00:00"
+          dateFormat: "yyyy-MM-dd HH:mm:ss"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+test-length-rule:
+  ruleId: test-length-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule with length operator
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: lengthEquals
+      index: 0
+      conditionValues:
+        - conditionValueId: cv1
+          conditionValue: 4
+          valueTypeCode: INTEGER
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.ValidationAction
+
+
+test-set-header-rule:
+  ruleId: test-set-header-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule that sets a header with value from objMap
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: equals
+      conditionValues:
+        - conditionValue: "test"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.TestSetHeaderAction
+      actionValues:
+        - actionValueId: X-Test-Name
+          value: ${name}
+
+test-set-header-with-result-rule:
+  ruleId: test-set-header-with-result-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule that sets a header with result from conditions
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: equals
+      conditionValues:
+        - conditionValue: "test"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.TestSetHeaderAction
+      actionValues:
+        - actionValueId: X-Test-Result
+          value: ^{cid1}
+
+test-set-header-nested-rule:
+  ruleId: test-set-header-nested-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule that sets a header with value from a nested property
+  conditions:
+    - conditionId: cid1
+      propertyPath: address.city
+      operatorCode: equals
+      conditionValues:
+        - conditionValue: "New York"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.TestSetHeaderAction
+      actionValues:
+        - actionValueId: X-Test-City
+          value: ${address.city}
+test-set-header-no-match-rule:
+  ruleId: test-set-header-no-match-rule
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test rule with no match and no header is set
+  conditions:
+    - conditionId: cid1
+      propertyPath: name
+      operatorCode: equals
+      conditionValues:
+        - conditionValue: "abc"
+  actions:
+    - actionId: act1
+      actionClassName: com.networknt.rule.TestSetHeaderAction
+      actionValues:
+        - actionValueId: X-Test-Name
+          value: ${name}
+
+
+test-set-header-optional-code:
+  ruleId: test-set-header-optional-code
+  hostId: N2CMw0HGQXeLvC1wBfln2A
+  ruleType: generic
+  common: Y
+  ruleDesc: test set header action without valueTypeCode
+  conditions:
+    - conditionId: cid1
+      propertyPath: age
+      operatorCode: equals
+      conditionValues:
+        - conditionValue: 30
+  actions:
+    - actionId: setHeader1
+      actionClassName: com.networknt.rule.TestSetHeaderAction
+      actionValues:
+        - actionValueId: X-Test-Age
+          value: ${age}

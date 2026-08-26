@@ -14,9 +14,6 @@ public class Rule {
     private String ruleDesc;
     private String ruleOwner;
     private Collection<RuleCondition> conditions;
-    private String conditionLanguage;
-    private String conditionSecurityProfile;
-    private String expression;
     private String conditionExpression;
     private Collection<RuleAction> actions;
 
@@ -63,14 +60,6 @@ public class Rule {
         this.ruleVersion = ruleVersion;
     }
 
-    public String getVersion() {
-        return ruleVersion;
-    }
-
-    public void setVersion(String version) {
-        this.ruleVersion = version;
-    }
-
     public String getRuleGroup() {
         return ruleGroup;
     }
@@ -95,14 +84,6 @@ public class Rule {
         this.ruleOwner = ruleOwner;
     }
 
-    public String getAuthor() {
-        return ruleOwner;
-    }
-
-    public void setAuthor(String author) {
-        this.ruleOwner = author;
-    }
-
     public Collection<RuleCondition> getConditions() {
         return conditions;
     }
@@ -111,30 +92,6 @@ public class Rule {
         this.conditions = conditions;
     }
 
-    public String getConditionLanguage() {
-        return conditionLanguage;
-    }
-
-    public void setConditionLanguage(String conditionLanguage) {
-        this.conditionLanguage = conditionLanguage;
-    }
-
-    public String getConditionSecurityProfile() {
-        return conditionSecurityProfile;
-    }
-
-    public void setConditionSecurityProfile(String conditionSecurityProfile) {
-        this.conditionSecurityProfile = conditionSecurityProfile;
-    }
-
-    public String getExpression() {
-        return expression;
-    }
-
-    public void setExpression(String expression) {
-        this.expression = expression;
-    }
-    
     public String getConditionExpression() {
         return conditionExpression;
     }
@@ -163,11 +120,11 @@ public class Rule {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(ruleName, rule.ruleName) && Objects.equals(ruleVersion, rule.ruleVersion) && Objects.equals(hostId, rule.hostId) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(common, rule.common) && Objects.equals(ruleGroup, rule.ruleGroup) && Objects.equals(ruleDesc, rule.ruleDesc) && Objects.equals(ruleOwner, rule.ruleOwner) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditionLanguage, rule.conditionLanguage) && Objects.equals(conditionSecurityProfile, rule.conditionSecurityProfile) && Objects.equals(expression, rule.expression) && Objects.equals(conditionExpression, rule.conditionExpression) && Objects.equals(actions, rule.actions);
+        return Objects.equals(ruleId, rule.ruleId) && Objects.equals(ruleName, rule.ruleName) && Objects.equals(ruleVersion, rule.ruleVersion) && Objects.equals(hostId, rule.hostId) && Objects.equals(ruleType, rule.ruleType) && Objects.equals(common, rule.common) && Objects.equals(ruleGroup, rule.ruleGroup) && Objects.equals(ruleDesc, rule.ruleDesc) && Objects.equals(ruleOwner, rule.ruleOwner) && Objects.equals(conditions, rule.conditions) && Objects.equals(conditionExpression, rule.conditionExpression) && Objects.equals(actions, rule.actions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ruleId, ruleName, ruleVersion, hostId, ruleType, common, ruleGroup, ruleDesc, ruleOwner, conditions, conditionLanguage, conditionSecurityProfile, expression, conditionExpression, actions);
+        return Objects.hash(ruleId, ruleName, ruleVersion, hostId, ruleType, common, ruleGroup, ruleDesc, ruleOwner, conditions, conditionExpression, actions);
     }
 }
