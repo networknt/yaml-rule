@@ -10,17 +10,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-## 3.0.1 - 2026-08-26
+## 3.0.1 - 2026-08-28
 
 ### Fixed
-- Restored the Java YAML/JSON rule body and `IAction` API to the 2.0.1-compatible contract for existing Java gateway deployments.
-- Fixed serialize/read round-trip data loss of `conditionValueId`, `dateFormat`, `regexFlags`, and other legacy condition-value metadata.
+- Restored the 2.0.1-compatible Java YAML/JSON rule model and `IAction` API for existing Java gateway deployments ([#33](https://github.com/networknt/yaml-rule/issues/33)).
+- Preserved legacy condition-value metadata, including `conditionValueId`, `dateFormat`, and `regexFlags`, when rule bodies are serialized and read back.
+- Kept resolved action values local to each execution so concurrent requests do not mutate shared rule definitions.
+- Made action-class initialization atomic and report missing `actionClassName` values with the affected rule and action IDs.
 
 ### Changed
-- Removed Java CEL and compact/new-spec rule-body support; CEL remains supported by the Rust rule runtime.
-- Treat 3.0.0 as a withdrawn compatibility experiment. Version 3.0.1 deliberately restores the 2.0.1 Java API and is binary-incompatible with code compiled only against the removed 3.0.0 API; rebuild any such integrations before upgrading.
-- Portal-published CEL bodies must not target Java instances. A CEL field in any rule rejects the entire `ruleBodies` document; initial Java gateway startup fails, while an updated light-4j reload retains the last-known-good rules and rejects that configuration snapshot.
-- Retained post-2.0.1 concurrency fixes, dependency/build updates, and native operator improvements.
+- Withdrew the Java CEL and compact/new-spec rule model introduced by 3.0.0. CEL rule conditions remain available in the Rust rule runtime, but CEL rule bodies must not be deployed to Java instances.
+- Restored the 2.0.1 Java API rather than retaining source or binary compatibility with the withdrawn 3.0.0 API. Integrations compiled against 3.0.0-only APIs must be updated and rebuilt before upgrading.
+- Raised the build target from Java 21 to Java 25.
+- Upgraded Jackson to 2.22.1 and Logback to 1.5.37.
 
 ## 3.0.0 - 2026-04-27
 
