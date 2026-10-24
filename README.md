@@ -1,6 +1,23 @@
 # yaml-rule
 A simple rule engine with rules defined in YAML or JSON
 
+## Jackson 3 migration
+
+`RuleMapper.yamlMapper` now exposes `tools.jackson.databind.ObjectMapper` and is
+built with `YAMLMapper.builder()`. Jackson 3.2.3 requires Java 17 or newer; this
+project retains Java 25. Dependencies use the `tools.jackson:jackson-bom` BOM and
+the `tools.jackson.core` / `tools.jackson.dataformat` coordinates. Annotation
+packages and the legacy `Rule` Java and wire contracts are unchanged.
+
+Rule YAML now uses Jackson 3's YAML 1.2 scalar reading. `yes`, `no`, `on`, `off`,
+`012`, `0b11`, `1_000`, and `~` remain strings. Use `true`/`false`, decimal numbers,
+and `null` where those types are intended. This also preserves literal `on`
+operator codes rather than coercing them to a boolean. Existing unknown-field
+rejection, first-document reading, property order, and error wrapping are
+preserved explicitly. Mappers are immutable; use a builder to create a separately
+configured mapper. Jackson parsing exceptions are unchecked `JacksonException`s;
+the two `RuleMapper` parsing helpers still wrap failures in `RuntimeException`.
+
 
 
 ## Action Execution

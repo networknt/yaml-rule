@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Migrated `RuleMapper` to Jackson 3.2.3 and YAML 1.2 scalar reading. Values such
+  as `yes`, `on`, `012`, and `~` are strings; use explicit boolean, decimal, and
+  null values when intended. Preserved the legacy rule contract, unknown-field
+  rejection, first-document behavior, and parsing-error wrapping.
+
 ## 3.0.1 - 2026-08-28
 
 ### Fixed
