@@ -4,8 +4,8 @@ A simple rule engine with rules defined in YAML or JSON
 ## Jackson 3 migration
 
 **Breaking API and YAML semantics, for the next major release only.** The
-development version remains `2.4.2-SNAPSHOT` under the coordinated migration
-plan; do not publish it as a compatible 2.4.x update. Migrate consumers and
+POM version remains `3.0.1` under the coordinated migration
+plan; do not republish that existing version with an incompatible API. Migrate consumers and
 coordinate the major-version/release cutover before releasing from `master`.
 
 `RuleMapper.yamlMapper` now exposes `tools.jackson.databind.ObjectMapper` and is
