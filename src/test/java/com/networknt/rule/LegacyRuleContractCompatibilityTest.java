@@ -1,7 +1,7 @@
 package com.networknt.rule;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.exc.UnrecognizedPropertyException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -229,7 +229,7 @@ class LegacyRuleContractCompatibilityTest {
 
     private static void assertKeys(JsonNode node, String... expectedKeys) {
         Set<String> actual = new LinkedHashSet<>();
-        node.fieldNames().forEachRemaining(actual::add);
+        node.propertyNames().iterator().forEachRemaining(actual::add);
         assertEquals(Set.of(expectedKeys), actual);
     }
 }

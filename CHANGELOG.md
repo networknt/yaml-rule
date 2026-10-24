@@ -10,6 +10,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+- Breaking next-major migration: `RuleMapper` exposes Jackson 3.2.3 types and
+  immutable mapper instances; callers using Jackson 2 must migrate together.
+- The Jackson 3 YAML resolver reads `yes/no/on/off`, `True/TRUE/False/FALSE`,
+  `Null/NULL`, `012`, `0b11`, `0x1F`, `1_000`, and `~` as strings. Boolean,
+  Integer, collection, and untyped parameter fields may reject inputs or change
+  values; for example, `index: 010` becomes decimal 10 rather than octal 8.
+  Use canonical lowercase booleans/null and decimal numbers without leading zeros.
+- Kept legacy Rule field definitions and wire property names, unknown-field
+  rejection, first-document behavior, and parsing-error wrapping. This is not
+  a promise of legacy YAML accepted-input/value compatibility. See the README
+  for required rule-file rewrites and named downstream consumers.
+
 ## 3.0.1 - 2026-08-28
 
 ### Fixed

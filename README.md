@@ -1,6 +1,66 @@
 # yaml-rule
 A simple rule engine with rules defined in YAML or JSON
 
+## Jackson 3 migration
+
+**Breaking API and YAML semantics, for the next major release only.** The
+POM version remains `3.0.1` under the coordinated migration
+plan; do not republish that existing version with an incompatible API. Migrate consumers and
+coordinate the major-version/release cutover before releasing from `master`.
+
+`RuleMapper.yamlMapper` now exposes `tools.jackson.databind.ObjectMapper` and is
+built with `YAMLMapper.builder()`. Jackson 3.2.3 requires Java 17 or newer; this
+project retains Java 25. Dependencies use the `tools.jackson:jackson-bom` BOM and
+the `tools.jackson.core` / `tools.jackson.dataformat` coordinates. Annotation
+packages, `Rule` field definitions, and wire property names are unchanged.
+This does **not** preserve every formerly accepted YAML scalar or its value.
+
+Jackson 3.2.3's resolver reads `yes`, `no`, `on`, `off`, `True`, `TRUE`, `False`,
+`FALSE`, `Null`, `NULL`, `012`, `0b11`, `0x1F`, `1_000`, and `~` as strings. This is
+the measured Jackson resolver behavior, not a promise that every YAML 1.2
+spelling is recognized. Literal `on` operator codes therefore stay strings.
+
+| Rule input | Migration behavior | Rewrite |
+| --- | --- | --- |
+| `conditionResult: yes`, `~`, `Null`, or `NULL` | Boolean binding fails; the parsing helper wraps the Jackson failure | Lowercase `true`, `false`, or `null` |
+| `index: 0x1` | Integer binding fails | `index: 1` |
+| `index: 010` | Integer becomes decimal 10; Jackson 2 read octal 8 | `index: 8` to retain the old value |
+| `conditions: ~`, `Null`, or `NULL` | Collection binding fails | `conditions: null` or `conditions: []`, as intended |
+| Scalars inside untyped parameter maps/lists | The spellings above stay strings rather than booleans, nulls, or integers | Use canonical lowercase booleans/null and decimal numbers without leading zeros |
+
+These are deliberate accepted-input/value changes. Audit rule files before
+cutover; the legacy Java field/annotation tests alone cannot establish YAML
+behavioral compatibility. Shared mapper feature flags are compared with measured
+Jackson 2.22.3 snapshots; removed/renamed/new-only features are not a claim of
+complete default or behavior equivalence. Existing unknown-field
+rejection, first-document reading, property order, and error wrapping are
+retained. Jackson parsing exceptions are unchecked `JacksonException`s;
+the two `RuleMapper` parsing helpers still wrap failures in `RuntimeException`.
+
+### Consumer coordination
+
+`RuleMapper.yamlMapper` remains a public, non-final static field, but its type
+changes from Jackson 2 to Jackson 3 and mapper instances are immutable. This is
+not source or binary compatible with Jackson 2 callers. Build a replacement via
+`RuleMapper.yamlMapper.rebuild()` before publishing it to callers; move former
+`configure`/`registerModule` mutations onto that builder. Replacing the shared
+field while workers are running is not a migration strategy.
+
+Known workspace consumers requiring coordinated qualification are:
+
+- **light-4j/rule-loader**, `MultiThreadRuleExecutor.java:43`: its direct
+  `yamlMapper.convertValue` call must migrate `TypeReference` from
+  `com.fasterxml.jackson.core.type` to `tools.jackson.core.type` in lockstep.
+- **yaml-rule-plugin/header-replace**,
+  `HeaderReplaceRequestTransformActionTest`: uses `string2RuleMap`; rerun its
+  rule-fixture tests. Other plugin modules also declare the yaml-rule dependency.
+- **light-4j/rule-config**, **light-rest-4j/access-control**, and
+  **light-hybrid-4j/rpc-security** declare yaml-rule dependencies and need their
+  rule/configuration tests rerun. **http-sidecar** and **light-gateway** need
+  application-level rule qualification after their shared libraries migrate.
+
+Those downstream gates are pending; this component PR does not qualify them.
+
 
 
 ## Action Execution
