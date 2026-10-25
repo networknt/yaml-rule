@@ -4,9 +4,10 @@ A simple rule engine with rules defined in YAML or JSON
 ## Jackson 3 migration
 
 **Breaking API and YAML semantics, for the next major release only.** The
-POM version remains `3.0.1` under the coordinated migration
-plan; do not republish that existing version with an incompatible API. Migrate consumers and
-coordinate the major-version/release cutover before releasing from `master`.
+development coordinate is `com.networknt:yaml-rule:4.0.0-SNAPSHOT`. The published
+`3.0.1` artifact uses Jackson 2 and must not be overwritten. Build this source
+before migrated consumers until a Jackson 3 artifact is published, and coordinate
+the major-version/release cutover before releasing from `master`.
 
 `RuleMapper.yamlMapper` now exposes `tools.jackson.databind.ObjectMapper` and is
 built with `YAMLMapper.builder()`. Jackson 3.2.3 requires Java 17 or newer; this
@@ -393,3 +394,4 @@ Prioritize Regression Tests: Whenever you find a bug, create a unit test that re
 
 Focus on Boundary values: Make sure you are including boundary values in your tests (0, null, "", very large and small values)
 ```
+
