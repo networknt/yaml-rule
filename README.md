@@ -393,3 +393,7 @@ Prioritize Regression Tests: Whenever you find a bug, create a unit test that re
 
 Focus on Boundary values: Make sure you are including boundary values in your tests (0, null, "", very large and small values)
 ```
+
+The Jackson 3 development artifact is `com.networknt:yaml-rule:4.0.0-SNAPSHOT`.
+The published `3.0.1` artifact uses Jackson 2. Build this source revision before
+its migrated consumers until a Jackson 3 artifact is published.
