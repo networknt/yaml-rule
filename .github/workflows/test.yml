@@ -2,7 +2,7 @@ name: Tests
 on:
   pull_request:
   push:
-    branches: [master, fix-jackson3-build-coordinates]
+    branches: [master]
 permissions:
   contents: read
 jobs:
