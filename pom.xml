@@ -44,9 +44,10 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git://github.com:networknt/yaml-rule.git</connection>
-        <developerConnection>scm:git://github.com:networknt/yaml-rule.git</developerConnection>
-        <url>https://github.com:networknt/yaml-rule.git</url>
+        <connection>scm:git:https://github.com/networknt/yaml-rule.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/networknt/yaml-rule.git</developerConnection>
+        <url>https://github.com/networknt/yaml-rule</url>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <repository>
