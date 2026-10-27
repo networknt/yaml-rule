@@ -6,11 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-10-27
+
 ### Added
 
 ### Changed
 
-- Use `4.0.0-SNAPSHOT` for the Jackson 3 line; the published `3.0.1` coordinate
+- Release `4.0.0` for the Jackson 3 line; the published `3.0.1` coordinate
   remains the Jackson 2 release and must not be overwritten.
 - Breaking next-major migration: `RuleMapper` exposes Jackson 3.2.3 types and
   immutable mapper instances; callers using Jackson 2 must migrate together.
