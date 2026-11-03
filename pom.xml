@@ -60,13 +60,13 @@
         </snapshotRepository>
     </distributionManagement>
     <properties>
-    <version.central-publishing-maven>0.11.0</version.central-publishing-maven>
+    <version.central-publishing-maven>0.12.0</version.central-publishing-maven>
         <java.version>25</java.version>
         <java.testversion>25</java.testversion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.jackson>3.2.3</version.jackson>
+        <version.jackson>3.2.4</version.jackson>
         <version.slf4j>2.0.20</version.slf4j>
-        <version.logback>1.6.5</version.logback>
+        <version.logback>1.6.6</version.logback>
         <version.junit>6.1.3</version.junit>
         <version.jose4j>0.9.7</version.jose4j>
         <version.mockito>5.24.0</version.mockito>
